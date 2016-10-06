@@ -9,4 +9,4 @@ HTMLTestRunner:http://tungwaiyip.info/software/HTMLTestRunner.html
 
 
 使用方法：
-  克隆HTMLTestRunner.py文件，将其复制到../Python35/Lib/目录下即可。
+  克隆HTMLTestRunner.py文件，将其复制到../Python35/Lib/目录下即可。test
