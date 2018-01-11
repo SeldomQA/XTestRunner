@@ -5,8 +5,11 @@
     <title>&lt;project name&gt;test report</title>
     <meta name="generator" content="HTMLTestRunner 0.8.2"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
+    <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
+    
     
 <style type="text/css" media="screen">
 body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
@@ -59,20 +62,21 @@ a.popup_link:hover {
 #show_detail_line {
     margin-top: 3ex;
     margin-bottom: 1ex;
-	margin-left: 10px;
+    margin-left: 10px;
 }
 #result_table {
     width: 80%;
     border-collapse: collapse;
     border: 1px solid #777;
-	margin-left: 10px;
+    margin-left: 10px;
 }
 #header_row {
     font-weight: bold;
     color: #606060;
     background-color: #f5f5f5;
-	border-top-width: 10px;
+    border-top-width: 10px;
     border-color: #d6e9c6;
+	font-size: 12px;
 }
 #result_table td {
     border: 1px solid #f5f5f5;
@@ -94,6 +98,26 @@ a.popup_link:hover {
 #ending {
 }
 
+/* -- chars ---------------------------------------------------------------------- */
+.testChars {margin-left: 150px;}
+
+.btn-info1 {
+    color: #fff;
+    background-color: #d6e9c6;
+    border-color: #d6e9c6;
+}
+
+.btn-info2 {
+    color: #fff;
+    background-color: #faebcc;
+    border-color: #faebcc;
+}
+
+.btn-info3 {
+    color: #fff;
+    background-color: #ebccd1;
+    border-color: #ebccd1;
+}
 </style>
 
 </head>
@@ -195,11 +219,22 @@ function showOutput(id, name) {
 
 <div class='heading'>
 <h1>&lt;project name&gt;test report</h1>
-<p class='attribute'><strong>Start Time:</strong> 2017-11-21 16:03:15</p>
-<p class='attribute'><strong>Duration:</strong> 0:00:00.001005</p>
+<p class='attribute'><strong>Start Time:</strong> 2018-01-11 10:15:39</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:00</p>
 <p class='attribute'><strong>Status:</strong> Pass 2 Failure 2 Error 1</p>
 
 <p class='description'>describe: ... </p>
+</div>
+
+<div style="float:left; margin-left: 10px;">
+	<p> Test Case Pie charts </p>
+	<a class="btn btn-xs btn-info1">-Pass-</a><br>
+	<a class="btn btn-xs btn-info2">-Faild-</a><br>
+	<a class="btn btn-xs btn-info3">-Error-</a><br>
+</div>
+
+<div class="testChars">
+	<canvas id="myChart" width="250" height="250"></canvas>
 </div>
 
 
@@ -360,5 +395,42 @@ AssertionError: 3 != 4
 
 <div id='ending'>&nbsp;</div>
 
+    <script type="text/javascript">
+var data = [
+	{
+		value: 1,
+		color: "#ebccd1",
+		label: "Error",
+		labelColor: 'white',
+		labelFontSize: '16'
+	},
+	{
+		value : 2,
+		color : "#faebcc",
+		label: "Fail",
+		labelColor: 'white',
+		labelFontSize: '16'
+	},
+	{
+		value : 2,
+		color : "#d6e9c6",
+		label : "Pass",
+		labelColor: 'white',
+		labelFontSize: '16'
+	}			
+]
+
+var newopts = {
+     animationSteps: 100,
+ 		animationEasing: 'easeInOutQuart',
+}
+
+//Get the context of the canvas element we want to select
+var ctx = document.getElementById("myChart").getContext("2d");
+
+var myNewChart = new Chart(ctx).Pie(data,newopts);
+
+</script>
+	
 </body>
 </html>
