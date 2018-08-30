@@ -1,10 +1,17 @@
 import HTMLTestRunner
 import unittest
 
+
 class TestDemo(unittest.TestCase):
+    """
+    测试用例说明
+    """
 
     def test_success(self):
-        self.assertEqual(5, 5)
+        """
+        执行成功
+        """
+        self.assertEqual(2+3, 5)
 
     @unittest.skip("skip case")
     def test_skip(self):
@@ -22,6 +29,7 @@ class TestDemo2(unittest.TestCase):
     def test_success(self):
         self.assertEqual(2+2, 4)
 
+
 class TestDemo3(unittest.TestCase):
 
     def test_fail(self):
@@ -29,7 +37,7 @@ class TestDemo3(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit=unittest.TestSuite()
+    suit = unittest.TestSuite()
     suit.addTest(TestDemo("test_success"))
     suit.addTest(TestDemo("test_skip"))
     suit.addTest(TestDemo("test_fail"))
@@ -38,9 +46,11 @@ if __name__ == '__main__':
     suit.addTest(TestDemo3("test_fail"))
 
     fp = open('./result.html', 'wb')
-    runner =HTMLTestRunner.HTMLTestRunner(stream=fp,
-                                          title=u'<project name>test report',
-                                          description=u'describe: ... ')
+    runner = HTMLTestRunner.HTMLTestRunner(
+        stream=fp,
+        title='<project name>test report',
+        description='describe: ... '
+    )
 
     runner.run(suit)
     fp.close()
