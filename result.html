@@ -5,10 +5,13 @@
     <title>&lt;project name&gt;test report</title>
     <meta name="generator" content="HTMLTestRunner 0.8.2"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
     <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
     
     
 <style type="text/css" media="screen">
@@ -219,8 +222,8 @@ function showOutput(id, name) {
 
 <div class='heading'>
 <h1>&lt;project name&gt;test report</h1>
-<p class='attribute'><strong>Start Time:</strong> 2018-01-11 10:15:39</p>
-<p class='attribute'><strong>Duration:</strong> 0:00:00</p>
+<p class='attribute'><strong>Start Time:</strong> 2019-03-10 19:20:37</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:00.000997</p>
 <p class='attribute'><strong>Status:</strong> Pass 2 Failure 2 Error 1</p>
 
 <p class='description'>describe: ... </p>
@@ -240,9 +243,9 @@ function showOutput(id, name) {
 
 
 <p id='show_detail_line' style="margin-left: 10px;">Show
-<a href='javascript:showCase(0)' class="btn btn-xs btn-primary">Summary</a>
-<a href='javascript:showCase(1)' class="btn btn-xs btn-danger">Failed</a>
-<a href='javascript:showCase(2)' class="btn btn-xs btn-info">All</a>
+<a href='javascript:showCase(0)' class="btn btn-outline-primary btn-sm">Summary</a>
+<a href='javascript:showCase(1)' class="btn btn-outline-warning btn-sm">Failed</a>
+<a href='javascript:showCase(2)' class="btn btn-outline-info btn-sm">All</a>
 </p>
 <table id='result_table'>
 <colgroup>
@@ -263,7 +266,9 @@ function showOutput(id, name) {
 </tr>
 
 <tr class='errorClass'>
-    <td>TestDemo</td>
+    <td>TestDemo: 
+    测试用例说明
+    </td>
     <td>3</td>
     <td>1</td>
     <td>1</td>
@@ -292,7 +297,7 @@ function showOutput(id, name) {
         <pre>
         
 ft1.2: Traceback (most recent call last):
-  File "D:\git\HTMLTestRunner\test_HTMLTestRunner.py", line 14, in test_fail
+  File "test_HTMLTestRunner.py", line 21, in test_fail
     self.assertEqual(5, 6)
 AssertionError: 5 != 6
 
@@ -320,7 +325,7 @@ AssertionError: 5 != 6
         <pre>
         
 ft1.3: Traceback (most recent call last):
-  File "D:\git\HTMLTestRunner\test_HTMLTestRunner.py", line 17, in test_error
+  File "test_HTMLTestRunner.py", line 24, in test_error
     self.assertEqual(a, 6)
 NameError: name 'a' is not defined
 
@@ -371,7 +376,7 @@ NameError: name 'a' is not defined
         <pre>
         
 ft3.1: Traceback (most recent call last):
-  File "D:\git\HTMLTestRunner\test_HTMLTestRunner.py", line 28, in test_fail
+  File "test_HTMLTestRunner.py", line 36, in test_fail
     self.assertEqual(3, 4)
 AssertionError: 3 != 4
 
