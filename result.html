@@ -7,47 +7,43 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
     <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    
-    
+    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+
     
 <style type="text/css" media="screen">
 body        { font-family: verdana, arial, helvetica, sans-serif; font-size: 80%; }
 table       { font-size: 100%; }
 pre         {  }
-
 /* -- heading ---------------------------------------------------------------------- */
 h1 {
 	font-size: 16pt;
 	color: gray;
 }
 .heading {
-    margin-top: 0ex;
+    margin-top: 20px;
     margin-bottom: 1ex;
 	margin-left: 10px;
+	width: 30%;
+    float: left;
 }
-
 .heading .attribute {
     margin-top: 1ex;
     margin-bottom: 0;
 }
-
 .heading .description {
     margin-top: 4ex;
     margin-bottom: 6ex;
 }
-
 /* -- css div popup ------------------------------------------------------------------------ */
 a.popup_link {
 }
-
 a.popup_link:hover {
     color: red;
 }
-
 .popup_window {
     display: none;
     position: relative;
@@ -59,7 +55,6 @@ a.popup_link:hover {
     font-size: 8pt;
     width: 500px;
 }
-
 }
 /* -- report ------------------------------------------------------------------------ */
 #show_detail_line {
@@ -79,12 +74,11 @@ a.popup_link:hover {
     background-color: #f5f5f5;
     border-top-width: 10px;
     border-color: #d6e9c6;
-	font-size: 12px;
+	font-size: 15px;
 }
 #result_table td {
     border: 1px solid #f5f5f5;
     padding: 2px;
-
 }
 #total_row  { font-weight: bold; }
 .passClass  { background-color: #d6e9c6; }
@@ -94,28 +88,23 @@ a.popup_link:hover {
 .failCase   { color: #c60; font-weight: bold; }
 .errorCase  { color: #c00; font-weight: bold; }
 .hiddenRow  { display: none; }
+.none {color: #009900 }
 .testcase   { margin-left: 2em; }
-
-
 /* -- ending ---------------------------------------------------------------------- */
 #ending {
 }
-
 /* -- chars ---------------------------------------------------------------------- */
-.testChars {margin-left: 150px;}
-
+.testChars {width: 900px;margin-left: 0px;}
 .btn-info1 {
     color: #fff;
     background-color: #d6e9c6;
     border-color: #d6e9c6;
 }
-
 .btn-info2 {
     color: #fff;
     background-color: #faebcc;
     border-color: #faebcc;
 }
-
 .btn-info3 {
     color: #fff;
     background-color: #ebccd1;
@@ -127,7 +116,6 @@ a.popup_link:hover {
 <body>
 <script language="javascript" type="text/javascript"><!--
 output_list = Array();
-
 /* level - 0:Summary; 1:Failed; 2:All */
 function showCase(level) {
     trs = document.getElementsByTagName("tr");
@@ -152,8 +140,6 @@ function showCase(level) {
         }
     }
 }
-
-
 function showClassDetail(cid, count) {
     var id_list = Array(count);
     var toHide = 1;
@@ -181,8 +167,6 @@ function showClassDetail(cid, count) {
         }
     }
 }
-
-
 function showTestDetail(div_id){
     var details_div = document.getElementById(div_id)
     var displayState = details_div.style.display
@@ -195,15 +179,12 @@ function showTestDetail(div_id){
         details_div.style.display = 'none'
     }
 }
-
-
 function html_escape(s) {
     s = s.replace(/&/g,'&amp;');
     s = s.replace(/</g,'&lt;');
     s = s.replace(/>/g,'&gt;');
     return s;
 }
-
 /* obsoleted by detail in <div>
 function showOutput(id, name) {
     var w = window.open("", //url
@@ -219,33 +200,29 @@ function showOutput(id, name) {
 }
 */
 --></script>
-
 <div class='heading'>
 <h1>&lt;project name&gt;test report</h1>
-<p class='attribute'><strong>Start Time:</strong> 2019-03-10 19:20:37</p>
-<p class='attribute'><strong>Duration:</strong> 0:00:00.000997</p>
+<p class='attribute'><strong>Start Time:</strong> 2019-11-13 23:39:31</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:00.000998</p>
 <p class='attribute'><strong>Status:</strong> Pass 2 Failure 2 Error 1</p>
 
 <p class='description'>describe: ... </p>
 </div>
-
-<div style="float:left; margin-left: 10px;">
+<div style="float:left; margin-left: 10px; margin-top: 20px;">
 	<p> Test Case Pie charts </p>
-	<a class="btn btn-xs btn-info1">-Pass-</a><br>
-	<a class="btn btn-xs btn-info2">-Faild-</a><br>
-	<a class="btn btn-xs btn-info3">-Error-</a><br>
+	<a class="badge text-wrap btn-info1">-Pass-</a><br>
+	<a class="badge text-wrap btn-info2">-Faild-</a><br>
+	<a class="badge text-wrap btn-info3">-Error-</a><br>
 </div>
-
 <div class="testChars">
 	<canvas id="myChart" width="250" height="250"></canvas>
 </div>
 
 
-
-<p id='show_detail_line' style="margin-left: 10px;">Show
-<a href='javascript:showCase(0)' class="btn btn-outline-primary btn-sm">Summary</a>
-<a href='javascript:showCase(1)' class="btn btn-outline-warning btn-sm">Failed</a>
-<a href='javascript:showCase(2)' class="btn btn-outline-info btn-sm">All</a>
+<p id='show_detail_line' style="margin-left: 10px;">Result
+<a href='javascript:showCase(0)' class="btn btn-secondary btn-sm">Summary</a>
+<a href='javascript:showCase(1)' class="btn btn-danger btn-sm">Failed</a>
+<a href='javascript:showCase(2)' class="btn btn-info btn-sm">All</a>
 </p>
 <table id='result_table'>
 <colgroup>
@@ -284,11 +261,9 @@ function showOutput(id, name) {
 <tr id='ft1.2' class='none'>
     <td class='failCase'><div class='testcase'>test_fail</div></td>
     <td colspan='5' align='center'>
-
     <!--css div popup start-->
     <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.2')" >
         fail</a>
-
     <div id='div_ft1.2' class="popup_window">
         <div style='text-align: right; color:red;cursor:pointer'>
         <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.2').style.display = 'none' " >
@@ -305,18 +280,15 @@ AssertionError: 5 != 6
         </pre>
     </div>
     <!--css div popup end-->
-
     </td>
 </tr>
 
 <tr id='ft1.3' class='none'>
     <td class='errorCase'><div class='testcase'>test_error</div></td>
     <td colspan='5' align='center'>
-
     <!--css div popup start-->
     <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.3')" >
         error</a>
-
     <div id='div_ft1.3' class="popup_window">
         <div style='text-align: right; color:red;cursor:pointer'>
         <a onfocus='this.blur();' onclick="document.getElementById('div_ft1.3').style.display = 'none' " >
@@ -333,7 +305,6 @@ NameError: name 'a' is not defined
         </pre>
     </div>
     <!--css div popup end-->
-
     </td>
 </tr>
 
@@ -363,11 +334,9 @@ NameError: name 'a' is not defined
 <tr id='ft3.1' class='none'>
     <td class='failCase'><div class='testcase'>test_fail</div></td>
     <td colspan='5' align='center'>
-
     <!--css div popup start-->
     <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft3.1')" >
         fail</a>
-
     <div id='div_ft3.1' class="popup_window">
         <div style='text-align: right; color:red;cursor:pointer'>
         <a onfocus='this.blur();' onclick="document.getElementById('div_ft3.1').style.display = 'none' " >
@@ -384,7 +353,6 @@ AssertionError: 3 != 4
         </pre>
     </div>
     <!--css div popup end-->
-
     </td>
 </tr>
 
@@ -424,17 +392,13 @@ var data = [
 		labelFontSize: '16'
 	}			
 ]
-
 var newopts = {
      animationSteps: 100,
  		animationEasing: 'easeInOutQuart',
 }
-
 //Get the context of the canvas element we want to select
 var ctx = document.getElementById("myChart").getContext("2d");
-
 var myNewChart = new Chart(ctx).Pie(data,newopts);
-
 </script>
 	
 </body>
