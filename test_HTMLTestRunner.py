@@ -1,16 +1,12 @@
-import HTMLTestRunner
+from HTMLTestRunner import HTMLTestRunner
 import unittest
 
 
 class TestDemo(unittest.TestCase):
-    """
-    测试用例说明
-    """
+    """测试用例说明"""
 
     def test_success(self):
-        """
-        执行成功
-        """
+        """执行成功"""
         self.assertEqual(2+3, 5)
 
     @unittest.skip("skip case")
@@ -46,11 +42,11 @@ if __name__ == '__main__':
     suit.addTest(TestDemo3("test_fail"))
 
     fp = open('./result.html', 'wb')
-    runner = HTMLTestRunner.HTMLTestRunner(
+    runner = HTMLTestRunner(
         stream=fp,
         title='<project name>test report',
         description='describe: ... '
     )
 
-    runner.run(suit)
+    runner.run(suit, rerun=0, save_last_run=False)
     fp.close()
