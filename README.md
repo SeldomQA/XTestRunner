@@ -9,17 +9,21 @@ HTMLTestRunner:http://tungwaiyip.info/software/HTMLTestRunner.html
 
 
 使用方法：
-  克隆HTMLTestRunner.py文件，将其复制到../Python36/Lib/目录下即可。
+  克隆 `HTMLTestRunner.py` 文件，将其复制到 `../Python36/Lib/` 目录下即可。
 
-demo:
+## demo:
+
 ```python
-import HTMLTestRunner
 import unittest
+from HTMLTestRunner import HTMLTestRunner
+
 
 class TestDemo(unittest.TestCase):
+    """测试用例说明"""
 
     def test_success(self):
-        self.assertEqual(5, 5)
+        """执行成功"""
+        self.assertEqual(2 + 3, 5)
 
     @unittest.skip("skip case")
     def test_skip(self):
@@ -35,7 +39,8 @@ class TestDemo(unittest.TestCase):
 class TestDemo2(unittest.TestCase):
 
     def test_success(self):
-        self.assertEqual(2+2, 4)
+        self.assertEqual(2 + 2, 4)
+
 
 class TestDemo3(unittest.TestCase):
 
@@ -44,7 +49,7 @@ class TestDemo3(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit=unittest.TestSuite()
+    suit = unittest.TestSuite()
     suit.addTest(TestDemo("test_success"))
     suit.addTest(TestDemo("test_skip"))
     suit.addTest(TestDemo("test_fail"))
@@ -52,14 +57,24 @@ if __name__ == '__main__':
     suit.addTest(TestDemo2("test_success"))
     suit.addTest(TestDemo3("test_fail"))
 
-    fp = open('./result.html', 'wb')
-    runner =HTMLTestRunner.HTMLTestRunner(stream=fp,
-                                          title=u'<project name>test report',
-                                          description=u'describe: ... ')
-
-    runner.run(suit)
-    fp.close()
+    with(open('./result.html', 'wb')) as fp:
+        runner = HTMLTestRunner(
+            stream=fp,
+            title='<project name>test report',
+            description='describe: ... '
+        )
+        runner.run(suit, rerun=0, save_last_run=False)
 ```
+**HTMLTestRunner类说明：**
 
-测试报告：
+* stream ： 指定报告的路径
+* title ： 报告的标题
+* description ： 报告的描述
+
+**run()方法说明:**
+* suit ： 运行的测试套件
+* rerun ：重跑次数
+* save_last_run ：是否保存最后一个结果
+
+## 测试报告：
 ![](./test_report.png)
