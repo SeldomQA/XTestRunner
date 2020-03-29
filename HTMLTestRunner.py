@@ -185,7 +185,8 @@ class Template_mixin(object):
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
     <!-- <link href="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js" rel="stylesheet">   -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="./classic.css">
 
 
     %(stylesheet)s
@@ -551,19 +552,29 @@ a.popup_link:hover {
     # Heading
     #
 
-    HEADING_TMPL = """<div class='heading card'>
-<h1>%(title)s</h1>
-%(parameters)s
-<p class='description'>%(description)s</p>
+    HEADING_TMPL = """<div style="height: 260px">
+<div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
+    <div class='card flex-fill'>
+        <div class="card-header">
+            <h1 class="card-title mb-0">%(title)s</h1>
+        </div>
+        <div class="card-body my-2">
+            %(parameters)s
+            <p class='description'>%(description)s</p>
+        </div>
+    </div>
 </div>
+
 <div style="float:left; margin-left: 10px; margin-top: 20px;">
-	<p> Test Case Pie charts </p>
-	<a class="badge text-wrap btn-info1">-Pass-</a><br>
-	<a class="badge text-wrap btn-info2">-Faild-</a><br>
-	<a class="badge text-wrap btn-info3">-Error-</a><br>
+    <p> Test Case Pie charts </p>
+    <a class="badge text-wrap btn-info1">-Pass-</a><br>
+    <a class="badge text-wrap btn-info2">-Faild-</a><br>
+    <a class="badge text-wrap btn-info3">-Error-</a><br>
 </div>
 <div class="testChars">
-	<canvas id="myChart" width="250" height="250"></canvas>
+    <canvas id="myChart" width="250" height="250"></canvas>
+</div>
+
 </div>
 """  # variables: (title, parameters, description)
 
