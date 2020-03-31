@@ -552,12 +552,23 @@ a.popup_link:hover {
     # Heading
     #
 
-    HEADING_TMPL = """<div style="height: 260px">
+    HEADING_TMPL = """
+<link rel="stylesheet" href="./classic.css">
+
+<nav class="navbar navbar-expand navbar-light bg-white">
+    <a class="sidebar-toggle d-flex mr-2">
+        <i class="hamburger align-self-center"></i>
+    </a>
+    <h1 style="margin-bottom: 0px;">seldom</h1>
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav ml-auto">
+            <h3 style="float: right;">project:%(title)s</h3>
+        </ul>
+    </div>
+</nav>
+<div style="height: 260px; margin-top: 20px;">
 <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
     <div class='card flex-fill'>
-        <div class="card-header">
-            <h1 class="card-title mb-0">%(title)s</h1>
-        </div>
         <div class="card-body my-2">
             %(parameters)s
             <p class='description'>%(description)s</p>
