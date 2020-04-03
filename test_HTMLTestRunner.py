@@ -44,7 +44,7 @@ if __name__ == '__main__':
     with(open('./result.html', 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
-            title='<project name>test report',
-            description='describe: ... '
+            title='Seldom自动化测试报告',
+            description='浏览器chrome，平台windows'
         )
         runner.run(suit, rerun=0, save_last_run=False)

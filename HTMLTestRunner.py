@@ -434,7 +434,7 @@ a.popup_link:hover {
     /*border: solid #627173 1px; */
     font-family: "Lucida Console", "Courier New", Courier, monospace;
     text-align: left;
-    font-size: 8pt;
+    font-size: 12pt;
     width: 500px;
 }
 }
@@ -444,12 +444,7 @@ a.popup_link:hover {
     margin-bottom: 1ex;
     margin-left: 10px;
 }
-#result_table {
-    width: 80%;
-    border-collapse: collapse;
-    border: 1px solid #777;
-    margin-left: 10px;
-}
+
 #header_row {
     font-weight: bold;
     color: #606060;
@@ -458,11 +453,8 @@ a.popup_link:hover {
     border-color: #d6e9c6;
 	font-size: 15px;
 }
-#result_table td {
-    border: 1px solid #f5f5f5;
-    padding: 2px;
-}
-#total_row  { font-weight: bold; }
+
+#total_row  { font-weight: bold; background-color: #dee2e6;}
 .passClass  { background-color: #d6e9c6; }
 .failClass  { background-color: #faebcc; }
 .errorClass { background-color: #ebccd1; }
@@ -562,7 +554,7 @@ a.popup_link:hover {
     <h1 style="margin-bottom: 0px;">seldom</h1>
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav ml-auto">
-            <h3 style="float: right;">project:%(title)s</h3>
+            <h3 style="float: right;">%(title)s</h3>
         </ul>
     </div>
 </nav>
@@ -570,17 +562,25 @@ a.popup_link:hover {
 <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
     <div class='card flex-fill'>
         <div class="card-body my-2">
+        <table class="table my-0">
+            <tbody>
             %(parameters)s
-            <p class='description'>%(description)s</p>
+            <tr><td>Description:</td><td class="text-right">%(description)s</td></tr>
+            </tbody>
+        </table>
         </div>
     </div>
 </div>
 
 <div style="float:left; margin-left: 10px; margin-top: 20px;">
     <p> Test Case Pie charts </p>
-    <a class="badge text-wrap btn-info1">-Pass-</a><br>
-    <a class="badge text-wrap btn-info2">-Faild-</a><br>
-    <a class="badge text-wrap btn-info3">-Error-</a><br>
+    
+    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info1">2</h2>
+    <a>PASS</a><br>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info2">2</h2>
+    <a>FAILD</a>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info3">1</h2>
+    <a>ERROR</a><br>
 </div>
 <div class="testChars">
     <canvas id="myChart" width="250" height="250"></canvas>
@@ -628,7 +628,7 @@ var myNewChart = new Chart(ctx).Pie(data,newopts);
 </script>
 	"""
 
-    HEADING_ATTRIBUTE_TMPL = """<p class='attribute'><strong>%(name)s:</strong> %(value)s</p>
+    HEADING_ATTRIBUTE_TMPL = """<tr><td>%(name)s:</td><td class="text-right">%(value)s</td></tr>
 """  # variables: (name, value)
 
     # ------------------------------------------------------------------------
@@ -644,25 +644,18 @@ var myNewChart = new Chart(ctx).Pie(data,newopts);
 <a href='javascript:showCase(4, %(channel)s)' class="btn btn-light btn-sm">Skip</a>
 <a href='javascript:showCase(5, %(channel)s)' class="btn btn-info btn-sm">All</a>
 </p>
-<table id='result_table'>
-<colgroup>
-<col align='left' />
-<col align='right' />
-<col align='right' />
-<col align='right' />
-<col align='right' />
-<col align='right' />
-<col align='right' />
-</colgroup>
-<tr id='header_row' class="panel-title">
-    <td>Test Group/Test case</td>
-    <td>Count</td>
-    <td>Pass</td>
-    <td>Fail</td>
-    <td>Error</td>
-    <td>View</td>
-    <td>Screenshots</td>
-</tr>
+<table class="table mb-0">
+<thead>
+    <tr id='header_row'>
+        <td>Test Group/Test case</td>
+        <td>Count</td>
+        <td>Pass</td>
+        <td>Fail</td>
+        <td>Error</td>
+        <td>View</td>
+        <td>Screenshots</td>
+    </tr>
+</thead>
 %(test_list)s
 <tr id='total_row'>
     <td>Total</td>
