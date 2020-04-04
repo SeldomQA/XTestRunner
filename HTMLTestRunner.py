@@ -549,8 +549,6 @@ a.popup_link:hover {
     #
 
     HEADING_TMPL = """
-<link rel="stylesheet" href="./classic.css">
-
 <nav class="navbar navbar-expand navbar-light bg-white">
     <a class="sidebar-toggle d-flex mr-2">
         <i class="hamburger align-self-center"></i>
@@ -972,7 +970,6 @@ class HTMLTestRunner(Template_mixin):
             "error": result.error_count,
             "skip": result.skip_count,
         }
-        print("result", result)
         return [
             ('Start Time', startTime),
             ('Duration', duration),
@@ -1006,8 +1003,6 @@ class HTMLTestRunner(Template_mixin):
     def _generate_heading(self, report_attrs):
         a_lines = []
         for name, value in report_attrs:
-            print("name", name)
-            print("value", name)
             result = {}
             if name == "Result":
                 result = value
