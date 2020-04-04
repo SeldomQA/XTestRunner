@@ -469,22 +469,26 @@ a.popup_link:hover {
 }
 /* -- chars ---------------------------------------------------------------------- */
 .testChars {width: 900px;margin-left: 0px;}
-.btn-info1 {
+.error-color {
     color: #fff;
-    background-color: #d6e9c6;
-    border-color: #d6e9c6;
+    background-color: #f44455;
+    border-color: #f44455;
 }
-.btn-info2 {
+.pass-color {
     color: #fff;
-    background-color: #faebcc;
-    border-color: #faebcc;
+    background-color: #5fc27e;
+    border-color: #5fc27e;
 }
-.btn-info3 {
+.fail-color {
     color: #fff;
-    background-color: #ebccd1;
-    border-color: #ebccd1;
+    background-color: #fcc100;
+    border-color: #fcc100;
 }
-
+.skip-color {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
 
 /* -- screenshots ---------------------------------------------------------------------- */
 .img{
@@ -574,13 +578,14 @@ a.popup_link:hover {
 
 <div style="float:left; margin-left: 10px; margin-top: 20px;">
     <p> Test Case Pie charts </p>
-    
-    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info1">2</h2>
-    <a>PASS</a><br>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info2">2</h2>
-    <a>FAILD</a>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light btn-info3">1</h2>
-    <a>ERROR</a><br>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light pass-color">%(pass_count)s</h2>
+    <a>PASSED</a><br>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light fail-color">%(fail_count)s</h2>
+    <a>FAILED</a>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light error-color">%(error_count)s</h2>
+    <a>ERRORS</a><br>
+    <h2 class="d-flex align-items-center mb-0 font-weight-light skip-color">%(skip_count)s</h2>
+    <a>SKIPED</a><br>
 </div>
 <div class="testChars">
     <canvas id="myChart" width="250" height="250"></canvas>
@@ -598,25 +603,32 @@ a.popup_link:hover {
 var data = [
 	{
 		value: %(error)s,
-		color: "#ebccd1",
+		color: "#f44455",
 		label: "Error",
 		labelColor: 'white',
 		labelFontSize: '16'
 	},
 	{
 		value : %(fail)s,
-		color : "#faebcc",
+		color : "#fcc100",
 		label: "Fail",
 		labelColor: 'white',
 		labelFontSize: '16'
 	},
 	{
 		value : %(Pass)s,
-		color : "#d6e9c6",
+		color : "#5fc27e",
 		label : "Pass",
 		labelColor: 'white',
 		labelFontSize: '16'
-	}			
+	},
+    {
+		value : %(skip)s,
+		color : "#6c757d",
+		label : "skip",
+		labelColor: 'white',
+		labelFontSize: '16'
+	}
 ]
 var newopts = {
      animationSteps: 100,
@@ -746,7 +758,7 @@ class _TestResult(TestResult):
         self.stderr0 = None
         self.success_count = 0
         self.failure_count = 0
-        self.error_count = 0
+        self.error_count = 0        
         self.skip_count = 0
         self.verbosity = verbosity
 
@@ -941,22 +953,31 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
+        
         if result.success_count:
-            status.append('Pass:%s' % result.success_count)
+            status.append('Passed:%s' % result.success_count)
         if result.failure_count:
-            status.append('Failure:%s' % result.failure_count)
+            status.append('Failed:%s' % result.failure_count)
         if result.error_count:
-            status.append('Error:%s' % result.error_count)
+            status.append('Errors:%s' % result.error_count)
         if result.skip_count:
-            status.append('Skip:%s' % result.skip_count)
+            status.append('Skiped:%s' % result.skip_count)
         if status:
             status = ' '.join(status)
         else:
             status = 'none'
+        result = {
+            "pass": result.success_count,
+            "fail": result.failure_count,
+            "error": result.error_count,
+            "skip": result.skip_count,
+        }
+        print("result", result)
         return [
             ('Start Time', startTime),
             ('Duration', duration),
             ('Status', status),
+            ('Result', result),
         ]
 
     def generateReport(self, test, result):
@@ -985,15 +1006,25 @@ class HTMLTestRunner(Template_mixin):
     def _generate_heading(self, report_attrs):
         a_lines = []
         for name, value in report_attrs:
-            line = self.HEADING_ATTRIBUTE_TMPL % dict(
-                name=saxutils.escape(name),
-                value=saxutils.escape(value),
-            )
-            a_lines.append(line)
+            print("name", name)
+            print("value", name)
+            result = {}
+            if name == "Result":
+                result = value
+            else:
+                line = self.HEADING_ATTRIBUTE_TMPL % dict(
+                    name=saxutils.escape(name),
+                    value=saxutils.escape(value),
+                )
+                a_lines.append(line)
         heading = self.HEADING_TMPL % dict(
             title=saxutils.escape(self.title),
             parameters=''.join(a_lines),
             description=saxutils.escape(self.description),
+            pass_count=saxutils.escape(str(result["pass"])),
+            fail_count=saxutils.escape(str(result["fail"])),
+            error_count=saxutils.escape(str(result["error"])),
+            skip_count=saxutils.escape(str(result["skip"])),
         )
         return heading
 
@@ -1052,6 +1083,7 @@ class HTMLTestRunner(Template_mixin):
             Pass=str(result.success_count),
             fail=str(result.failure_count),
             error=str(result.error_count),
+            skip=str(result.skip_count),
         )
         return chart
 
