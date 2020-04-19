@@ -916,7 +916,7 @@ class HTMLTestRunner(Template_mixin):
 
         self.startTime = datetime.datetime.now()
 
-    def run(self, test, rerun, save_last_run):
+    def run(self, test, rerun=0, save_last_run=False):
         """Run the given test case or test suite."""
         result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run)
         test(result)

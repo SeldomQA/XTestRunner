@@ -47,4 +47,4 @@ if __name__ == '__main__':
             title='Seldom自动化测试报告',
             description='浏览器chrome，平台windows'
         )
-        runner.run(suit, rerun=0, save_last_run=False)
+        runner.run(suit)

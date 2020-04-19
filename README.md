@@ -63,7 +63,7 @@ if __name__ == '__main__':
             title='<project name>test report',
             description='describe: ... '
         )
-        runner.run(suit, rerun=0, save_last_run=False)
+        runner.run(suit)
 ```
 **HTMLTestRunner类说明：**
 
