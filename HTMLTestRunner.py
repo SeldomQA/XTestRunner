@@ -184,7 +184,7 @@ class Template_mixin(object):
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
-    <link rel="stylesheet" href="http://img.itest.info/classic.css">
+    <link rel="stylesheet" href="http://img.itest.info/seldom.css">
 
     %(stylesheet)s
 </head>
