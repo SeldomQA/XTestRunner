@@ -180,7 +180,7 @@ class Template_mixin(object):
     <title>%(title)s</title>
     <meta name="generator" content="%(generator)s"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="http://apps.bdimg.com/libs/Chart.js/0.2.0/Chart.min.js"></script>
@@ -775,6 +775,7 @@ class _TestResult(TestResult):
         # TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
         self.outputBuffer = io.StringIO()
+        print("000000", self.outputBuffer.getvalue)
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout
@@ -830,6 +831,7 @@ class _TestResult(TestResult):
         self.status = 0
         TestResult.addSuccess(self, test)
         output = self.complete_output()
+        print("2222222", output)
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
             sys.stderr.write('ok ')
@@ -922,6 +924,7 @@ class HTMLTestRunner(Template_mixin):
         test(result)
         self.stopTime = datetime.datetime.now()
         self.run_times += 1
+        print("111111", result.result)
         self.generateReport(test, result)
         # print(sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime))
         return result
@@ -948,7 +951,7 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
-        
+        print("bbbb", result.result)
         if result.success_count:
             status.append('Passed:%s' % result.success_count)
         if result.failure_count:
@@ -1021,9 +1024,12 @@ class HTMLTestRunner(Template_mixin):
         return heading
 
     def _generate_report(self, result):
+        print("aaaa", result.result)
         rows = []
         sortedResult = self.sortResult(result.result)
+        print("ddd", sortedResult)
         for cid, (cls, cls_results) in enumerate(sortedResult):
+            print("ccc", cls_results)
             # subtotal for a class
             np = nf = ne = ns = 0
             for n, t, o, e in cls_results:
@@ -1056,6 +1062,7 @@ class HTMLTestRunner(Template_mixin):
             rows.append(row)
 
             for tid, (n, t, o, e) in enumerate(cls_results):
+                print("o", o)
                 self._generate_report_test(rows, cid, tid, n, t, o, e)
 
         report = self.REPORT_TMPL % dict(
