@@ -1,28 +1,9 @@
 """
 A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
-The simplest way to use this is to invoke its main method. E.g.
-    import unittest
-    import HTMLTestRunner
-    ... define your tests ...
-    if __name__ == '__main__':
-        HTMLTestRunner.main()
-For more customization options, instantiates a HTMLTestRunner object.
-HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
-    # output to a file
-    fp = file('my_report.html', 'wb')
-    runner = HTMLTestRunner.HTMLTestRunner(
-                stream=fp,
-                title='My unit test',
-                description='This demonstrates the report output by HTMLTestRunner.'
-                )
-    # Use an external stylesheet.
-    # See the Template_mixin class for more customizable options
-    runner.STYLESHEET_TMPL = '<link rel="stylesheet" href="my_stylesheet.css" type="text/css">'
-    # run the test
-    runner.run(my_test_suite)
+
 ------------------------------------------------------------------------
-Copyright (c) 2004-2007, Wai Yip Tung
+Copyright (c) 2004-2020, Wai Yip Tung
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -756,14 +737,6 @@ class _TestResult(TestResult):
         self.error_count = 0        
         self.skip_count = 0
         self.verbosity = verbosity
-
-        # result is a list of result in 4 tuple
-        # (
-        #   result code (0: success; 1: fail; 2: error; 3: skip),
-        #   TestCase object,
-        #   Test output (byte string),
-        #   stack trace,
-        # )
         self.rerun = rerun
         self.save_last_run = save_last_run
         self.status = 0
@@ -775,7 +748,6 @@ class _TestResult(TestResult):
         # TestResult.startTest(self, test)
         # just one buffer for both stdout and stderr
         self.outputBuffer = io.StringIO()
-        print("000000", self.outputBuffer.getvalue)
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
         self.stdout0 = sys.stdout
@@ -831,7 +803,6 @@ class _TestResult(TestResult):
         self.status = 0
         TestResult.addSuccess(self, test)
         output = self.complete_output()
-        print("2222222", output)
         self.result.append((0, test, output, ''))
         if self.verbosity > 1:
             sys.stderr.write('ok ')
@@ -924,9 +895,7 @@ class HTMLTestRunner(Template_mixin):
         test(result)
         self.stopTime = datetime.datetime.now()
         self.run_times += 1
-        print("111111", result.result)
         self.generateReport(test, result)
-        # print(sys.stderr, '\nTime Elapsed: %s' % (self.stopTime-self.startTime))
         return result
 
     def sortResult(self, result_list):
@@ -951,7 +920,6 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
-        print("bbbb", result.result)
         if result.success_count:
             status.append('Passed:%s' % result.success_count)
         if result.failure_count:
@@ -1024,12 +992,9 @@ class HTMLTestRunner(Template_mixin):
         return heading
 
     def _generate_report(self, result):
-        print("aaaa", result.result)
         rows = []
         sortedResult = self.sortResult(result.result)
-        print("ddd", sortedResult)
         for cid, (cls, cls_results) in enumerate(sortedResult):
-            print("ccc", cls_results)
             # subtotal for a class
             np = nf = ne = ns = 0
             for n, t, o, e in cls_results:
