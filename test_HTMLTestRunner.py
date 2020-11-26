@@ -1,5 +1,5 @@
 import unittest
-from HTMLTestRunner import HTMLTestRunner
+from TestRunner import HTMLTestRunner
 
 
 class TestDemo(unittest.TestCase):

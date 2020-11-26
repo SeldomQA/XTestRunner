@@ -1,0 +1,39 @@
+<script type="text/javascript">
+    var data = [{
+            value: {{ error }},
+            color: "#f44455",
+            label: "Error",
+            labelColor: 'white',
+            labelFontSize: '16'
+        },
+        {
+            value: {{ fail }},
+            color: "#fcc100",
+            label: "Fail",
+            labelColor: 'white',
+            labelFontSize: '16'
+        },
+        {
+            value: {{ Pass }},
+            color: "#5fc27e",
+            label: "Pass",
+            labelColor: 'white',
+            labelFontSize: '16'
+        },
+        {
+            value: {{ skip }},
+            color: "#6c757d",
+            label: "skip",
+            labelColor: 'white',
+            labelFontSize: '16'
+        }
+    ]
+    
+    var newopts = {
+        animationSteps: 100,
+        animationEasing: 'easeInOutQuart',
+    }
+    //Get the context of the canvas element we want to select
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myNewChart = new Chart(ctx).Pie(data, newopts);
+</script>
