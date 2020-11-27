@@ -1,64 +1,7 @@
-"""
-A TestRunner for use with the Python unit testing framework. It
-generates a HTML report to show the result at a glance.
-
-------------------------------------------------------------------------
-Copyright (c) 2004-2020, Wai Yip Tung
-All rights reserved.
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-* Redistributions of source code must retain the above copyright notice,
-  this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-* Neither the name Wai Yip Tung nor the names of its contributors may be
-  used to endorse or promote products derived from this software without
-  specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
-IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
-TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
-OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-"""
-
-# URL: http://tungwaiyip.info/software/HTMLTestRunner.html
-
-__author__ = "Wai Yip Tung , bugmaster"
-__version__ = "0.9.0"
-
-"""
-Change History
-
-Version 0.9.0
-* Increased repeat execution
-* Added failure screenshots
-
-Version 0.8.2
-* Show output inline instead of popup window (Viorel Lupu).
-
-Version in 0.8.1
-* Validated XHTML (Wolfgang Borgert).
-* Added description of test classes and test cases.
-
-Version in 0.8.0
-* Define Template_mixin class for customization.
-* Workaround a IE 6 bug that it does not treat <script> block as CDATA.
-
-Version in 0.7.1
-* Back port to Python 2.3 (Frank Horowitz).
-* Fix missing scroll bars in detail log (Podi).
-"""
-
 import os
 import datetime
+import re
+import ast
 import io
 import sys
 import time
@@ -66,8 +9,11 @@ import copy
 import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
+INIT_FILE = os.path.join(BASE_DIR, "__init__.py")
 
 # ------------------------------------------------------------------------
 # The redirectors below are used to capture output during testing. Output
@@ -75,6 +21,22 @@ HTML_DIR = os.path.join(BASE_DIR, "html")
 # in some cases sys.stdout is already cached before HTMLTestRunner is
 # invoked (e.g. calling logging.basicConfig). In order to capture those
 # output, use the redirectors for the cached stream.
+
+# ---------------------------
+# Read version number
+# ---------------------------
+_version_re = re.compile(r'__version__\s+=\s+(.*)')
+
+with open(INIT_FILE, 'rb') as f:
+    version = str(ast.literal_eval(_version_re.search(
+        f.read().decode('utf-8')).group(1)))
+
+
+# ---------------------------
+# Define the HTML template directory
+# --------------------------
+env = Environment(loader=FileSystemLoader(HTML_DIR))
+print("evn--->", env.list_templates())
 
 
 class OutputRedirector(object):
@@ -104,38 +66,6 @@ class Template_mixin(object):
     """
     Define a HTML template for report customerization and generation.
     Overall structure of an HTML report
-    HTML
-    +------------------------+
-    |<html>                  |
-    |  <head>                |
-    |                        |
-    |   STYLESHEET           |
-    |   +----------------+   |
-    |   |                |   |
-    |   +----------------+   |
-    |                        |
-    |  </head>               |
-    |                        |
-    |  <body>                |
-    |                        |
-    |   HEADING              |
-    |   +----------------+   |
-    |   |                |   |
-    |   +----------------+   |
-    |                        |
-    |   REPORT               |
-    |   +----------------+   |
-    |   |                |   |
-    |   +----------------+   |
-    |                        |
-    |   ENDING               |
-    |   +----------------+   |
-    |   |                |   |
-    |   +----------------+   |
-    |                        |
-    |  </body>               |
-    |</html>                 |
-    +------------------------+
     """
 
     STATUS = {
@@ -146,143 +76,9 @@ class Template_mixin(object):
     }
 
     DEFAULT_TITLE = 'Unit Test Report'
-    DEFAULT_DESCRIPTION = ''
-
-
-    # ------------------------------------------------------------------------
-    # Heading
-    #
-
-    HEADING_TMPL = """
-<nav class="navbar navbar-expand navbar-light bg-white">
-    <a class="sidebar-toggle d-flex mr-2">
-        <i class="hamburger align-self-center"></i>
-    </a>
-    <h1 style="margin-bottom: 0px;">seldom</h1>
-    <div class="navbar-collapse collapse">
-        <ul class="navbar-nav ml-auto">
-            <h3 style="float: right;">%(title)s</h3>
-        </ul>
-    </div>
-</nav>
-<div style="height: 260px; margin-top: 20px;">
-<div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
-    <div class='card flex-fill'>
-        <div class="card-body my-2">
-        <table class="table my-0">
-            <tbody>
-            %(parameters)s
-            <tr><td>Description:</td><td class="text-right">%(description)s</td></tr>
-            </tbody>
-        </table>
-        </div>
-    </div>
-</div>
-
-<div style="float:left; margin-left: 10px; margin-top: 20px;">
-    <p> Test Case Pie charts </p>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light pass-color">%(pass_count)s</h2>
-    <a>PASSED</a><br>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light fail-color">%(fail_count)s</h2>
-    <a>FAILED</a>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light error-color">%(error_count)s</h2>
-    <a>ERRORS</a><br>
-    <h2 class="d-flex align-items-center mb-0 font-weight-light skip-color">%(skip_count)s</h2>
-    <a>SKIPED</a><br>
-</div>
-<div class="testChars">
-    <canvas id="myChart" width="250" height="250"></canvas>
-</div>
-
-</div>
-"""  # variables: (title, parameters, description)
-
-    # ------------------------------------------------------------------------
-    # Pie chart
-    #
-
-    ECHARTS_SCRIPT = """
-    <script type="text/javascript">
-var data = [
-	{
-		value: %(error)s,
-		color: "#f44455",
-		label: "Error",
-		labelColor: 'white',
-		labelFontSize: '16'
-	},
-	{
-		value : %(fail)s,
-		color : "#fcc100",
-		label: "Fail",
-		labelColor: 'white',
-		labelFontSize: '16'
-	},
-	{
-		value : %(Pass)s,
-		color : "#5fc27e",
-		label : "Pass",
-		labelColor: 'white',
-		labelFontSize: '16'
-	},
-    {
-		value : %(skip)s,
-		color : "#6c757d",
-		label : "skip",
-		labelColor: 'white',
-		labelFontSize: '16'
-	}
-]
-var newopts = {
-     animationSteps: 100,
- 		animationEasing: 'easeInOutQuart',
-}
-//Get the context of the canvas element we want to select
-var ctx = document.getElementById("myChart").getContext("2d");
-var myNewChart = new Chart(ctx).Pie(data,newopts);
-</script>
-	"""
 
     HEADING_ATTRIBUTE_TMPL = """<tr><td>%(name)s:</td><td class="text-right">%(value)s</td></tr>
 """  # variables: (name, value)
-
-    # ------------------------------------------------------------------------
-    # Report
-    #
-
-    REPORT_TMPL = """
-<p id='show_detail_line' style="margin-left: 10px; margin-top: 30px;">
-<a href='javascript:showCase(0, %(channel)s)' class="btn btn-dark btn-sm">Summary</a>
-<a href='javascript:showCase(1, %(channel)s)' class="btn btn-success btn-sm">Pass</a>
-<a href='javascript:showCase(2, %(channel)s)' class="btn btn-warning btn-sm">Failed</a>
-<a href='javascript:showCase(3, %(channel)s)' class="btn btn-danger btn-sm">Error</a>
-<a href='javascript:showCase(4, %(channel)s)' class="btn btn-light btn-sm">Skip</a>
-<a href='javascript:showCase(5, %(channel)s)' class="btn btn-info btn-sm">All</a>
-</p>
-<table class="table mb-0">
-<thead>
-    <tr id='header_row'>
-        <td>Test Group/Test case</td>
-        <td>Count</td>
-        <td>Pass</td>
-        <td>Fail</td>
-        <td>Error</td>
-        <td>View</td>
-        <td>Screenshots</td>
-    </tr>
-</thead>
-%(test_list)s
-<tr id='total_row'>
-    <td>Total</td>
-    <td>%(count)s</td>
-    <td class="text text-success">%(Pass)s</td>
-    <td class="text text-danger">%(fail)s</td>
-    <td class="text text-warning">%(error)s</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-</tr>
-</table>
-"""  # variables: (test_list, count, Pass, fail, error)
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
@@ -510,7 +306,7 @@ class HTMLTestRunner(Template_mixin):
         else:
             self.title = title
         if description is None:
-            self.description = self.DEFAULT_DESCRIPTION
+            self.description = ""
         else:
             self.description = description
 
@@ -573,17 +369,15 @@ class HTMLTestRunner(Template_mixin):
         ]
 
     def generateReport(self, test, result):
-        env = Environment(loader=FileSystemLoader(HTML_DIR))
-        style_ = env.get_template('stylesheet.html').render()
-        report_attrs = self.getReportAttributes(result)
-        generator = 'HTMLTestRunner %s' % __version__
+        template = env.get_template('teamplate.html')
         stylesheet = env.get_template('stylesheet.html').render()
+        report_attrs = self.getReportAttributes(result)
+        generator = 'HTMLTestRunner %s' % version
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result)
         ending = self._generate_ending()
         chart = self._generate_chart(result)
         
-        template = env.get_template('teamplate.html')
         html_content = template.render(
             title=saxutils.escape(self.title),
             generator=generator,
@@ -598,8 +392,8 @@ class HTMLTestRunner(Template_mixin):
 
     def _generate_heading(self, report_attrs):
         a_lines = []
+        result = {}
         for name, value in report_attrs:
-            result = {}
             if name == "Result":
                 result = value
             else:
@@ -608,15 +402,17 @@ class HTMLTestRunner(Template_mixin):
                     value=saxutils.escape(value),
                 )
                 a_lines.append(line)
-        heading = self.HEADING_TMPL % dict(
-            title=saxutils.escape(self.title),
+
+        heading = env.get_template('heading.html').render(
+            title=self.title,
             parameters=''.join(a_lines),
-            description=saxutils.escape(self.description),
-            pass_count=saxutils.escape(str(result["pass"])),
-            fail_count=saxutils.escape(str(result["fail"])),
-            error_count=saxutils.escape(str(result["error"])),
-            skip_count=saxutils.escape(str(result["skip"])),
+            description=self.description,
+            pass_count=str(result["pass"]),
+            fail_count=str(result["fail"]),
+            error_count=str(result["error"]),
+            skip_count=str(result["skip"]),
         )
+
         return heading
 
     def _generate_report(self, result):
@@ -655,10 +451,9 @@ class HTMLTestRunner(Template_mixin):
             rows.append(row)
 
             for tid, (n, t, o, e) in enumerate(cls_results):
-                print("o", o)
                 self._generate_report_test(rows, cid, tid, n, t, o, e)
 
-        report = self.REPORT_TMPL % dict(
+        report = env.get_template('report.html').render(
             test_list=''.join(rows),
             count=str(result.success_count + result.failure_count + result.error_count),
             Pass=str(result.success_count),
@@ -671,7 +466,7 @@ class HTMLTestRunner(Template_mixin):
         return report
 
     def _generate_chart(self, result):
-        chart = self.ECHARTS_SCRIPT % dict(
+        chart = env.get_template('echarts_script.html').render(
             Pass=str(result.success_count),
             fail=str(result.failure_count),
             error=str(result.error_count),
@@ -743,34 +538,3 @@ class HTMLTestRunner(Template_mixin):
     def _generate_ending(self):
         return self.ENDING_TMPL
 
-
-##############################################################################
-# Facilities for running tests from the command line
-##############################################################################
-
-# Note: Reuse unittest.TestProgram to launch test. In the future we may
-# build our own launcher to support more specific command line
-# parameters like test title, CSS, etc.
-class TestProgram(unittest.TestProgram):
-    """
-    A variation of the unittest.TestProgram. Please refer to the base
-    class for command line parameters.
-    """
-
-    def runTests(self):
-        # Pick HTMLTestRunner as the default test runner.
-        # base class's testRunner parameter is not useful because it means
-        # we have to instantiate HTMLTestRunner before we know self.verbosity.
-        if self.testRunner is None:
-            self.testRunner = HTMLTestRunner(verbosity=self.verbosity)
-        unittest.TestProgram.runTests(self)
-
-
-main = TestProgram
-
-##############################################################################
-# Executing this module from the command line
-##############################################################################
-
-if __name__ == "__main__":
-    main(module=None)
