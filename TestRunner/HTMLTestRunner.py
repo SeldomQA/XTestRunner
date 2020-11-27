@@ -39,7 +39,9 @@ print("evn--->", env.list_templates())
 
 
 class OutputRedirector(object):
-    """ Wrapper to redirect stdout or stderr """
+    """ 
+    Wrapper to redirect stdout or stderr 
+    """
 
     def __init__(self, fp):
         self.fp = fp
@@ -300,7 +302,9 @@ class HTMLTestRunner(Template_mixin):
         self.startTime = datetime.datetime.now()
 
     def run(self, test, rerun=0, save_last_run=False):
-        """Run the given test case or test suite."""
+        """
+        Run the given test case or test suite.
+        """
         result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run)
         test(result)
         self.stopTime = datetime.datetime.now()
@@ -309,8 +313,10 @@ class HTMLTestRunner(Template_mixin):
         return result
 
     def sortResult(self, result_list):
-        # unittest does not seems to run in any particular order.
-        # Here at least we want to group them together by class.
+        """
+        unittest does not seems to run in any particular order.
+        Here at least we want to group them together by class.
+        """
         rmap = {}
         classes = []
         for n, t, o, e in result_list:
