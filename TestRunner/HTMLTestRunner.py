@@ -4,7 +4,6 @@ import re
 import ast
 import io
 import sys
-import time
 import copy
 import unittest
 from xml.sax import saxutils
@@ -353,12 +352,6 @@ class HTMLTestRunner(Template_mixin):
             {"name": "Start Time", "value": startTime},
             {"name": "Duration", "value": duration},
             {"name": "Status", "value": status},
-            {"name": "Result", "value": result}
-
-            # ('Start Time', startTime),
-            # ('Duration', duration),
-            # ('Status', status),
-            # ('Result', result),
         ]
 
     def generateReport(self, test, result):
