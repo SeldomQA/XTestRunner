@@ -77,9 +77,6 @@ class Template_mixin(object):
 
     DEFAULT_TITLE = 'Unit Test Report'
 
-    HEADING_ATTRIBUTE_TMPL = """<tr><td>%(name)s:</td><td class="text-right">%(value)s</td></tr>
-"""  # variables: (name, value)
-
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
     <td>%(desc)s</td>
@@ -122,9 +119,6 @@ class Template_mixin(object):
 </tr>
 """  # variables: (tid, Class, style, desc, status)
 
-    REPORT_TEST_OUTPUT_TMPL = r"""
-%(id)s: %(output)s
-"""  # variables: (id, output)
 
     IMG_TMPL = r"""
 <a  onfocus='this.blur();' href="javacript:void(0);" onclick="show_img(this)">show</a>
@@ -134,12 +128,6 @@ class Template_mixin(object):
     <div class="imgyuan"></div>
 </div>
 """
-    # ------------------------------------------------------------------------
-    # ENDING
-    #
-
-    ENDING_TMPL = """<div id='ending'>&nbsp;</div>"""
-
 
 # -------------------- The end of the Template class -------------------
 
@@ -168,8 +156,6 @@ class _TestResult(TestResult):
 
     def startTest(self, test):
         test.imgs = getattr(test, "imgs", [])
-        # TestResult.startTest(self, test)
-        # just one buffer for both stdout and stderr
         self.outputBuffer = io.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
@@ -191,9 +177,11 @@ class _TestResult(TestResult):
         return self.outputBuffer.getvalue()
 
     def stopTest(self, test):
-        # Usually one of addSuccess, addError or addFailure would have been called.
-        # But there are some path in unittest that would bypass this.
-        # We must disconnect stdout in stopTest(), which is guaranteed to be called.
+        """
+        Usually one of addSuccess, addError or addFailure would have been called.
+        But there are some path in unittest that would bypass this.
+        We must disconnect stdout in stopTest(), which is guaranteed to be called.
+        """
         if self.rerun and self.rerun >= 1:
             if self.status == 1:
                 self.runs += 1
@@ -362,20 +350,25 @@ class HTMLTestRunner(Template_mixin):
             "skip": result.skip_count,
         }
         return [
-            ('Start Time', startTime),
-            ('Duration', duration),
-            ('Status', status),
-            ('Result', result),
+            {"name": "Start Time", "value": startTime},
+            {"name": "Duration", "value": duration},
+            {"name": "Status", "value": status},
+            {"name": "Result", "value": result}
+
+            # ('Start Time', startTime),
+            # ('Duration', duration),
+            # ('Status', status),
+            # ('Result', result),
         ]
 
     def generateReport(self, test, result):
         template = env.get_template('teamplate.html')
         stylesheet = env.get_template('stylesheet.html').render()
         report_attrs = self.getReportAttributes(result)
+
         generator = 'HTMLTestRunner %s' % version
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result)
-        ending = self._generate_ending()
         chart = self._generate_chart(result)
         
         html_content = template.render(
@@ -384,33 +377,16 @@ class HTMLTestRunner(Template_mixin):
             stylesheet=stylesheet,
             heading=heading,
             report=report,
-            ending=ending,
             chart_script=chart,
             channel=self.run_times,
         )
         self.stream.write(html_content.encode('utf8'))
 
     def _generate_heading(self, report_attrs):
-        a_lines = []
-        result = {}
-        for name, value in report_attrs:
-            if name == "Result":
-                result = value
-            else:
-                line = self.HEADING_ATTRIBUTE_TMPL % dict(
-                    name=saxutils.escape(name),
-                    value=saxutils.escape(value),
-                )
-                a_lines.append(line)
-
         heading = env.get_template('heading.html').render(
             title=self.title,
-            parameters=''.join(a_lines),
+            parameters=report_attrs,
             description=self.description,
-            pass_count=str(result["pass"]),
-            fail_count=str(result["fail"]),
-            error_count=str(result["error"]),
-            skip_count=str(result["skip"]),
         )
 
         return heading
@@ -505,8 +481,7 @@ class HTMLTestRunner(Template_mixin):
             ue = e
         else:
             ue = e
-
-        script = self.REPORT_TEST_OUTPUT_TMPL % dict(
+        script = """%(id)s: %(output)s""" % dict(
             id=tid,
             output=saxutils.escape(uo + ue),
         )
@@ -535,6 +510,4 @@ class HTMLTestRunner(Template_mixin):
         if not has_output:
             return
 
-    def _generate_ending(self):
-        return self.ENDING_TMPL
 

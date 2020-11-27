@@ -10,34 +10,38 @@
     </div>
 </nav>
 <div style="height: 260px; margin-top: 20px;">
-    <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
-        <div class='card flex-fill'>
-            <div class="card-body my-2">
-                <table class="table my-0">
-                    <tbody>
-                        {{ parameters }}
+    
+    <div class="row">
+        <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
+            <div class='card flex-fill'>
+                <div class="card-body my-2">
+                    <h4 class="header-title">Overview</h4>
+                    <table class="table my-0">
+                        <tbody>
+                            {% for p in parameters %}
+                            <tr>
+                                <td> {{ p.name }}</td>
+                                <td class="text-right">{{ p.value }}</td>
+                            </tr>
+                            {% endfor %}
+                        <!-- {{ parameters }} -->
                         <tr>
                             <td>Description:</td>
                             <td class="text-right">{{ description }}</td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div style="float:left; margin-left: 10px; margin-top: 20px;">
-        <p> Test Case Pie charts </p>
-        <h2 class="d-flex align-items-center mb-0 font-weight-light pass-color"> {{ pass_count }}</h2>
-        <a>PASSED</a><br>
-        <h2 class="d-flex align-items-center mb-0 font-weight-light fail-color">{{ fail_count }}</h2>
-        <a>FAILED</a>
-        <h2 class="d-flex align-items-center mb-0 font-weight-light error-color">{{ error_count }}</h2>
-        <a>ERRORS</a><br>
-        <h2 class="d-flex align-items-center mb-0 font-weight-light skip-color">{{ skip_count }}</h2>
-        <a>SKIPED</a><br>
-    </div>
-    <div class="testChars">
-        <canvas id="myChart" width="250" height="250"></canvas>
+        <div class="col-xl-3 col-lg-6 order-lg-1">
+            <div class="card-body">
+                <div class="testChars" style="width: 230px; height: 200px;">
+                    <canvas id="myChart" width="250" height="250"></canvas>
+                </div>
+            </div> 
+        </div>
+
     </div>
 </div>
