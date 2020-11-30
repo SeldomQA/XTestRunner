@@ -43,7 +43,7 @@ if __name__ == '__main__':
     suit.addTest(TestDemo3("test_fail"))
 
     report = "./result.html"
-    with(open('./result.html', 'wb')) as fp:
+    with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',

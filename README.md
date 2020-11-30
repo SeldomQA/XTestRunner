@@ -62,7 +62,7 @@ if __name__ == '__main__':
     suit.addTest(TestDemo2("test_success"))
     suit.addTest(TestDemo3("test_fail"))
 
-    with(open('./result.html', 'wb')) as fp:
+    with(open('test/result.html', 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='<project name>test report',
@@ -80,6 +80,44 @@ if __name__ == '__main__':
 * suit ： 运行的测试套件
 * rerun ：重跑次数
 * save_last_run ：是否保存最后一个结果
+
+## send mail
+
+HTMLTestRunner 集成了发邮件功能。
+
+```python
+import unittest
+from TestRunner import HTMLTestRunner
+from TestRunner import SMTP
+
+# ...
+
+if __name__ == '__main__':
+    suit = unittest.TestSuite()
+    # ...
+
+    report = "./result.html"
+    with(open(report, 'wb')) as fp:
+        runner = HTMLTestRunner(
+            stream=fp,
+            title='Seldom自动化测试报告',
+            description='浏览器chrome，平台windows'
+        )
+        runner.run(suit)
+    # 发邮件功能
+    smtp = SMTP(user="user@126.com", password="123", host="smtp.126.com")
+    smtp.sender(to="user@126.com", attachments=report)
+```
+
+**SMTP类说明：**
+* user 发送者邮箱帐号
+* password 发送者邮箱密码
+* host 邮箱服务器地址
+
+**sender()方法说明：**
+
+* to 接收者邮箱
+* attachments 附件
 
 ## 测试报告：
 ![](./test_report.png)
