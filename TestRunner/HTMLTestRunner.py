@@ -1,3 +1,4 @@
+from email.message import EmailMessage
 import os
 import datetime
 import re
@@ -8,18 +9,16 @@ import copy
 import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
+import smtplib
+from email.header import Header
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
 INIT_FILE = os.path.join(BASE_DIR, "__init__.py")
-
-# ------------------------------------------------------------------------
-# The redirectors below are used to capture output during testing. Output
-# sent to sys.stdout and sys.stderr are automatically captured. However
-# in some cases sys.stdout is already cached before HTMLTestRunner is
-# invoked (e.g. calling logging.basicConfig). In order to capture those
-# output, use the redirectors for the cached stream.
 
 # ---------------------------
 # Read version number
@@ -35,7 +34,6 @@ with open(INIT_FILE, 'rb') as f:
 # Define the HTML template directory
 # --------------------------
 env = Environment(loader=FileSystemLoader(HTML_DIR))
-print("evn--->", env.list_templates())
 
 
 class OutputRedirector(object):
@@ -58,6 +56,16 @@ class OutputRedirector(object):
 
 stdout_redirector = OutputRedirector(sys.stdout)
 stderr_redirector = OutputRedirector(sys.stderr)
+
+
+class RunResult:
+    """
+    Test run results
+    """
+    passed = 0
+    failed = 0
+    errors = 0
+    skiped = 0
 
 
 # ----------------------------------------------------------------------
@@ -283,6 +291,7 @@ class _TestResult(TestResult):
 
 class HTMLTestRunner(Template_mixin):
     """
+    Run the test class
     """
 
     def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None, save_last_run=True):
@@ -336,6 +345,12 @@ class HTMLTestRunner(Template_mixin):
         startTime = str(self.startTime)[:19]
         duration = str(self.stopTime - self.startTime)
         status = []
+        
+        RunResult.passed = result.success_count
+        RunResult.failed = result.failure_count
+        RunResult.errors = result.error_count
+        RunResult.Skiped = result.skip_count
+
         if result.success_count:
             status.append('Passed:%s' % result.success_count)
         if result.failure_count:
@@ -348,12 +363,7 @@ class HTMLTestRunner(Template_mixin):
             status = ' '.join(status)
         else:
             status = 'none'
-        result = {
-            "pass": result.success_count,
-            "fail": result.failure_count,
-            "error": result.error_count,
-            "skip": result.skip_count,
-        }
+
         return [
             {"name": "Start Time", "value": startTime},
             {"name": "Duration", "value": duration},
@@ -510,3 +520,57 @@ class HTMLTestRunner(Template_mixin):
             return
 
 
+class SMTP(object):
+    """
+    Mail function based on SMTP protocol
+    """
+    def __init__(self, user, password, host, port=None):
+        self.user = user
+        self.password = password
+        self.host = host
+        self.port = str(port) if port is not None else "465"
+
+    def sender(self, to=None, subject=None, contents=None, attachments=None):
+        if to is None:
+            raise ValueError("Please specify the email address to send")
+
+        if subject is None:
+            subject = 'Unit Test Report'
+        if contents is None:
+            contents = env.get_template('mail.html').render(
+                mail_pass=str(RunResult.passed), 
+                mail_fail=str(RunResult.failed),
+                mail_error=str(RunResult.errors),
+                mail_skip=str(RunResult.skiped)
+            )
+        
+        msg = MIMEMultipart()
+        msg['Subject'] = Header(subject, 'utf-8')
+        msg['From'] = self.user
+        msg['To'] = to
+
+        text = MIMEText(contents, 'html', 'utf-8')
+        msg.attach(text)
+
+        if attachments is not None:
+            att_name = "report.html"
+            if "\\" in attachments:
+                att_name = attachments.split("\\")[-1]
+            if "/" in attachments:
+                att_name = attachments.split("/")[-1]
+
+            att = MIMEApplication(open(attachments, 'rb').read())
+            att['Content-Type'] = 'application/octet-stream'
+            att["Content-Disposition"] = 'attachment; filename="{}"'.format(att_name)
+            msg.attach(att)
+
+        smtp = smtplib.SMTP()
+        try:
+            smtp.connect(self.host)
+            smtp.login(self.user, self.password)
+            smtp.sendmail(self.user, to, msg.as_string())
+            print(" 📧 Email sent successfully!!")
+        except BaseException as msg:
+            print('❌ Email failed to send!!' + str(msg))
+        finally:
+            smtp.quit()

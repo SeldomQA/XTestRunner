@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <title> Seldom自动化测试报告 </title>
-    <meta name="generator" content="HTMLTestRunner 1.0.0"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="generator" content="HTMLTestRunner 1.0.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="http://127.0.0.1:8000/static/css/app.min.css"> -->
     <link rel="stylesheet" href="http://img.itest.info/seldom.css">
 
     <style type="text/css" media="screen">
@@ -74,13 +76,12 @@
         margin-bottom: 1ex;
         margin-left: 10px;
         text-align: right;
-        margin-right: 10px;
+        margin-right: 15px;
     }
 
     #header_row {
         font-weight: bold;
         color: #606060;
-        background-color: #f5f5f5;
         border-top-width: 10px;
         border-color: #d6e9c6;
         font-size: 15px;
@@ -215,259 +216,268 @@
     }
 </style>
 </head>
+
 <body>
-<script language="javascript" type="text/javascript">
+    <script language="javascript" type="text/javascript">
 
-function show_img(obj) {
-    var obj1 = obj.nextElementSibling
-    obj1.style.display='block'
-    var index = 0;//每张图片的下标，
-    var len = obj1.getElementsByTagName('img').length;
-    var imgyuan = obj1.getElementsByClassName('imgyuan')[0]
-    //var start=setInterval(autoPlay,500);
-    obj1.onmouseover=function(){//当鼠标光标停在图片上，则停止轮播
-        clearInterval(start);
-    }
-    obj1.onmouseout=function(){//当鼠标光标停在图片上，则开始轮播
-        start=setInterval(autoPlay,1000);
-    }
-    for (var i = 0; i < len; i++) {
-        var font = document.createElement('font')
-        imgyuan.appendChild(font)
-    }
-    var lis = obj1.getElementsByTagName('font');//得到所有圆圈
-    changeImg(0)
-    var funny = function (i) {
-        lis[i].onmouseover = function () {
-            index=i
-            changeImg(i)
-        }
-    }
-    for (var i = 0; i < lis.length; i++) {
-        funny(i);
-    }
+        function show_img(obj) {
+            var obj1 = obj.nextElementSibling
+            obj1.style.display = 'block'
+            var index = 0; //每张图片的下标，
+            var len = obj1.getElementsByTagName('img').length;
+            var imgyuan = obj1.getElementsByClassName('imgyuan')[0]
+            //var start=setInterval(autoPlay,500);
+            obj1.onmouseover = function () { //当鼠标光标停在图片上，则停止轮播
+                clearInterval(start);
+            }
+            obj1.onmouseout = function () { //当鼠标光标停在图片上，则开始轮播
+                start = setInterval(autoPlay, 1000);
+            }
+            for (var i = 0; i < len; i++) {
+                var font = document.createElement('font')
+                imgyuan.appendChild(font)
+            }
+            var lis = obj1.getElementsByTagName('font'); //得到所有圆圈
+            changeImg(0)
+            var funny = function (i) {
+                lis[i].onmouseover = function () {
+                    index = i
+                    changeImg(i)
+                }
+            }
+            for (var i = 0; i < lis.length; i++) {
+                funny(i);
+            }
 
-    function autoPlay(){
-        if(index>len-1){
-            index=0;
-            clearInterval(start); //运行一轮后停止
-        }
-        changeImg(index++);
-    }
-    imgyuan.style.width= 25*len +"px";
-    //对应圆圈和图片同步
-    function changeImg(index) {
-        var list = obj1.getElementsByTagName('img');
-        var list1 = obj1.getElementsByTagName('font');
-        for (i = 0; i < list.length; i++) {
-            list[i].style.display = 'none';
-            list1[i].style.backgroundColor = 'white';
-        }
-        list[index].style.display = 'block';
-        list1[index].style.backgroundColor = 'red';
-    }
-}
-
-function hide_img(obj){
-    obj.parentElement.style.display = "none";
-    obj.parentElement.getElementsByClassName('imgyuan')[0].innerHTML = "";
-}
-
-output_list = Array();
-/* level - 0:Summary; 1:Failed; 2:Skip; 3:All */
-function showCase(level, channel) {
-    trs = document.getElementsByTagName("tr");
-    for (var i = 0; i < trs.length; i++) {
-        tr = trs[i];
-        id = tr.id;
-        if (["ft","pt","et","st"].indexOf(id.substr(0,2))!=-1){
-           if ( level == 0 && id.substr(2,1) == channel ) {
-                tr.className = 'hiddenRow';
+            function autoPlay() {
+                if (index > len - 1) {
+                    index = 0;
+                    clearInterval(start); //运行一轮后停止
+                }
+                changeImg(index++);
+            }
+            imgyuan.style.width = 25 * len + "px";
+            //对应圆圈和图片同步
+            function changeImg(index) {
+                var list = obj1.getElementsByTagName('img');
+                var list1 = obj1.getElementsByTagName('font');
+                for (i = 0; i < list.length; i++) {
+                    list[i].style.display = 'none';
+                    list1[i].style.backgroundColor = 'white';
+                }
+                list[index].style.display = 'block';
+                list1[index].style.backgroundColor = 'red';
             }
         }
-        if (id.substr(0,3) == 'pt'+ channel) {
-            if ( level == 1){
-                tr.className = '';
+
+        function hide_img(obj) {
+            obj.parentElement.style.display = "none";
+            obj.parentElement.getElementsByClassName('imgyuan')[0].innerHTML = "";
+        }
+
+        output_list = Array();
+        /* level 
+        - 0:Summary; 
+        - 1:Failed; 
+        - 2:Skip; 
+        - 3:All 
+        */
+        function showCase(level, channel) {
+            trs = document.getElementsByTagName("tr");
+            for (var i = 0; i < trs.length; i++) {
+                tr = trs[i];
+                id = tr.id;
+                if (["ft", "pt", "et", "st"].indexOf(id.substr(0, 2)) != -1) {
+                    if (level == 0 && id.substr(2, 1) == channel) {
+                        tr.className = 'hiddenRow';
+                    }
+                }
+                if (id.substr(0, 3) == 'pt' + channel) {
+                    if (level == 1) {
+                        tr.className = '';
+                    }
+                    else if (level > 4 && id.substr(2, 1) == channel) {
+                        tr.className = '';
+                    }
+                    else {
+                        tr.className = 'hiddenRow';
+                    }
+                }
+                if (id.substr(0, 3) == 'ft' + channel) {
+                    if (level == 2) {
+                        tr.className = '';
+                    }
+                    else if (level > 4 && id.substr(2, 1) == channel) {
+                        tr.className = '';
+                    }
+                    else {
+                        tr.className = 'hiddenRow';
+                    }
+                }
+                if (id.substr(0, 3) == 'et' + channel) {
+                    if (level == 3) {
+                        tr.className = '';
+                    }
+                    else if (level > 4 && id.substr(2, 1) == channel) {
+                        tr.className = '';
+                    }
+                    else {
+                        tr.className = 'hiddenRow';
+                    }
+                }
+                if (id.substr(0, 3) == 'st' + channel) {
+                    if (level == 4) {
+                        tr.className = '';
+                    }
+                    else if (level > 4 && id.substr(2, 1) == channel) {
+                        tr.className = '';
+                    }
+                    else {
+                        tr.className = 'hiddenRow';
+                    }
+                }
             }
-            else if  (level > 4 && id.substr(2,1) == channel ){
-                tr.className = '';
+        }
+        function showClassDetail(cid, count) {
+            var id_list = Array(count);
+            var toHide = 1;
+            for (var i = 0; i < count; i++) {
+                tid0 = 't' + cid.substr(1) + '.' + (i + 1);
+                tid = 'f' + tid0;
+                tr = document.getElementById(tid);
+                if (!tr) {
+                    tid = 'p' + tid0;
+                    tr = document.getElementById(tid);
+                }
+                if (!tr) {
+                    tid = 'e' + tid0;
+                    tr = document.getElementById(tid);
+                }
+                if (!tr) {
+                    tid = 's' + tid0;
+                    tr = document.getElementById(tid);
+                }
+                id_list[i] = tid;
+                if (tr.className) {
+                    toHide = 0;
+                }
+            }
+            for (var i = 0; i < count; i++) {
+                tid = id_list[i];
+                if (toHide) {
+                    document.getElementById(tid).className = 'hiddenRow';
+                }
+                else {
+                    document.getElementById(tid).className = '';
+                }
+            }
+        }
+        function showTestDetail(div_id) {
+            var details_div = document.getElementById(div_id)
+            var displayState = details_div.style.display
+
+            if (displayState != 'block') {
+                displayState = 'block'
+                details_div.style.display = 'block'
             }
             else {
-                tr.className = 'hiddenRow';
-            }
-         }
-        if (id.substr(0,3) == 'ft'+channel) {
-            if (level == 2) {
-                tr.className = '';
-            }
-            else if  (level > 4 && id.substr(2,1) == channel ){
-                tr.className = '';
-            }
-            else {
-                tr.className = 'hiddenRow';
-            }
-          }
-        if (id.substr(0,3) == 'et'+channel) {
-            if (level == 3) {
-                tr.className = '';
-            }
-            else if  (level > 4 && id.substr(2,1) == channel ){
-                tr.className = '';
-            }
-            else {
-                tr.className = 'hiddenRow';
+                details_div.style.display = 'none'
             }
         }
-        if (id.substr(0,3) == 'st'+channel) {
-            if (level == 4) {
-                tr.className = '';
-            }
-            else if  (level > 4 && id.substr(2,1) == channel ){
-                tr.className = '';
-            }
-            else {
-                tr.className = 'hiddenRow';
-            }
+        function html_escape(s) {
+            s = s.replace(/&/g, '&amp;');
+            s = s.replace(/</g, '&lt;');
+            s = s.replace(/>/g, '&gt;');
+            return s;
         }
-    }
-}
-function showClassDetail(cid, count) {
-    var id_list = Array(count);
-    var toHide = 1;
-    for (var i = 0; i < count; i++) {
-        tid0 = 't' + cid.substr(1) + '.' + (i+1);
-        tid = 'f' + tid0;
-        tr = document.getElementById(tid);
-        if (!tr) {
-            tid = 'p' + tid0;
-            tr = document.getElementById(tid);
-        }
-        if (!tr) {
-            tid = 'e' + tid0;
-            tr = document.getElementById(tid);
-        }
-        if (!tr) {
-            tid = 's' + tid0;
-            tr = document.getElementById(tid);
-        }
-        id_list[i] = tid;
-        if (tr.className) {
-            toHide = 0;
-        }
-    }
-    for (var i = 0; i < count; i++) {
-        tid = id_list[i];
-        if (toHide) {
-            document.getElementById(tid).className = 'hiddenRow';
-        }
-        else {
-            document.getElementById(tid).className = '';
-        }
-    }
-}
-function showTestDetail(div_id){
-    var details_div = document.getElementById(div_id)
-    var displayState = details_div.style.display
+    </script>
 
-    if (displayState != 'block' ) {
-        displayState = 'block'
-        details_div.style.display = 'block'
-    }
-    else {
-        details_div.style.display = 'none'
-    }
-}
-function html_escape(s) {
-    s = s.replace(/&/g,'&amp;');
-    s = s.replace(/</g,'&lt;');
-    s = s.replace(/>/g,'&gt;');
-    return s;
-}
-</script>
-
-<nav class="navbar navbar-expand navbar-light bg-white">
+    <nav class="navbar navbar-expand navbar-light bg-dark">
     <a class="sidebar-toggle d-flex mr-2">
         <i class="hamburger align-self-center"></i>
     </a>
-    <h1 style="margin-bottom: 0px;">seldom</h1>
+    <h1 style="margin-bottom: 0px; color: azure;">seldom</h1>
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav ml-auto">
-            <h3 style="float: right;"> Seldom自动化测试报告</h3>
+            <h3 style="float: right; color: azure;"> Seldom自动化测试报告</h3>
         </ul>
     </div>
 </nav>
-<div style="height: 260px; margin-top: 20px;">
-    
-    <div class="row">
-        <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
-            <div class='card flex-fill'>
-                <div class="card-body my-2">
-                    <h4 class="header-title">Overview</h4>
-                    <table class="table my-0">
-                        <tbody>
-                            
-                            <tr>
-                                <td> Start Time</td>
-                                <td class="text-right">2020-11-27 18:26:53</td>
-                            </tr>
-                            
-                            <tr>
-                                <td> Duration</td>
-                                <td class="text-right">0:00:00.001004</td>
-                            </tr>
-                            
-                            <tr>
-                                <td> Status</td>
-                                <td class="text-right">Passed:2 Failed:2 Errors:1 Skiped:1</td>
-                            </tr>
-                            
-                            <tr>
-                                <td> Result</td>
-                                <td class="text-right">{'pass': 2, 'fail': 2, 'error': 1, 'skip': 1}</td>
-                            </tr>
-                            
-                        <!-- [{'name': 'Start Time', 'value': '2020-11-27 18:26:53'}, {'name': 'Duration', 'value': '0:00:00.001004'}, {'name': 'Status', 'value': 'Passed:2 Failed:2 Errors:1 Skiped:1'}, {'name': 'Result', 'value': {'pass': 2, 'fail': 2, 'error': 1, 'skip': 1}}] -->
-                        <tr>
-                            <td>Description:</td>
-                            <td class="text-right">浏览器chrome，平台windows</td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+<div class="container-fluid mm-active" style="padding-left: 35px;padding-right: 35px; padding-bottom:100px;">
+    <div style="height: 260px; margin-top: 20px;">
+        
+        <div class="row" style="margin-left: 0px; margin-right: 0px;">
+            <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
+                <div class='card flex-fill'>
+                    <div class="card-body my-2">
+                        <h4 class="header-title">Overview</h4>
+                        <table class="table my-0">
+                            <tbody>
+                                
+                                <tr>
+                                    <td> Start Time</td>
+                                    <td class="text-right">2020-11-30 23:04:27</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td> Duration</td>
+                                    <td class="text-right">0:00:00.000983</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td> Status</td>
+                                    <td class="text-right">Passed:2 Failed:2 Errors:1 Skiped:1</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td>Description:</td>
+                                    <td class="text-right">浏览器chrome，平台windows</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-xl-3 col-lg-6 order-lg-1">
-            <div class="card-body">
-                <div class="testChars" style="width: 230px; height: 200px;">
-                    <canvas id="myChart" width="250" height="250"></canvas>
-                </div>
-            </div> 
-        </div>
+            <div class="col-xl-3 col-lg-6 order-lg-1">
+                <div class="card-body">
+                    <div class="testChars" style="width: 230px; height: 200px;">
+                        <canvas id="myChart" width="250" height="250"></canvas>
+                    </div>
+                </div> 
+            </div>
 
+        </div>
     </div>
+    <div style="margin-left: 10px; margin-top: 30px;">
+    <p id='show_detail_line' >
+        <a href='javascript:showCase(0, 1)' class="btn btn-dark btn-sm">Summary</a>
+        <a href='javascript:showCase(1, 1)' class="btn btn-success btn-sm">Pass</a>
+        <a href='javascript:showCase(2, 1)' class="btn btn-warning btn-sm">Failed</a>
+        <a href='javascript:showCase(3, 1)' class="btn btn-danger btn-sm">Error</a>
+        <a href='javascript:showCase(4, 1)' class="btn btn-secondary btn-sm">Skip</a>
+        <a href='javascript:showCase(5, 1)' class="btn btn-info btn-sm">All</a>
+    </p>
 </div>
-<p id='show_detail_line' style="margin-left: 10px; margin-top: 30px;">
-    <a href='javascript:showCase(0, 1)' class="btn btn-dark btn-sm">Summary</a>
-    <a href='javascript:showCase(1, 1)' class="btn btn-success btn-sm">Pass</a>
-    <a href='javascript:showCase(2, 1)' class="btn btn-warning btn-sm">Failed</a>
-    <a href='javascript:showCase(3, 1)' class="btn btn-danger btn-sm">Error</a>
-    <a href='javascript:showCase(4, 1)' class="btn btn-light btn-sm">Skip</a>
-    <a href='javascript:showCase(5, 1)' class="btn btn-info btn-sm">All</a>
-</p>
-<table class="table mb-0">
-    <thead>
-        <tr id='header_row'>
-            <td>Test Group/Test case</td>
-            <td>Count</td>
-            <td>Pass</td>
-            <td>Fail</td>
-            <td>Error</td>
-            <td>View</td>
-            <td>Screenshots</td>
-        </tr>
-    </thead>
-    
+
+<div class="col-12 d-flex">
+    <div class='card flex-fill'>
+        <div class="card-body my-2">
+            <h4 class="header-title">Result</h4>
+            <table class="table mb-0">
+                <thead>
+                    <tr id='header_row'>
+                        <td>Test Group/Test case</td>
+                        <td>Count</td>
+                        <td>Pass</td>
+                        <td>Fail</td>
+                        <td>Error</td>
+                        <td>View</td>
+                        <td>Screenshots</td>
+                    </tr>
+                </thead>
+                
 <tr class='errorClass'>
     <td>TestDemo: 测试用例说明</td>
     <td>3</td>
@@ -517,7 +527,7 @@ function html_escape(s) {
         </div>
         <pre>
         ft1.1.3: Traceback (most recent call last):
-  File ".\test_HTMLTestRunner.py", line 17, in test_fail
+  File ".\test_case.py", line 18, in test_fail
     self.assertEqual(5, 6)
 AssertionError: 5 != 6
 
@@ -541,7 +551,7 @@ AssertionError: 5 != 6
         </div>
         <pre>
         et1.1.4: Traceback (most recent call last):
-  File ".\test_HTMLTestRunner.py", line 20, in test_error
+  File ".\test_case.py", line 21, in test_error
     self.assertEqual(a, 6)
 NameError: name 'a' is not defined
 
@@ -591,7 +601,7 @@ NameError: name 'a' is not defined
         </div>
         <pre>
         ft1.3.1: Traceback (most recent call last):
-  File ".\test_HTMLTestRunner.py", line 32, in test_fail
+  File ".\test_case.py", line 33, in test_fail
     self.assertEqual(3, 4)
 AssertionError: 3 != 4
 
@@ -602,20 +612,21 @@ AssertionError: 3 != 4
     <td></td>
 </tr>
 
-    <tr id='total_row'>
-        <td>Total</td>
-        <td>5</td>
-        <td class="text text-success">2</td>
-        <td class="text text-danger">2</td>
-        <td class="text text-warning">1</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
+                <tr id='total_row'>
+                    <td>Total</td>
+                    <td>5</td>
+                    <td class="text text-success">2</td>
+                    <td class="text text-danger">2</td>
+                    <td class="text text-warning">1</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
-<div id='ending'>&nbsp;@重定向科技; itest.info </div>
-
-<script src="https://cdn.bootcss.com/Chart.js/2.1.6/Chart.bundle.js"></script>
+    <script src="https://cdn.bootcss.com/Chart.js/2.1.6/Chart.bundle.js"></script>
 <script type="text/javascript">
 
     var data = {
@@ -640,16 +651,35 @@ AssertionError: 3 != 4
                     "#ff5b5b",
                     "#98a6ad"
                 ]
-            }]
+            }
+        ]
     };
     var ctx = document.getElementById("myChart").getContext("2d");
     var myNewChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            // options: options
+        type: 'doughnut',
+        data: data,
+        // options: options
     });
 
 </script>
 
+</div>
+
+<footer class="footer" style="height: 50px;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                2020 © 重定向科技 - http://itest.info
+            </div>
+            <div class="col-md-6">
+                <div class="text-md-right footer-links d-none d-md-block">
+                    <a href="https://github.com/SeldomQA/HTMLTestRunner">HTMLTestRunner</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </body>
+
 </html>

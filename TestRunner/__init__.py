@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # URL: https://github.com/SeldomQA/HTMLTestRunner
 
 from .HTMLTestRunner import HTMLTestRunner
+from .HTMLTestRunner import SMTP
+
 
 __author__ = "bugmaster"
 
