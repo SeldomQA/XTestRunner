@@ -1,11 +1,12 @@
 from email.message import EmailMessage
 import os
-import datetime
 import re
-import ast
 import io
+import ast
 import sys
 import copy
+import time
+import datetime
 import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
@@ -66,6 +67,7 @@ class RunResult:
     failed = 0
     errors = 0
     skiped = 0
+    runtime = []
 
 
 # ----------------------------------------------------------------------
@@ -88,6 +90,7 @@ class Template_mixin(object):
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
+    <td>%(name)s</td>
     <td>%(desc)s</td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
@@ -100,7 +103,12 @@ class Template_mixin(object):
 
     REPORT_TEST_WITH_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
+    <td class='%(style)s'>
+        <div class='testcase'>%(casename)s</div>
+    </td>
+    <td style="color: #495057">
+        <div>%(desc)s</div>
+    </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
     <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
@@ -122,7 +130,12 @@ class Template_mixin(object):
 
     REPORT_TEST_NO_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
+    <td class='%(style)s'>
+        <div class='testcase'>%(casename)s</div>
+    </td>
+    <td style="color: #495057">
+        <div>%(desc)s</div>
+    </td>
     <td colspan='5' align='center'>%(status)s</td>
     <td>%(img)s</td>
 </tr>
@@ -162,8 +175,11 @@ class _TestResult(TestResult):
         self.status = 0
         self.runs = 0
         self.result = []
+        self.case_start_time = None
+        self.case_end_time = None
 
     def startTest(self, test):
+        self.case_start_time = time.time()
         test.imgs = getattr(test, "imgs", [])
         self.outputBuffer = io.StringIO()
         stdout_redirector.fp = self.outputBuffer
@@ -217,6 +233,8 @@ class _TestResult(TestResult):
                     self.status = 0
                     self.runs = 0
         self.complete_output()
+        self.case_end_time = time.time()
+        RunResult.runtime.append(self.case_end_time - self.case_start_time)
 
     def addSuccess(self, test):
         self.success_count += 1
@@ -350,7 +368,7 @@ class HTMLTestRunner(Template_mixin):
         RunResult.failed = result.failure_count
         RunResult.errors = result.error_count
         RunResult.Skiped = result.skip_count
-
+        print("测试时间记录", RunResult.runtime)
         if result.success_count:
             status.append('Passed:%s' % result.success_count)
         if result.failure_count:
@@ -422,11 +440,12 @@ class HTMLTestRunner(Template_mixin):
             else:
                 name = "%s.%s" % (cls.__module__, cls.__name__)
             doc = cls.__doc__ or ""
-            desc = doc and '%s: %s' % (name, doc) or name
+            # desc = doc and '%s: %s' % (name, doc) or name
 
             row = self.REPORT_CLASS_TMPL % dict(
                 style=ne > 0 and 'errorClass' or nf > 0 and 'failClass' or 'passClass',
-                desc=desc,
+                name=name,
+                desc=doc,
                 count=np + nf + ne,
                 Pass=np,
                 fail=nf,
@@ -474,7 +493,7 @@ class HTMLTestRunner(Template_mixin):
         # tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = t.id().split('.')[-1]
         doc = t.shortDescription() or ""
-        desc = doc and ('%s: %s' % (name, doc)) or name
+        # desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
 
         # o and e should be byte string because they are collected from stdout and stderr?
@@ -510,7 +529,8 @@ class HTMLTestRunner(Template_mixin):
             tid=tid,
             Class=(n == 0 and 'hiddenRow' or 'none'),
             style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'passCase'),
-            desc=desc,
+            casename=name,
+            desc=doc,
             script=script,
             status=self.STATUS[n],
             img=screenshots_html
