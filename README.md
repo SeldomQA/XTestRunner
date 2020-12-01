@@ -119,5 +119,9 @@ if __name__ == '__main__':
 * to 接收者邮箱
 * attachments 附件
 
-## 测试报告：
-![](./test_report.png)
+## show
+* test report
+![](test/img/test_report.png)
+
+* mail
+![](test/img/test_mail.png)
