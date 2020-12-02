@@ -92,6 +92,7 @@ class Template_mixin(object):
 <tr class='%(style)s'>
     <td>%(name)s</td>
     <td>%(desc)s</td>
+    <td></td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
@@ -108,6 +109,9 @@ class Template_mixin(object):
     </td>
     <td style="color: #495057">
         <div>%(desc)s</div>
+    </td>
+    <td style="color: #495057">
+        <div>%(runtime)s s</div>
     </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
@@ -135,6 +139,9 @@ class Template_mixin(object):
     </td>
     <td style="color: #495057">
         <div>%(desc)s</div>
+    </td>
+    <td style="color: #495057">
+        <div>%(runtime)s s</div>
     </td>
     <td colspan='5' align='center'>%(status)s</td>
     <td>%(img)s</td>
@@ -234,7 +241,8 @@ class _TestResult(TestResult):
                     self.runs = 0
         self.complete_output()
         self.case_end_time = time.time()
-        RunResult.runtime.append(self.case_end_time - self.case_start_time)
+        case_run_time = self.case_end_time - self.case_start_time
+        RunResult.runtime.append("%.2f" % case_run_time)
 
     def addSuccess(self, test):
         self.success_count += 1
@@ -421,6 +429,7 @@ class HTMLTestRunner(Template_mixin):
     def _generate_report(self, result):
         rows = []
         sortedResult = self.sortResult(result.result)
+        case_count = 0
         for cid, (cls, cls_results) in enumerate(sortedResult):
             # subtotal for a class
             np = nf = ne = ns = 0
@@ -455,7 +464,8 @@ class HTMLTestRunner(Template_mixin):
             rows.append(row)
 
             for tid, (n, t, o, e) in enumerate(cls_results):
-                self._generate_report_test(rows, cid, tid, n, t, o, e)
+                self._generate_report_test(rows, cid, tid, n, t, o, e, case_count)
+                case_count = case_count + 1
 
         report = env.get_template('report.html').render(
             test_list=''.join(rows),
@@ -478,7 +488,7 @@ class HTMLTestRunner(Template_mixin):
         )
         return chart
 
-    def _generate_report_test(self, rows, cid, tid, n, t, o, e):
+    def _generate_report_test(self, rows, cid, tid, n, t, o, e, c):
         # e.g. 'pt1.1', 'ft1.1','et1.1', 'st1.1' etc
         has_output = bool(o or e)
         if n == 0:
@@ -531,6 +541,7 @@ class HTMLTestRunner(Template_mixin):
             style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'passCase'),
             casename=name,
             desc=doc,
+            runtime=RunResult.runtime[c],
             script=script,
             status=self.STATUS[n],
             img=screenshots_html
