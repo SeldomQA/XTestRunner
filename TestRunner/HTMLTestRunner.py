@@ -67,7 +67,6 @@ class RunResult:
     failed = 0
     errors = 0
     skiped = 0
-    runtime = []
 
 
 # ----------------------------------------------------------------------
@@ -188,6 +187,7 @@ class _TestResult(TestResult):
     def startTest(self, test):
         self.case_start_time = time.time()
         test.imgs = getattr(test, "imgs", [])
+        test.runtime = getattr(test, "runtime", None)
         self.outputBuffer = io.StringIO()
         stdout_redirector.fp = self.outputBuffer
         stderr_redirector.fp = self.outputBuffer
@@ -242,7 +242,7 @@ class _TestResult(TestResult):
         self.complete_output()
         self.case_end_time = time.time()
         case_run_time = self.case_end_time - self.case_start_time
-        RunResult.runtime.append("%.2f" % case_run_time)
+        test.runtime = "%.2f" % case_run_time
 
     def addSuccess(self, test):
         self.success_count += 1
@@ -376,7 +376,6 @@ class HTMLTestRunner(Template_mixin):
         RunResult.failed = result.failure_count
         RunResult.errors = result.error_count
         RunResult.Skiped = result.skip_count
-        print("测试时间记录", RunResult.runtime)
         if result.success_count:
             status.append('Passed:%s' % result.success_count)
         if result.failure_count:
@@ -429,7 +428,6 @@ class HTMLTestRunner(Template_mixin):
     def _generate_report(self, result):
         rows = []
         sortedResult = self.sortResult(result.result)
-        case_count = 0
         for cid, (cls, cls_results) in enumerate(sortedResult):
             # subtotal for a class
             np = nf = ne = ns = 0
@@ -464,8 +462,7 @@ class HTMLTestRunner(Template_mixin):
             rows.append(row)
 
             for tid, (n, t, o, e) in enumerate(cls_results):
-                self._generate_report_test(rows, cid, tid, n, t, o, e, case_count)
-                case_count = case_count + 1
+                self._generate_report_test(rows, cid, tid, n, t, o, e)
 
         report = env.get_template('report.html').render(
             test_list=''.join(rows),
@@ -488,7 +485,7 @@ class HTMLTestRunner(Template_mixin):
         )
         return chart
 
-    def _generate_report_test(self, rows, cid, tid, n, t, o, e, c):
+    def _generate_report_test(self, rows, cid, tid, n, t, o, e):
         # e.g. 'pt1.1', 'ft1.1','et1.1', 'st1.1' etc
         has_output = bool(o or e)
         if n == 0:
@@ -523,8 +520,8 @@ class HTMLTestRunner(Template_mixin):
             id=tid,
             output=saxutils.escape(uo + ue),
         )
+        # add image
         if getattr(t, 'imgs', []):
-            # 判断截图列表，如果有则追加
             tmp = ""
             for i, img in enumerate(t.imgs):
                 if i == 0:
@@ -535,13 +532,19 @@ class HTMLTestRunner(Template_mixin):
         else:
             screenshots_html = """"""
 
+        # add runtime
+        if getattr(t, 'runtime', []):
+            runtime = t.runtime
+        else:
+            runtime = "0.00"
+
         row = tmpl % dict(
             tid=tid,
             Class=(n == 0 and 'hiddenRow' or 'none'),
             style=n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'passCase'),
             casename=name,
             desc=doc,
-            runtime=RunResult.runtime[c],
+            runtime=runtime,
             script=script,
             status=self.STATUS[n],
             img=screenshots_html
