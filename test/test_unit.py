@@ -47,7 +47,7 @@ if __name__ == '__main__':
         runner = HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',
-            description='浏览器chrome，平台windows'
+            description='单元测试'
         )
         runner.run(suit)
     # 发邮件功能
