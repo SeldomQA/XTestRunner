@@ -22,7 +22,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'jinja2>=2.11.2',
+        'jinja2==2.11.2',
     ],
     classifiers=[
         'Intended Audience :: Developers',
@@ -32,7 +32,17 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         "Topic :: Software Development :: Testing",
+    ],
+    py_modules=['whyteboard'],
+    scripts=[
+        'TestRunner/html/charts_script.html',
+        'TestRunner/html/heading.html',
+        'TestRunner/html/mail.html',
+        'TestRunner/html/report.html',
+        'TestRunner/html/stylesheet.html',
+        'TestRunner/html/template.html',
     ],
 )
