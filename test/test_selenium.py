@@ -3,6 +3,10 @@ from time import sleep
 from TestRunner import HTMLTestRunner
 from selenium import webdriver
 
+"""
+注意：驱动必须定义为 `driver`， 否则无法生成截图
+"""
+
 
 class YouTest(unittest.TestCase):
 

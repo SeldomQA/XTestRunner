@@ -15,7 +15,7 @@ Version in 0.8.1
 * Added description of test classes and test cases.
 
 Version in 0.8.0
-* Define Template_mixin class for customization.
+* Define TemplateMixing class for customization.
 * Workaround a IE 6 bug that it does not treat <script> block as CDATA.
 
 Version in 0.7.1

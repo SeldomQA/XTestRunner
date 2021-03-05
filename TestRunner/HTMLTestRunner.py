@@ -72,7 +72,7 @@ class RunResult:
 # ----------------------------------------------------------------------
 # Template
 
-class Template_mixin(object):
+class TemplateMixing(object):
     """
     Define a HTML template for report customerization and generation.
     Overall structure of an HTML report
@@ -264,14 +264,9 @@ class _TestResult(TestResult):
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
         self.result.append((2, test, output, _exc_str))
-        if not getattr(test, "driver", ""):
-            pass
-        else:
-            try:
-                driver = getattr(test, "driver")
-                test.imgs.append(driver.get_screenshot_as_base64())
-            except BaseException:
-                pass
+        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
+            driver = getattr(test, "driver")
+            test.imgs.append(driver.get_screenshot_as_base64())
         if self.verbosity > 1:
             sys.stderr.write('E  ')
             sys.stderr.write(str(test))
@@ -286,14 +281,9 @@ class _TestResult(TestResult):
         _, _exc_str = self.failures[-1]
         output = self.complete_output()
         self.result.append((1, test, output, _exc_str))
-        if not getattr(test, "driver", ""):
-            pass
-        else:
-            try:
-                driver = getattr(test, "driver")
-                test.imgs.append(driver.get_screenshot_as_base64())
-            except BaseException:
-                pass
+        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
+            driver = getattr(test, "driver")
+            test.imgs.append(driver.get_screenshot_as_base64())
         if self.verbosity > 1:
             sys.stderr.write('F  ')
             sys.stderr.write(str(test))
@@ -315,7 +305,7 @@ class _TestResult(TestResult):
             sys.stderr.write('S')
 
 
-class HTMLTestRunner(Template_mixin):
+class HTMLTestRunner(TemplateMixing):
     """
     Run the test class
     """
@@ -334,7 +324,7 @@ class HTMLTestRunner(Template_mixin):
         else:
             self.description = description
 
-        self.startTime = datetime.datetime.now()
+        self.start_time = datetime.datetime.now()
 
     def run(self, test, rerun=0, save_last_run=False):
         """
@@ -342,7 +332,7 @@ class HTMLTestRunner(Template_mixin):
         """
         result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run)
         test(result)
-        self.stopTime = datetime.datetime.now()
+        self.end_time = datetime.datetime.now()
         self.run_times += 1
         self.generateReport(test, result)
         return result
@@ -356,7 +346,7 @@ class HTMLTestRunner(Template_mixin):
         classes = []
         for n, t, o, e in result_list:
             cls = t.__class__
-            if not cls in rmap:
+            if cls not in rmap:
                 rmap[cls] = []
                 classes.append(cls)
             rmap[cls].append((n, t, o, e))
@@ -368,10 +358,10 @@ class HTMLTestRunner(Template_mixin):
         Return report attributes as a list of (name, value).
         Override this to add custom attributes.
         """
-        startTime = str(self.startTime)[:19]
-        duration = str(self.stopTime - self.startTime)
+        start_time_format = str(self.start_time)[:19]
+        duration = str(self.end_time - self.start_time)
         status = []
-        
+
         RunResult.passed = result.success_count
         RunResult.failed = result.failure_count
         RunResult.errors = result.error_count
@@ -390,7 +380,7 @@ class HTMLTestRunner(Template_mixin):
             status = 'none'
 
         return [
-            {"name": "Start Time", "value": startTime},
+            {"name": "Start Time", "value": start_time_format},
             {"name": "Duration", "value": duration},
             {"name": "Status", "value": status},
         ]
@@ -427,8 +417,8 @@ class HTMLTestRunner(Template_mixin):
 
     def _generate_report(self, result):
         rows = []
-        sortedResult = self.sortResult(result.result)
-        for cid, (cls, cls_results) in enumerate(sortedResult):
+        sorted_result = self.sortResult(result.result)
+        for cid, (cls, cls_results) in enumerate(sorted_result):
             # subtotal for a class
             np = nf = ne = ns = 0
             for n, t, o, e in cls_results:
@@ -476,7 +466,8 @@ class HTMLTestRunner(Template_mixin):
         )
         return report
 
-    def _generate_chart(self, result):
+    @staticmethod
+    def _generate_chart(result):
         chart = env.get_template('charts_script.html').render(
             Pass=str(result.success_count),
             fail=str(result.failure_count),
