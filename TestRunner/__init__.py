@@ -3,7 +3,7 @@ A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
 
 ------------------------------------------------------------------------
-Copyright (c) 2004-2020, bugmaster
+Copyright (c) 2004-2021, bugmaster
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
