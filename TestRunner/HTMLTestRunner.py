@@ -589,9 +589,8 @@ class SMTP(object):
             att["Content-Disposition"] = 'attachment; filename="{}"'.format(att_name)
             msg.attach(att)
 
-        smtp = smtplib.SMTP()
         try:
-            smtp.connect(self.host)
+            smtp = smtplib.SMTP_SSL(self.host, self.port)
             smtp.login(self.user, self.password)
             smtp.sendmail(self.user, to, msg.as_string())
             print(" 📧 Email sent successfully!!")
