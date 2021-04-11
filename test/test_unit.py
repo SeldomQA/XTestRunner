@@ -51,5 +51,7 @@ if __name__ == '__main__':
         )
         runner.run(suit)
     # 发邮件功能
+    # 使用126邮箱发送时password应为授权码而非用户密码，须在邮箱客户端设置开启授权码
+    # 使用gmail邮箱发送时password为用户密码，须在gmail客户端开启安全性较低的应用的访问权限
     smtp = SMTP(user="user@126.com", password="123", host="smtp.126.com")
     smtp.sender(to="user@126.com", attachments=report)
