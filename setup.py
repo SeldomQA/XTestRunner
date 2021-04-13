@@ -22,7 +22,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'jinja2==2.11.2',
+        'jinja2>=2.11.3',
     ],
     classifiers=[
         'Intended Audience :: Developers',
