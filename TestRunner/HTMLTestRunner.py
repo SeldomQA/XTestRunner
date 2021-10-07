@@ -66,7 +66,7 @@ class RunResult:
     passed = 0
     failed = 0
     errors = 0
-    skiped = 0
+    skipped = 0
 
 
 # ----------------------------------------------------------------------
@@ -146,7 +146,6 @@ class TemplateMixing(object):
     <td>%(img)s</td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
-
 
     IMG_TMPL = r"""
 <a  onfocus='this.blur();' href="javacript:void(0);" onclick="show_img(this)">show</a>
@@ -570,6 +569,7 @@ class SMTP(object):
     """
     Mail function based on SMTP protocol
     """
+
     def __init__(self, user, password, host, port=None):
         self.user = user
         self.password = password
@@ -580,6 +580,12 @@ class SMTP(object):
         if to is None:
             raise ValueError("Please specify the email address to send")
 
+        if isinstance(to, str):
+            to = [to]
+
+        if isinstance(to, list) is False:
+            raise ValueError("Received mail type error")
+
         if subject is None:
             subject = 'Unit Test Report'
         if contents is None:
@@ -587,13 +593,13 @@ class SMTP(object):
                 mail_pass=str(RunResult.passed), 
                 mail_fail=str(RunResult.failed),
                 mail_error=str(RunResult.errors),
-                mail_skip=str(RunResult.skiped)
+                mail_skip=str(RunResult.skipped)
             )
         
         msg = MIMEMultipart()
         msg['Subject'] = Header(subject, 'utf-8')
         msg['From'] = self.user
-        msg['To'] = to
+        msg['To'] = ",".join(to)
 
         text = MIMEText(contents, 'html', 'utf-8')
         msg.attach(text)
@@ -610,12 +616,12 @@ class SMTP(object):
             att["Content-Disposition"] = 'attachment; filename="{}"'.format(att_name)
             msg.attach(att)
 
+        smtp = smtplib.SMTP_SSL(self.host, self.port)
         try:
-            smtp = smtplib.SMTP_SSL(self.host, self.port)
             smtp.login(self.user, self.password)
             smtp.sendmail(self.user, to, msg.as_string())
             print(" 📧 Email sent successfully!!")
         except BaseException as msg:
-            print('❌ Email failed to send!!' + str(msg))
+            print('❌ Email failed to send!!' + msg.__str__())
         finally:
             smtp.quit()

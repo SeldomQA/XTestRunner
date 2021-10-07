@@ -107,6 +107,8 @@ if __name__ == '__main__':
     # 发邮件功能
     smtp = SMTP(user="user@126.com", password="123", host="smtp.126.com")
     smtp.sender(to="user@126.com", attachments=report)
+    # 发送给多用户
+    smtp.sender(to=["aa@qq.com", "bb@126.com", "cc@gmail.com"])
 ```
 
 **SMTP类说明：**
