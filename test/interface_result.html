@@ -4,7 +4,7 @@
 
 <head>
     <title> Seldom自动化测试报告 </title>
-    <meta name="generator" content="HTMLTestRunner 1.0.0" />
+    <meta name="generator" content="HTMLTestRunner 1.1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="https://lib.baomitu.com/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -25,6 +25,24 @@
     h1 {
         font-size: 16pt;
         color: gray;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: rgba(114,124,245,.25);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #6c757d;
     }
 
     .heading {
@@ -70,7 +88,18 @@
     }
 
     /* -- report ------------------------------------------------------------------------ */
-    #show_detail_line {
+    pre {
+        background-color: #eef2f7;
+        box-shadow: 0px 0px 1px inset;
+        padding-top: 10px;
+    }
+    .show_detail_line {
+        margin-left: 10px;
+        margin-top: 30px;
+        margin-bottom: 60px;
+    }
+
+    .show_detail_button {
         margin-top: 3ex;
         margin-bottom: 1ex;
         margin-left: 10px;
@@ -212,6 +241,25 @@
         z-index: 99;
         width: 22px;
         box-shadow: 1px 2px 5px #333333;
+    }
+
+    .footer {
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+    }
+    
+    @media screen and (max-width:1000px){
+        #parentContainer{
+            padding-bottom:300px
+        };
+    }
+
+    @media screen and (min-width:1000px){
+        #parentContainer{
+            padding-bottom:100px
+        };
     }
 </style>
 </head>
@@ -403,7 +451,7 @@
     </div>
 </nav>
 
-<div class="container-fluid mm-active" style="padding-left: 35px;padding-right: 35px; padding-bottom:100px;">
+<div id="parentContainer" class="container-fluid mm-active" style="padding-left: 35px;padding-right: 35px;">
     <div style="height: 260px; margin-top: 20px;">
         
         <div class="row" style="margin-left: 0px; margin-right: 0px;">
@@ -416,12 +464,12 @@
                                 
                                 <tr>
                                     <td> Start Time</td>
-                                    <td class="text-right">2020-12-03 10:50:07</td>
+                                    <td class="text-right">2021-10-07 23:34:47</td>
                                 </tr>
                                 
                                 <tr>
                                     <td> Duration</td>
-                                    <td class="text-right">0:00:04.028517</td>
+                                    <td class="text-right">0:00:03.963703</td>
                                 </tr>
                                 
                                 <tr>
@@ -449,8 +497,9 @@
 
         </div>
     </div>
-    <div style="margin-left: 10px; margin-top: 30px;">
-    <p id='show_detail_line' >
+</div>
+    <div class="show_detail_line">
+    <p class="show_detail_button">
         <a href='javascript:showCase(0, 1)' class="btn btn-dark btn-sm">Summary</a>
         <a href='javascript:showCase(1, 1)' class="btn btn-success btn-sm">Pass</a>
         <a href='javascript:showCase(2, 1)' class="btn btn-warning btn-sm">Failed</a>
@@ -461,7 +510,7 @@
 </div>
 
 <div class="col-12 d-flex">
-    <div class='card flex-fill'>
+    <div class='card flex-fill'  style="bottom: 50px;">
         <div class="card-body my-2">
             <h4 class="header-title">Result</h4>
             <table class="table mb-0">
@@ -499,7 +548,7 @@
         <div>测试get接口</div>
     </td>
     <td style="color: #495057">
-        <div>1.09 s</div>
+        <div>1.02 s</div>
     </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
@@ -511,7 +560,7 @@
            [x]</a>
         </div>
         <pre>
-        pt1.1.1: {'args': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-5fc85260-0a28b8a319723fa471d307c5'}, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/get?key=value'}
+        pt1.1.1: {'args': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-615f1398-17d3db155e96710f7d90bfd6'}, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/get?key=value'}
 
         </pre>
     </div>
@@ -528,7 +577,7 @@
         <div>测试post接口</div>
     </td>
     <td style="color: #495057">
-        <div>0.95 s</div>
+        <div>0.98 s</div>
     </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
@@ -540,7 +589,7 @@
            [x]</a>
         </div>
         <pre>
-        pt1.1.2: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-5fc85261-15989db56b0993fa56b2efbf'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/post'}
+        pt1.1.2: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-615f1399-4e4b44784dd893131458efad'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/post'}
 
         </pre>
     </div>
@@ -557,7 +606,7 @@
         <div>测试put接口</div>
     </td>
     <td style="color: #495057">
-        <div>1.00 s</div>
+        <div>1.0 s</div>
     </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
@@ -569,7 +618,7 @@
            [x]</a>
         </div>
         <pre>
-        pt1.1.3: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-5fc85262-04b8a1ac6968694a79cf847b'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/put'}
+        pt1.1.3: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-615f139a-54296a6a138b5ff3494d9a8f'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/put'}
 
         </pre>
     </div>
@@ -586,7 +635,7 @@
         <div>测试delete接口</div>
     </td>
     <td style="color: #495057">
-        <div>0.99 s</div>
+        <div>0.97 s</div>
     </td>
     <td colspan='5' align='center'>
     <!--css div popup start-->
@@ -598,7 +647,7 @@
            [x]</a>
         </div>
         <pre>
-        pt1.1.4: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-5fc85263-3c0e1fbe26f64b324dba4069'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/delete'}
+        pt1.1.4: {'args': {}, 'data': '', 'files': {}, 'form': {'key': 'value'}, 'headers': {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Content-Length': '9', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'httpbin.org', 'User-Agent': 'python-requests/2.25.0', 'X-Amzn-Trace-Id': 'Root=1-615f139b-1880271308f17091718102ac'}, 'json': None, 'origin': '173.248.248.93', 'url': 'https://httpbin.org/delete'}
 
         </pre>
     </div>
@@ -662,11 +711,11 @@
 
 </div>
 
-<footer class="footer" style="height: 50px;">
+<footer class="footer">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                2020 © 重定向科技 - http://itest.info
+                2021 © 重定向科技 - http://itest.info
             </div>
             <div class="col-md-6">
                 <div class="text-md-right footer-links d-none d-md-block">
