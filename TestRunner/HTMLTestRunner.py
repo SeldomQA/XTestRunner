@@ -72,7 +72,7 @@ class RunResult:
 # ----------------------------------------------------------------------
 # Template
 
-class TemplateMixing(object):
+class CustomTemplate(object):
     """
     Define a HTML template for report customerization and generation.
     Overall structure of an HTML report
@@ -112,20 +112,20 @@ class TemplateMixing(object):
     <td style="color: #495057">
         <div>%(runtime)s s</div>
     </td>
-    <td colspan='5' align='center'>
-    <!--css div popup start-->
-    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
-        %(status)s</a>
-    <div id='div_%(tid)s' class="popup_window">
-        <div style='text-align: right; color:red;cursor:pointer'>
-        <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
-           [x]</a>
+    <td colspan='5' align='center' class='caseStatistics'>
+        <!--css div popup start-->
+        <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
+            %(status)s</a>
+        <div id='div_%(tid)s' class="popup_window">
+            <div style='text-align: right; color:red;cursor:pointer'>
+            <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
+               [x]</a>
+            </div>
+            <pre>
+            %(script)s
+            </pre>
         </div>
-        <pre>
-        %(script)s
-        </pre>
-    </div>
-    <!--css div popup end-->
+        <!--css div popup end-->
     </td>
     <td>%(img)s</td>
 </tr>
@@ -156,7 +156,13 @@ class TemplateMixing(object):
 </div>
 """
 
+
 # -------------------- The end of the Template class -------------------
+
+class OneCase:
+    obj = None
+    error = 0
+    failure = 0
 
 
 TestResult = unittest.TestResult
@@ -221,12 +227,14 @@ class _TestResult(TestResult):
             if self.status == 1:
                 self.runs += 1
                 if self.runs <= self.rerun:
-                    if self.save_last_run:
+                    if self.save_last_run is True:
                         t = self.result.pop(-1)
                         if t[0] == 1:
-                            self.failure_count -= 1
+                            if self.failure_count > 1:
+                                self.failure_count -= 1
                         else:
-                            self.error_count -= 1
+                            if self.error_count > 1:
+                                self.error_count -= 1
                     test = copy.copy(test)
                     sys.stderr.write("Retesting... ")
                     sys.stderr.write(str(test))
@@ -248,6 +256,14 @@ class _TestResult(TestResult):
         test.runtime = round(case_run_time, 2)
 
     def addSuccess(self, test):
+        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.failure == 1):
+            self.failure_count -= 1
+            OneCase.obj = None
+            OneCase.failure = 0
+        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.error == 1):
+            self.error_count -= 1
+            OneCase.obj = None
+            OneCase.error = 0
         self.success_count += 1
         self.status = 0
         TestResult.addSuccess(self, test)
@@ -264,6 +280,8 @@ class _TestResult(TestResult):
         if self.test_obj != test:
             self.test_obj = test
             self.error_count += 1
+            OneCase.obj = test
+            OneCase.error = 1
         else:
             self.error_count += 0
         self.status = 1
@@ -285,6 +303,8 @@ class _TestResult(TestResult):
         if self.test_obj != test:
             self.test_obj = test
             self.failure_count += 1
+            OneCase.obj = test
+            OneCase.failure = 1
         else:
             self.failure_count += 0
         self.status = 1
@@ -316,7 +336,7 @@ class _TestResult(TestResult):
             sys.stderr.write('S')
 
 
-class HTMLTestRunner(TemplateMixing):
+class HTMLTestRunner(CustomTemplate):
     """
     Run the test class
     """
