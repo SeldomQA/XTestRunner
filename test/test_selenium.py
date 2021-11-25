@@ -37,8 +37,10 @@ class YouTest(unittest.TestCase):
         """测试百度搜索，断言失败 """
         self.driver.get(self.base_url)
         self.driver.find_element_by_id("kw").send_keys("unittest")
+        self.images.append(self.driver.get_screenshot_as_base64())
         self.driver.find_element_by_id("su").click()
         sleep(2)
+        self.images.append(self.driver.get_screenshot_as_base64())
         self.assertEqual(self.driver.title, "unittest")
 
 
