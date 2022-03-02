@@ -1,12 +1,16 @@
-<nav class="navbar navbar-expand navbar-light bg-dark">
-    <a class="sidebar-toggle d-flex mr-2">
-        <img src="http://img.itest.info/seldomLogo.png">
-    </a>
-    <h1 style="margin-bottom: 0px; color: azure;">seldom</h1>
-    <div class="navbar-collapse collapse">
-        <ul class="navbar-nav ml-auto">
-            <h3 style="float: right; color: azure;"> {{ title }}</h3>
-        </ul>
+<nav class="navbar navbar-light position-lg-sticky top-lg-0 d-none d-lg-block overlap-10 flex-none bg-white border-bottom px-0 py-3" id="topbar">
+    <div class="container-fluid">
+        <div class="hstack gap-2">
+            <a href="https://github.com/SeldomQA/HTMLTestRunner">
+                <img src="http://img.itest.info/seldomLogo.png" style="height: 2.25rem; width: 2.25rem;">
+            </a>
+            <h1 class="h2 ls-tight">seldom</h1>
+        </div>
+        <div class="navbar-user d-none d-sm-block">
+            <div class="hstack gap-3 ms-4">
+                <h3 style="float: right;"> {{ title }} </h3>
+            </div>
+        </div>
     </div>
 </nav>
 

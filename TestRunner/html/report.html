@@ -9,37 +9,38 @@
     </p>
 </div>
 
-<div class="col-12 d-flex">
-    <div class='card flex-fill'  style="bottom: 50px;">
-        <div class="card-body my-2">
-            <h4 class="header-title">Result</h4>
-            <table class="table mb-0">
-                <thead>
-                    <tr class="header_row">
-                        <td>Test Group/Test case</td>
-                        <td>description</td>
-                        <td>Duration</td>
-                        <td>Count</td>
-                        <td>Pass</td>
-                        <td>Fail</td>
-                        <td>Error</td>
-                        <td>View</td>
-                        <td>Screenshots</td>
-                    </tr>
-                </thead>
-                {{ test_list }}
-                <tr class="total_row">
-                    <td>Total</td>
-                    <td> </td>
-                    <td> </td>
-                    <td>{{ count }}</td>
-                    <td class="text text-success">{{ Pass }}</td>
-                    <td class="text text-warning">{{ fail }}</td>
-                    <td class="text text-danger">{{ error }}</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+<div class="card" style="margin-left: 10px; margin-right: 10px;">
+    <div class="card-header border-bottom">
+        <h5 class="mb-0">Result</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-nowrap">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Test Group/Test Case</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Pass</th>
+                    <th scope="col">Fail</th>
+                    <th scope="col">Error</th>
+                    <th scope="col">View</th>
+                    <th scope="col">Screenshots</th>
                 </tr>
-            </table>
-        </div>
+            </thead>
+            <tbody>
+                {{ test_list }}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer border-0 py-5">
+        <span class="text-muted text-sm">Total:
+            <button type="button" class="btn btn-sm btn-square bg-dark bg-opacity-20 bg-opacity-100-hover text-dark text-white-hover">{{ count }}</button> =
+            <button type="button" class="btn btn-sm btn-square bg-success bg-opacity-20 bg-opacity-100-hover text-success text-white-hover">{{ Pass }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-warning bg-opacity-20 bg-opacity-100-hover text-warning text-white-hover">{{ fail }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-danger bg-opacity-20 bg-opacity-100-hover text-danger text-white-hover">{{ error }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-secondary bg-opacity-20 bg-opacity-100-hover text-secondary text-white-hover">{{ skip }}</button>
+        </span>
     </div>
 </div>
+<div style="height:120px"></div>

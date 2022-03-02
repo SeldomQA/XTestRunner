@@ -71,6 +71,18 @@ class CustomTemplate(object):
     }
 
     DEFAULT_TITLE = 'Unit Test Report'
+    PASS_TAG = r"""
+    <span class="badge badge-pill bg-soft-success text-success me-2">Passed: %(s)s</span> 
+    """
+    FAIL_TAG = r"""
+    <span class="badge badge-pill bg-soft-warning text-warning me-2">Failed: %(s)s</span> 
+    """
+    ERROR_TAG = r"""
+    <span class="badge badge-pill bg-soft-danger text-danger me-2">Errors: %(s)s</span> 
+    """
+    SKIP_TAG = r"""
+    <span class="badge badge-pill bg-soft-secondary text-secondary me-2">Skipped: %(s)s</span> 
+    """
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
@@ -385,13 +397,17 @@ class HTMLTestRunner(CustomTemplate):
         RunResult.errors = result.error_count
         RunResult.skipped = result.skip_count
         if result.success_count:
-            status.append(f"Passed:{result.success_count}")
+            pass_tag = self.PASS_TAG % dict(s=result.success_count)
+            status.append(pass_tag)
         if result.failure_count:
-            status.append(f"Failed:{result.failure_count}")
+            fail_tag = self.FAIL_TAG % dict(s=result.failure_count)
+            status.append(fail_tag)
         if result.error_count:
-            status.append(f"Errors:{result.error_count}")
+            error_tag = self.ERROR_TAG % dict(s=result.error_count)
+            status.append(error_tag)
         if result.skip_count:
-            status.append(f"Skipped:{result.skip_count}")
+            skip_tag = self.SKIP_TAG % dict(s=result.skip_count)
+            status.append(skip_tag)
         if status:
             status = ' '.join(status)
         else:
