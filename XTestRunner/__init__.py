@@ -29,7 +29,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-# URL: https://github.com/SeldomQA/HTMLTestRunner
+# URL: https://github.com/SeldomQA/XTestRunner
 
 from .HTMLTestRunner import HTMLTestRunner
 from .email import SMTP
@@ -37,6 +37,6 @@ from .email import SMTP
 
 __author__ = "bugmaster"
 
-__version__ = "1.2.0"
+__version__ = "1.0.0"
 
 __description__ = "Unittest-based HTML test report."

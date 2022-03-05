@@ -22,12 +22,18 @@
 ## install
 
 ```shell
-> git clone https://github.com/SeldomQA/XTestRunner
-> cd XTestRunner/
-> python setup.py install
+> pip install XTestRunner
+```
+
+If you want to keep up with the latest version, you can install with github repository url:
+
+```shell
+> pip install -U git+https://github.com/SeldomQA/XTestRunner.git@master
 ```
 
 ## demo
+
+查看更多使用 [例子](./test)。
 
 * 单元测试 
 
