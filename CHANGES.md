@@ -1,3 +1,10 @@
+### XTestRunner 1.0.0
+
+* 正式更名为`XTestRunner`, 支持 `pip` 安装。
+* 使用全新的样式，更加现代化。
+* 去掉EChart 饼状图，采用全新的卡片。
+* 增加`通过率`, `失败率`，`错误率`，`跳过率` 等信息。
+
 Change History
 Version 1.0.0
 * Add Jinjia Library
