@@ -1,0 +1,46 @@
+
+<div id="resultContainer" class="card">
+    <div class="card-header border-bottom">
+        <span style="float: left;">
+            <h5 class="mb-0">结果</h5>
+        </span>
+        <span style="float: right;">
+            <a href='javascript:showCase(0, {{ channel }})' class="btn btn-dark btn-sm">摘要</a>
+            <a href='javascript:showCase(1, {{ channel }})' class="btn btn-success btn-sm">通过</a>
+            <a href='javascript:showCase(2, {{ channel }})' class="btn btn-warning btn-sm">失败</a>
+            <a href='javascript:showCase(3, {{ channel }})' class="btn btn-danger btn-sm">错误</a>
+            <a href='javascript:showCase(4, {{ channel }})' class="btn btn-secondary btn-sm">跳过</a>
+            <a href='javascript:showCase(5, {{ channel }})' class="btn btn-info btn-sm">所有</a>
+        </span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-nowrap">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">测试类/测试用例</th>
+                    <th scope="col">描述</th>
+                    <th scope="col">时长</th>
+                    <th scope="col">总数</th>
+                    <th scope="col">通过</th>
+                    <th scope="col">失败</th>
+                    <th scope="col">错误</th>
+                    <th scope="col">查看</th>
+                    <th scope="col">截图</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ test_list }}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer border-0 py-5">
+        <span class="text-muted text-sm">总数:
+            <button type="button" class="btn btn-sm btn-square bg-dark bg-opacity-20 bg-opacity-100-hover text-dark text-white-hover">{{ count }}</button> =
+            <button type="button" class="btn btn-sm btn-square bg-success bg-opacity-20 bg-opacity-100-hover text-success text-white-hover">{{ Pass }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-warning bg-opacity-20 bg-opacity-100-hover text-warning text-white-hover">{{ fail }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-danger bg-opacity-20 bg-opacity-100-hover text-danger text-white-hover">{{ error }}</button> +
+            <button type="button" class="btn btn-sm btn-square bg-secondary bg-opacity-20 bg-opacity-100-hover text-secondary text-white-hover">{{ skip }}</button>
+        </span>
+    </div>
+</div>
+<div style="height:120px"></div>

@@ -11,7 +11,7 @@ import datetime
 import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
-from XTestRunner.config import RunResult
+from XTestRunner.config import RunResult, Config
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
@@ -31,6 +31,9 @@ with open(INIT_FILE, 'rb') as f:
 # Define the HTML template directory
 # --------------------------
 env = Environment(loader=FileSystemLoader(HTML_DIR))
+
+TEMPLATE_HTML = "template.html"
+STYLESHEET_HTML = "stylesheet.html"
 
 
 class OutputRedirector(object):
@@ -327,11 +330,19 @@ class HTMLTestRunner(CustomTemplate):
     Run the test class
     """
 
-    def __init__(self, stream=sys.stdout, verbosity=1, title=None, description=None, save_last_run=True, **kwargs):
+    def __init__(self,
+                 stream=sys.stdout,
+                 verbosity=1,
+                 title=None,
+                 description=None,
+                 save_last_run=True,
+                 language="en",
+                 **kwargs):
         self.stream = stream
         self.verbosity = verbosity
         self.save_last_run = save_last_run
         self.run_times = 0
+        Config.language = language
         if title is None:
             self.title = self.DEFAULT_TITLE
         else:
@@ -434,6 +445,12 @@ class HTMLTestRunner(CustomTemplate):
         e_percent = '{:.2%}'.format(RunResult.errors / count)
         f_percent = '{:.2%}'.format(RunResult.failed / count)
         s_percent = '{:.2%}'.format(RunResult.skipped / count)
+
+        base_info = {
+            "start_time": start_time_format,
+            "duration": duration
+        }
+
         statistics_info = {
             "p": {
                 "number": RunResult.passed,
@@ -452,29 +469,12 @@ class HTMLTestRunner(CustomTemplate):
                 "percent": s_percent
             },
         }
-        if result.success_count:
-            status.append(f"Passed:{result.success_count}")
-        if result.failure_count:
-            status.append(f"Failed:{result.failure_count}")
-        if result.error_count:
-            status.append(f"Errors:{result.error_count}")
-        if result.skip_count:
-            status.append(f"Skipped:{result.skip_count}")
-        if status:
-            status = ' '.join(status)
-        else:
-            status = 'none'
-        base_info = [
-            {"name": "Start Time", "value": start_time_format},
-            {"name": "Duration", "value": duration},
-            {"name": "Status", "value": status},
-        ]
 
         return base_info, statistics_info
 
     def generate_report(self, test, result):
-        template = env.get_template('template.html')
-        stylesheet = env.get_template('stylesheet.html').render()
+        template = env.get_template(TEMPLATE_HTML)
+        stylesheet = env.get_template(STYLESHEET_HTML).render()
         base, statistics = self.get_report_attributes(result)
 
         generator = f'HTMLTestRunner {version}'
@@ -492,9 +492,16 @@ class HTMLTestRunner(CustomTemplate):
         self.stream.write(html_content.encode('utf8'))
 
     def _generate_heading(self, base, statistics):
-        heading = env.get_template('heading.html').render(
+        if Config.language == "en":
+            heading_html = "heading-en.html"
+        elif Config.language == "zh-CN":
+            heading_html = "heading-zh-CN.html"
+        else:
+            raise EnvironmentError("The language is not supported")
+        heading = env.get_template(heading_html).render(
             title=self.title,
-            parameters=base,
+            start_time=base["start_time"],
+            duration=base["duration"],
             description=self.description,
             p_number=statistics["p"]["number"],
             p_percent=statistics["p"]["percent"],
@@ -554,7 +561,13 @@ class HTMLTestRunner(CustomTemplate):
             for tid, (num, test, out, error) in enumerate(cls_results):
                 self._generate_report_test(rows, cid, tid, num, test, out, error)
 
-        report = env.get_template('report.html').render(
+        if Config.language == "en":
+            report_html = "report-en.html"
+        elif Config.language == "zh-CN":
+            report_html = "report-zh-CN.html"
+        else:
+            raise EnvironmentError("The language is not supported")
+        report = env.get_template(report_html).render(
             test_list=''.join(rows),
             count=str(result.success_count + result.failure_count + result.error_count),
             Pass=str(result.success_count),
@@ -565,16 +578,6 @@ class HTMLTestRunner(CustomTemplate):
             channel=str(self.run_times),
         )
         return report
-
-    @staticmethod
-    def _generate_chart(result):
-        chart = env.get_template('charts_script.html').render(
-            Pass=str(result.success_count),
-            fail=str(result.failure_count),
-            error=str(result.error_count),
-            skip=str(result.skip_count),
-        )
-        return chart
 
     def _generate_report_test(self, rows, cid, tid, num, test, out, error):
         # e.g. 'pt1.1', 'ft1.1','et1.1', 'st1.1' etc

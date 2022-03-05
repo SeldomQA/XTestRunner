@@ -1,4 +1,8 @@
 
+class Config:
+    language = "en"  # en/ zh-CN
+
+
 class RunResult:
     """
     Test run results

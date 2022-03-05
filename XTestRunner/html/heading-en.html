@@ -18,22 +18,51 @@
     <div class="row">
         <div class="col-12 col-lg-5 col-xl-4 d-flex" style="float:left">
             <div class='card flex-fill'>
-                <div class="card-body my-2">
-                    <h4 class="header-title">Overview</h4>
-                    <table class="table my-0">
-                        <tbody>
-                            {% for p in parameters %}
-                            <tr>
-                                <td> {{ p.name }}</td>
-                                <td class="text-right">{{ p.value }}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>Description:</td>
-                                <td class="text-right">{{ description }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0">Overview</h5>
+                    </div>
+                </div>
+                <div class="card-body py-0 position-relative scrollable-y" style="max-height:300px">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+                            <div class="flex-1">
+                                <div class="d-flex align-items-center mb-1">Start time</div>
+                                <div class="d-flex align-items-center">
+                                    <div class="w-3/4 text-sm text-muted line-clamp-1 me-auto">{{ start_time }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+                            <div class="flex-1">
+                                <div class="d-flex align-items-center mb-1">Duration</div>
+                                <div class="d-flex align-items-center">
+                                    <div class="w-3/4 text-sm text-muted line-clamp-1 me-auto">{{duration}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+                            <div class="flex-1">
+                                <div class="d-flex align-items-center mb-1">Status</div>
+                                <div class="d-flex align-items-center">
+                                    <div class="w-3/4 text-sm text-muted line-clamp-1 me-auto">
+                                        <span class="badge badge-pill bg-soft-success text-success me-2">Passed:{{p_number}}</span>
+                                        <span class="badge badge-pill bg-soft-warning text-warning me-2">Failed:{{f_number}}</span>
+                                        <span class="badge badge-pill bg-soft-danger text-danger me-2">Errors:{{e_number}}</span>
+                                        <span class="badge badge-pill bg-soft-secondary text-secondary me-2">Skipped:{{s_number}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0 position-relative hstack flex-wrap" style="padding-top: 5px;">
+                            <div class="flex-1">
+                                <div class="d-flex align-items-center mb-1">Description</div>
+                                <div class="d-flex align-items-center">
+                                    <div class="w-3/4 text-sm text-muted me-auto">{{description}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,7 +79,7 @@
                         </div>
                     </div>
                     <div class="mt-2 mb-0 text-sm">
-                        <span class="badge badge-pill bg-soft-warning text-success me-2">{{p_percent}}</span>
+                        <span class="badge badge-pill bg-soft-success text-success me-2">{{p_percent}}</span>
                         <span class="text-nowrap text-xs text-muted">Pass rate</span>
                     </div>
                     <div class="d-flex align-items-center">
