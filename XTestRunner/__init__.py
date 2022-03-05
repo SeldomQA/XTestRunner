@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from .HTMLTestRunner import HTMLTestRunner
 from .email import SMTP
+from .config import label
 
 
 __author__ = "bugmaster"
