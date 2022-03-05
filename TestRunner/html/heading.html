@@ -14,39 +14,120 @@
     </div>
 </nav>
 
-<div id="parentContainer" class="container-fluid mm-active" style="padding-left: 35px;padding-right: 35px; padding-right: 35px;">
-    <div style="height: 260px; margin-top: 20px;">
-        <div class="row" style="margin-left: 0px; margin-right: 0px;">
-            <div class="col-12 col-lg-5 col-xl-4 d-flex" style="float:left">
-                <div class='card flex-fill'>
-                    <div class="card-body my-2">
-                        <h4 class="header-title">Overview</h4>
-                        <table class="table my-0">
-                            <tbody>
-                                {% for p in parameters %}
-                                <tr>
-                                    <td> {{ p.name }}</td>
-                                    <td class="text-right">{{ p.value }}</td>
-                                </tr>
-                                {% endfor %}
-                                <tr>
-                                    <td>Description:</td>
-                                    <td class="text-right">{{ description }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+<div id="headContainer" class="container-fluid mm-active">
+    <div class="row">
+        <div class="col-12 col-lg-5 col-xl-4 d-flex" style="float:left">
+            <div class='card flex-fill'>
+                <div class="card-body my-2">
+                    <h4 class="header-title">Overview</h4>
+                    <table class="table my-0">
+                        <tbody>
+                            {% for p in parameters %}
+                            <tr>
+                                <td> {{ p.name }}</td>
+                                <td class="text-right">{{ p.value }}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>Description:</td>
+                                <td class="text-right">{{ description }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 20%">
+            <div class="card" style="height: 45%;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Passed</span>
+                            <span class="h3 font-bold mb-0">{{p_number}}</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-success text-white text-lg rounded-circle">P</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 mb-0 text-sm">
+                        <span class="badge badge-pill bg-soft-warning text-success me-2">{{p_percent}}</span>
+                        <span class="text-nowrap text-xs text-muted">Pass rate</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="progress" style="width:70%; margin-top: 5px;">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                                aria-valuemax="100" style="width:{{p_percent}}"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-lg-6 order-lg-1">
+            <div class="card" style="height: 45%; top: 10%;">
                 <div class="card-body">
-                    <div class="testChars" style="width: 230px; height: 200px;">
-                        <canvas id="myChart" width="250" height="250"></canvas>
+                    <div class="row">
+                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Failed</span>
+                            <span class="h3 font-bold mb-0">{{f_number}}</span></div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">F</div>
+                        </div>
                     </div>
-                </div> 
+                    <div class="mt-2 mb-0 text-sm">
+                        <span class="badge badge-pill bg-soft-warning text-warning me-2">{{f_percent}}</span>
+                        <span class="text-nowrap text-xs text-muted">Failure rate</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="progress" style="width:70%; margin-top: 5px;">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                                aria-valuemax="100" style="width:{{f_percent}}"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
+        </div>
+        <div style="width: 20%">
+            <div class="card" style="height: 45%;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Errors</span>
+                            <span class="h3 font-bold mb-0">{{e_number}}</span></div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-danger text-white text-lg rounded-circle">E</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 mb-0 text-sm">
+                        <span class="badge badge-pill bg-soft-danger text-danger me-2">{{e_percent}}</span>
+                        <span class="text-nowrap text-xs text-muted">Error rate</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="progress" style="width:70%; margin-top: 5px;">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                                aria-valuemax="100" style="width:{{e_percent}}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="height: 45%; top: 10%;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Skipped</span>
+                            <span class="h3 font-bold mb-0">{{s_number}}</span>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon icon-shape bg-secondary text-white text-lg rounded-circle">S</div>
+                        </div>
+                    </div>
+                    <div class="mt-2 mb-0 text-sm">
+                        <span class="badge badge-pill bg-soft-secondary text-secondary me-2">{{s_percent}}</span>
+                        <span class="text-nowrap text-xs text-muted">Skip rate</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="progress" style="width:70%; margin-top: 5px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                                aria-valuemax="100" style="width:{{s_percent}}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

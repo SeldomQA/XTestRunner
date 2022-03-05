@@ -71,18 +71,6 @@ class CustomTemplate(object):
     }
 
     DEFAULT_TITLE = 'Unit Test Report'
-    PASS_TAG = r"""
-    <span class="badge badge-pill bg-soft-success text-success me-2">Passed: %(s)s</span> 
-    """
-    FAIL_TAG = r"""
-    <span class="badge badge-pill bg-soft-warning text-warning me-2">Failed: %(s)s</span> 
-    """
-    ERROR_TAG = r"""
-    <span class="badge badge-pill bg-soft-danger text-danger me-2">Errors: %(s)s</span> 
-    """
-    SKIP_TAG = r"""
-    <span class="badge badge-pill bg-soft-secondary text-secondary me-2">Skipped: %(s)s</span> 
-    """
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
@@ -349,8 +337,15 @@ class HTMLTestRunner(CustomTemplate):
             self.title = title
         if description is None:
             self.description = ""
-        else:
+        elif isinstance(description, str):
             self.description = description
+        elif isinstance(description, list):
+            self.description = ""
+            for desc in description:
+                p_tag = '<p>' + desc + '</p>'
+                self.description = self.description + p_tag
+        else:
+            self.description = ""
 
         self.start_time = datetime.datetime.now()
         self.end_time = None
@@ -396,38 +391,57 @@ class HTMLTestRunner(CustomTemplate):
         RunResult.failed = result.failure_count
         RunResult.errors = result.error_count
         RunResult.skipped = result.skip_count
+        count = RunResult.passed + RunResult.failed + RunResult.errors + RunResult.skipped
+        p_percent = '{:.2%}'.format(RunResult.passed / count)
+        e_percent = '{:.2%}'.format(RunResult.errors / count)
+        f_percent = '{:.2%}'.format(RunResult.failed / count)
+        s_percent = '{:.2%}'.format(RunResult.skipped / count)
+        statistics_info = {
+            "p": {
+                "number": RunResult.passed,
+                "percent": p_percent
+            },
+            "e": {
+                "number": RunResult.errors,
+                "percent": e_percent
+            },
+            "f": {
+                "number": RunResult.failed,
+                "percent": f_percent
+            },
+            "s": {
+                "number": RunResult.skipped,
+                "percent": s_percent
+            },
+        }
         if result.success_count:
-            pass_tag = self.PASS_TAG % dict(s=result.success_count)
-            status.append(pass_tag)
+            status.append(f"Passed:{result.success_count}")
         if result.failure_count:
-            fail_tag = self.FAIL_TAG % dict(s=result.failure_count)
-            status.append(fail_tag)
+            status.append(f"Failed:{result.failure_count}")
         if result.error_count:
-            error_tag = self.ERROR_TAG % dict(s=result.error_count)
-            status.append(error_tag)
+            status.append(f"Errors:{result.error_count}")
         if result.skip_count:
-            skip_tag = self.SKIP_TAG % dict(s=result.skip_count)
-            status.append(skip_tag)
+            status.append(f"Skipped:{result.skip_count}")
         if status:
             status = ' '.join(status)
         else:
             status = 'none'
-
-        return [
+        base_info = [
             {"name": "Start Time", "value": start_time_format},
             {"name": "Duration", "value": duration},
             {"name": "Status", "value": status},
         ]
 
+        return base_info, statistics_info
+
     def generate_report(self, test, result):
         template = env.get_template('template.html')
         stylesheet = env.get_template('stylesheet.html').render()
-        report_attrs = self.get_report_attributes(result)
+        base, statistics = self.get_report_attributes(result)
 
         generator = f'HTMLTestRunner {version}'
-        heading = self._generate_heading(report_attrs)
+        heading = self._generate_heading(base, statistics)
         report = self._generate_report(result)
-        chart = self._generate_chart(result)
 
         html_content = template.render(
             title=saxutils.escape(self.title),
@@ -435,16 +449,23 @@ class HTMLTestRunner(CustomTemplate):
             stylesheet=stylesheet,
             heading=heading,
             report=report,
-            chart_script=chart,
             channel=self.run_times,
         )
         self.stream.write(html_content.encode('utf8'))
 
-    def _generate_heading(self, report_attrs):
+    def _generate_heading(self, base, statistics):
         heading = env.get_template('heading.html').render(
             title=self.title,
-            parameters=report_attrs,
+            parameters=base,
             description=self.description,
+            p_number=statistics["p"]["number"],
+            p_percent=statistics["p"]["percent"],
+            f_number=statistics["f"]["number"],
+            f_percent=statistics["f"]["percent"],
+            e_number=statistics["e"]["number"],
+            e_percent=statistics["e"]["percent"],
+            s_number=statistics["s"]["number"],
+            s_percent=statistics["s"]["percent"],
         )
         return heading
 
