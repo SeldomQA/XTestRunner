@@ -5,14 +5,14 @@ from setuptools import setup, find_packages
 
 _version_re = re.compile(r'__version__\s+=\s+(.*)')
 
-with open('TestRunner/__init__.py', 'rb') as f:
+with open('XTestRunner/__init__.py', 'rb') as f:
     version = str(ast.literal_eval(_version_re.search(
         f.read().decode('utf-8')).group(1)))
 
 setup(
-    name='TestRunner',
+    name='XTestRunner',
     version=version,
-    url='https://github.com/seldomQA/HTMLTestRunner/',
+    url='https://github.com/seldomQA/XTestRunner/',
     license='BSD',
     author='bugmaster',
     author_email='fnngj@126.com',
@@ -38,11 +38,10 @@ setup(
     ],
     py_modules=['whyteboard'],
     scripts=[
-        'TestRunner/html/charts_script.html',
-        'TestRunner/html/heading.html',
-        'TestRunner/html/mail.html',
-        'TestRunner/html/report.html',
-        'TestRunner/html/stylesheet.html',
-        'TestRunner/html/template.html',
+        'XTestRunner/html/heading.html',
+        'XTestRunner/html/mail.html',
+        'XTestRunner/html/report.html',
+        'XTestRunner/html/stylesheet.html',
+        'XTestRunner/html/template.html',
     ],
 )
