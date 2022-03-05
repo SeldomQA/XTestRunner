@@ -38,7 +38,7 @@ if __name__ == '__main__':
     suit.addTest(YouTest("test_put"))
     suit.addTest(YouTest("test_delete"))
 
-    report = "./reports/interface_result.html"
+    report = "./reports/api_result.html"
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,

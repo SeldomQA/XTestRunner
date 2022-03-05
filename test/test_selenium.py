@@ -1,10 +1,13 @@
 import unittest
 from time import sleep
-from TestRunner import HTMLTestRunner
+from XTestRunner import HTMLTestRunner
 from selenium import webdriver
 
 """
-注意：驱动必须定义为 `driver`， 否则无法生成截图
+1.安装selenium
+> pip install selenium
+
+2.注意：驱动必须定义为 `driver`， 否则无法生成截图
 """
 
 
@@ -22,7 +25,7 @@ class YouTest(unittest.TestCase):
     def test_success(self):
         """测试百度搜索：HTMLTestRunner """
         self.driver.get(self.base_url)
-        self.driver.find_element_by_id("kw").send_keys("HTMLTestRunner")
+        self.driver.find_element_by_id("kw").send_keys("XTestRunner")
         self.driver.find_element_by_id("su").click()
         sleep(2)
 
@@ -50,11 +53,11 @@ if __name__ == '__main__':
     suit.addTest(YouTest("test_error"))
     suit.addTest(YouTest("test_fail"))
 
-    report = "./selenium_result.html"
+    report = "./reports/selenium_result.html"
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',
-            description='浏览器chrome，平台windows'
+            description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome', '执行人：虫师']
         )
         runner.run(suit)

@@ -1,6 +1,6 @@
 import unittest
-from TestRunner import HTMLTestRunner
-from TestRunner import SMTP
+from XTestRunner import HTMLTestRunner
+from XTestRunner import SMTP
 
 
 class TestDemo(unittest.TestCase):
@@ -42,12 +42,12 @@ if __name__ == '__main__':
     suit.addTest(TestDemo2("test_success"))
     suit.addTest(TestDemo3("test_fail"))
 
-    report = "./result.html"
+    report = "./reports/unit_result.html"
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',
-            description='单元测试'
+            description=['类型：单元测试', '执行人：虫师']
         )
         runner.run(suit)
     # 发邮件功能
