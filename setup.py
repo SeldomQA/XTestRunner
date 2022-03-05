@@ -33,15 +33,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         "Topic :: Software Development :: Testing",
-    ],
-    py_modules=['whyteboard'],
-    scripts=[
-        'XTestRunner/html/heading.html',
-        'XTestRunner/html/mail.html',
-        'XTestRunner/html/report.html',
-        'XTestRunner/html/stylesheet.html',
-        'XTestRunner/html/template.html',
-    ],
+    ]
 )
