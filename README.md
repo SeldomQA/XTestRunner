@@ -1,8 +1,18 @@
 # XTestRunner
 
-> A next-generation unittest test report.
+> Modern style test report based on unittest framework.
 
-下一代unittest单元测试框架测试报告。
+基于unittest框架现代风格测试报告。
+
+### 特点
+
+* 漂亮测试报告让你更愿意做测试。
+* 支持`单元`、`Web UI`、`API` 各种类型的测试。
+* 支持`Selenium` 自动截图。
+* 支持失败重跑。
+* 提供丰富的断言。
+* 支持发邮件功能。
+
 
 ## Report
 
