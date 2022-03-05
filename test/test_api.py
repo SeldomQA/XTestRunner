@@ -1,7 +1,11 @@
 import requests
 import unittest
-from time import sleep
-from TestRunner import HTMLTestRunner
+from XTestRunner import HTMLTestRunner
+
+"""
+* 安装requests
+> pip install requests
+"""
 
 
 class YouTest(unittest.TestCase):
@@ -34,11 +38,11 @@ if __name__ == '__main__':
     suit.addTest(YouTest("test_put"))
     suit.addTest(YouTest("test_delete"))
 
-    report = "./interface_result.html"
+    report = "./reports/interface_result.html"
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',
-            description='测试接口：http://httpbin.org'
+            description=['类型：API', '地址：https://httpbin.org/', '执行人：虫师']
         )
         runner.run(suit)

@@ -10,7 +10,7 @@ import datetime
 import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
-from TestRunner.config import RunResult
+from XTestRunner.config import RunResult
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
