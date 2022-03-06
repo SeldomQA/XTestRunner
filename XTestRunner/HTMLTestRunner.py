@@ -139,8 +139,10 @@ class CustomTemplate(object):
     IMG_TMPL = r"""
 <a  onfocus='this.blur();' href="#" onclick="showImg(this)">show</a>
 <div align="center" class="screenshots"  style="display:none">
-    <a class="close-shots"  onclick="hideImg(this)">❌</a>
-    {images}
+    <button class="close-shots btn btn-sm btn-square btn-neutral text-danger-hover"  onclick="hideImg(this)">❌</button>
+    <div class="card-body pb-5 img-card">
+        {images}
+    </div>
     <div class="img-circle"></div>
 </div>
 """

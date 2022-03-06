@@ -182,19 +182,29 @@
 
     /* -- screenshots ---------------------------------------------------------------------- */
     .img {
-        height: 100%;
         border-collapse: collapse;
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
-        background-color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    .img-card {
+        height: 600px;
+        width:800px;
+        background-color: #e7eaf0;
     }
 
     .screenshots {
         z-index: 100;
         position: fixed;
-        max-height: 80%;
-        max-width: 80%;
+        height: 600px;
+        width: 800px;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
@@ -226,15 +236,10 @@
     }
 
     .close-shots {
-        color: #fa5c7c;
-        background-color: rgba(250,92,124,.18);
         position: absolute;
         top: 5px;
         right: 5px;
-        height: 22px;
         z-index: 99;
-        width: 22px;
-        box-shadow: 1px 2px 5px #333333;
     }
 
     .footer {
