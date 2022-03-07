@@ -70,7 +70,7 @@ if __name__ == '__main__':
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
-            title='Seldom自动化测试报告',
+            title='Selenium自动化测试报告',
             description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome', '执行人：虫师']
         )
         runner.run(suit)
