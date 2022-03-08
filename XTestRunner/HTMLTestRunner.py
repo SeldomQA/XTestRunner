@@ -384,6 +384,8 @@ class HTMLTestRunner(CustomTemplate):
         """
         Run the given test case or test suite.
         """
+        print('\nXTestRunner Running tests...\n')
+        print('----------------------------------------------------------------------')
         for test in self.test_iter(testlist):
             # Determine if test should be skipped
             skip = bool(self.whitelist)
@@ -411,6 +413,7 @@ class HTMLTestRunner(CustomTemplate):
         self.end_time = datetime.datetime.now()
         self.run_times += 1
         self.generate_report(testlist, result)
+        print("Generating HTML reports...")
         return result
 
     def sort_result(self, result_list):
