@@ -36,12 +36,11 @@ If you want to keep up with the latest version, you can install with github repo
 
 查看更多使用 [例子](./test)。
 
-* 单元测试 
+* unittest测试
 
 ```python
 import unittest
 from XTestRunner import HTMLTestRunner
-from XTestRunner import label
 
 
 class TestDemo(unittest.TestCase):
@@ -53,63 +52,43 @@ class TestDemo(unittest.TestCase):
     
     @unittest.skip("skip case")
     def test_skip(self):
+        """跳过用例"""
         pass
     
     def test_fail(self):
+        """失败用例"""
         self.assertEqual(5, 6)
     
     def test_error(self):
+        """错误用例"""
         self.assertEqual(a, 6)
-
-
-class TestDemo2(unittest.TestCase):
-
-    def test_success(self):
-        self.assertEqual(2 + 2, 4)
-
-
-class TestDemo3(unittest.TestCase):
-
-    @label("fail")
-    def test_fail(self):
-        self.assertEqual(3, 4)
-
 
 if __name__ == '__main__':
     suit = unittest.TestSuite()
-    suit.addTest(TestDemo("test_success"))
-    suit.addTest(TestDemo("test_skip"))
-    suit.addTest(TestDemo("test_fail"))
-    suit.addTest(TestDemo("test_error"))
-    suit.addTest(TestDemo2("test_success"))
-    suit.addTest(TestDemo3("test_fail"))
+    suit.addTests([
+        TestDemo("test_success"),
+        TestDemo("test_skip"),
+        TestDemo("test_fail"),
+        TestDemo("test_error")
+    ])
     
-    with(open('./reports/result.html', 'wb')) as fp:
+    with(open('./result.html', 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='<project name>test report',
             description='describe: ... ',
             language='en',
-            blacklist=["fail"],
         )
-        runner.run(suit)
+        runner.run(
+            testlist=suit,
+            rerun=2,
+            save_last_run=False
+        )
 ```
 
-__`HTMLTestRunner`类说明__
+## Document
 
-* `stream`: 指定报告的路径。
-* `title`: 报告的标题。
-* `description`: 报告的描述, 支持`str`、`list`两种类型。
-* `language`: 支持中文`zh-CN`, 默认`en`。
-* `blacklist/whitelist`: 黑白名单。
-  * 白名单：`whitelist=["fail"]`  只有使用`@label("fail")`装饰的用例执行。
-  * 黑名单：`blacklist=["fail"]`  只有使用`@label("fail")`装饰的用例不被执行。
-
-__`run()`方法说明__
-
-* `suit`: 运行的测试套件。
-* `rerun`: 重跑次数。
-* `save_last_run`: 是否保存最后一个结果。
+[中文文档](./docs/README.md)
 
 ## 感谢
 
