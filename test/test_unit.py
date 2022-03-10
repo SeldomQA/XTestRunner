@@ -33,19 +33,9 @@ class TestDemo3(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTest(TestDemo("test_success"))
-    suit.addTest(TestDemo("test_skip"))
-    suit.addTest(TestDemo("test_fail"))
-    suit.addTest(TestDemo("test_error"))
-    suit.addTest(TestDemo2("test_success"))
-    suit.addTest(TestDemo3("test_fail"))
-
-    report = "./reports/unit_result.html"
     with(open(report, 'wb')) as fp:
-        runner = HTMLTestRunner(
+        unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
             title='unittest单元测试测试报告',
             description=['类型：单元测试', '执行人：虫师']
-        )
-        runner.run(suit)
+        ))
