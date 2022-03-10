@@ -32,17 +32,10 @@ class YouTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTest(YouTest("test_get"))
-    suit.addTest(YouTest("test_post"))
-    suit.addTest(YouTest("test_put"))
-    suit.addTest(YouTest("test_delete"))
-
     report = "./reports/api_result.html"
     with(open(report, 'wb')) as fp:
-        runner = HTMLTestRunner(
+        unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
             title='Seldom自动化测试报告',
             description=['类型：API', '地址：https://httpbin.org/', '执行人：虫师']
-        )
-        runner.run(suit)
+        ))

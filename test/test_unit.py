@@ -33,6 +33,7 @@ class TestDemo3(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    report = "./reports/unit_result.html"
     with(open(report, 'wb')) as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,

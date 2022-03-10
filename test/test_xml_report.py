@@ -1,5 +1,4 @@
 import unittest
-from XTestRunner import HTMLTestRunner
 from XTestRunner import XMLTestRunner
 
 

@@ -1,6 +1,6 @@
 import unittest
 from XTestRunner import label
-from XTestRunner.HTMLTestRunner import HTMLTestRunner
+from XTestRunner import HTMLTestRunner
 
 """
 支持白黑名单
@@ -25,16 +25,12 @@ class LabelTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTest(LabelTest("test_label_base"))
-    suit.addTest(LabelTest("test_label_slow"))
-    suit.addTest(LabelTest("test_no_label"))
-
-    with(open('./reports/label_result.html', 'wb')) as fp:
-        runner = HTMLTestRunner(
+    report = './reports/label_result.html'
+    with(open(report, 'wb')) as fp:
+        unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
             title='<project name>test report',
             description='describe: ... ',
-            whitelist=["base"],  # 设置黑白名单
-        )
-        runner.run(suit)
+            whitelist=["base"],  # 设置白名单
+            # blacklist=["slow"],  # 设置黑名单
+        ))

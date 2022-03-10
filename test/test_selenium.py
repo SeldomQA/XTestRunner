@@ -60,17 +60,10 @@ class YouTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTest(YouTest("test_success"))
-    suit.addTest(YouTest("test_error"))
-    suit.addTest(YouTest("test_fail"))
-    suit.addTest(YouTest("test_screenshots"))
-
     report = "./reports/selenium_result.html"
     with(open(report, 'wb')) as fp:
-        runner = HTMLTestRunner(
+        unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
             title='Selenium自动化测试报告',
             description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome', '执行人：虫师']
-        )
-        runner.run(suit)
+        ))
