@@ -32,7 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # URL: https://github.com/SeldomQA/XTestRunner
 
 from .xmlrunner.runner import XMLTestRunner
-from .HTMLTestRunner import HTMLTestRunner
+from .htmlrunner.runner import HTMLTestRunner
 from .email import SMTP
 from .config import label
 
