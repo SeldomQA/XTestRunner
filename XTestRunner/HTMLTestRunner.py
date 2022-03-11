@@ -12,20 +12,10 @@ import unittest
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
 from XTestRunner.config import RunResult, Config
+from XTestRunner.version import get_version
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
-INIT_FILE = os.path.join(BASE_DIR, "__init__.py")
-
-# ---------------------------
-# Read version number
-# ---------------------------
-_version_re = re.compile(r'__version__\s+=\s+(.*)')
-
-with open(INIT_FILE, 'rb') as f:
-    version = str(ast.literal_eval(_version_re.search(
-        f.read().decode('utf-8')).group(1)))
-
 
 # ---------------------------
 # Define the HTML template directory
@@ -439,7 +429,6 @@ class HTMLTestRunner(CustomTemplate):
         """
         start_time_format = str(self.start_time)[:19]
         duration = str(self.end_time - self.start_time)
-        status = []
 
         RunResult.passed = result.success_count
         RunResult.failed = result.failure_count
@@ -482,13 +471,13 @@ class HTMLTestRunner(CustomTemplate):
         stylesheet = env.get_template(STYLESHEET_HTML).render()
         base, statistics = self.get_report_attributes(result)
 
-        generator = f'HTMLTestRunner {version}'
+        version = get_version()
         heading = self._generate_heading(base, statistics)
         report = self._generate_report(result)
 
         html_content = template.render(
             title=saxutils.escape(self.title),
-            generator=generator,
+            version=f'{version}',
             stylesheet=stylesheet,
             heading=heading,
             report=report,
