@@ -1,57 +1,31 @@
-from email.message import EmailMessage
 import os
-import re
-import io
-import ast
 import sys
-import copy
-import time
-import functools
-import datetime
 import unittest
+import datetime
+import functools
+from unittest import TextTestRunner
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
+from XTestRunner.htmlrunner.result import _TestResult
 from XTestRunner.config import RunResult, Config
 from XTestRunner.version import get_version
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-HTML_DIR = os.path.join(BASE_DIR, "html")
+# default tile
+DEFAULT_TITLE = 'XTestRunner Test Report'
 
 # ---------------------------
 # Define the HTML template directory
 # --------------------------
-env = Environment(loader=FileSystemLoader(HTML_DIR))
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HTML_DIR = os.path.join(BASE_DIR, "html")
+
+env = Environment(loader=FileSystemLoader(HTML_DIR))
 TEMPLATE_HTML = "template.html"
 STYLESHEET_HTML = "stylesheet.html"
 
 
-class OutputRedirector(object):
-    """
-    Wrapper to redirect stdout or stderr 
-    """
-
-    def __init__(self, fp):
-        self.fp = fp
-
-    def write(self, s):
-        self.fp.write(s)
-
-    def writelines(self, lines):
-        self.fp.writelines(lines)
-
-    def flush(self):
-        self.fp.flush()
-
-
-stdout_redirector = OutputRedirector(sys.stdout)
-stderr_redirector = OutputRedirector(sys.stderr)
-
-
-# ----------------------------------------------------------------------
-# Template
-
-class CustomTemplate(object):
+class CustomTemplate:
     """
     Define a HTML template for report customerization and generation.
     Overall structure of an HTML report
@@ -63,8 +37,6 @@ class CustomTemplate(object):
         2: 'error',
         3: 'skip',
     }
-
-    DEFAULT_TITLE = 'Unit Test Report'
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
@@ -138,186 +110,7 @@ class CustomTemplate(object):
 """
 
 
-# -------------------- The end of the Template class -------------------
-
-class OneCase:
-    obj = None
-    error = 0
-    failure = 0
-
-
-TestResult = unittest.TestResult
-
-
-class _TestResult(TestResult):
-    """
-    note: _TestResult is a pure representation of results.
-    It lacks the output and reporting ability compares to unittest._TextTestResult.
-    """
-
-    def __init__(self, verbosity=1, rerun=0, save_last_run=False):
-        TestResult.__init__(self)
-        self.stdout0 = None
-        self.stderr0 = None
-        self.success_count = 0
-        self.failure_count = 0
-        self.error_count = 0
-        self.skip_count = 0
-        self.verbosity = verbosity
-        self.rerun = rerun
-        self.save_last_run = save_last_run
-        self.status = 0
-        self.runs = 0
-        self.result = []
-        self.case_start_time = None
-        self.case_end_time = None
-        self.output_buffer = None
-        self.test_obj = None
-
-    def startTest(self, test):
-        self.case_start_time = time.time()
-        test.images = getattr(test, "images", [])
-        test.runtime = getattr(test, "runtime", None)
-        self.output_buffer = io.StringIO()
-        stdout_redirector.fp = self.output_buffer
-        stderr_redirector.fp = self.output_buffer
-        self.stdout0 = sys.stdout
-        self.stderr0 = sys.stderr
-        sys.stdout = stdout_redirector
-        sys.stderr = stderr_redirector
-
-    def complete_output(self):
-        """
-        Disconnect output redirection and return buffer.
-        Safe to call multiple times.
-        """
-        if self.stdout0:
-            sys.stdout = self.stdout0
-            sys.stderr = self.stderr0
-            self.stdout0 = None
-            self.stderr0 = None
-        return self.output_buffer.getvalue()
-
-    def stopTest(self, test):
-        """
-        Usually one of addSuccess, addError or addFailure would have been called.
-        But there are some path in unittest that would bypass this.
-        We must disconnect stdout in stopTest(), which is guaranteed to be called.
-        """
-        if self.rerun and self.rerun >= 1:
-            if self.status == 1:
-                self.runs += 1
-                if self.runs <= self.rerun:
-                    if self.save_last_run is True:
-                        t = self.result.pop(-1)
-                        if t[0] == 1:
-                            if self.failure_count > 1:
-                                self.failure_count -= 1
-                        else:
-                            if self.error_count > 1:
-                                self.error_count -= 1
-                    test = copy.copy(test)
-                    sys.stderr.write("Retesting... ")
-                    sys.stderr.write(str(test))
-                    sys.stderr.write(f"..{self.runs} \n")
-                    doc = getattr(test, '_testMethodDoc', u"") or u''
-                    if doc.find('->rerun') != -1:
-                        doc = doc[:doc.find('->rerun')]
-                    desc = f"{doc} ->rerun: {self.runs}"
-                    if isinstance(desc, str):
-                        desc = desc
-                    test._testMethodDoc = desc
-                    test(self)
-                else:
-                    self.status = 0
-                    self.runs = 0
-        self.complete_output()
-        self.case_end_time = time.time()
-        case_run_time = self.case_end_time - self.case_start_time
-        test.runtime = round(case_run_time, 2)
-
-    def addSuccess(self, test):
-        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.failure == 1):
-            self.failure_count -= 1
-            OneCase.obj = None
-            OneCase.failure = 0
-        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.error == 1):
-            self.error_count -= 1
-            OneCase.obj = None
-            OneCase.error = 0
-        self.success_count += 1
-        self.status = 0
-        TestResult.addSuccess(self, test)
-        output = self.complete_output()
-        self.result.append((0, test, output, ''))
-        if self.verbosity > 1:
-            sys.stderr.write('ok ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
-        else:
-            sys.stderr.write('.' + str(self.success_count))
-
-    def addError(self, test, err):
-        if self.test_obj != test:
-            self.test_obj = test
-            self.error_count += 1
-            OneCase.obj = test
-            OneCase.error = 1
-        else:
-            self.error_count += 0
-        self.status = 1
-        TestResult.addError(self, test, err)
-        _, _exc_str = self.errors[-1]
-        output = self.complete_output()
-        self.result.append((2, test, output, _exc_str))
-        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
-            driver = getattr(test, "driver")
-            test.images.append(driver.get_screenshot_as_base64())
-        if self.verbosity > 1:
-            sys.stderr.write('E  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
-        else:
-            sys.stderr.write('E')
-
-    def addFailure(self, test, err):
-        if self.test_obj != test:
-            self.test_obj = test
-            self.failure_count += 1
-            OneCase.obj = test
-            OneCase.failure = 1
-        else:
-            self.failure_count += 0
-        self.status = 1
-        TestResult.addFailure(self, test, err)
-        _, _exc_str = self.failures[-1]
-        output = self.complete_output()
-        self.result.append((1, test, output, _exc_str))
-        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
-            driver = getattr(test, "driver")
-            test.images.append(driver.get_screenshot_as_base64())
-        if self.verbosity > 1:
-            sys.stderr.write('F  ')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
-        else:
-            sys.stderr.write('F')
-
-    def addSkip(self, test, reason):
-        self.skip_count += 1
-        self.status = 0
-        TestResult.addSkip(self, test, reason)
-        output = self.complete_output()
-        self.result.append((3, test, output, reason))
-        if self.verbosity > 1:
-            sys.stderr.write('S')
-            sys.stderr.write(str(test))
-            sys.stderr.write('\n')
-        else:
-            sys.stderr.write('S')
-
-
-class HTMLTestRunner(CustomTemplate):
+class HTMLTestRunner(TextTestRunner):
     """
     Run the test class
     """
@@ -330,13 +123,14 @@ class HTMLTestRunner(CustomTemplate):
                  save_last_run=True,
                  language="en",
                  **kwargs):
+        super(HTMLTestRunner, self).__init__(**kwargs)
         self.stream = stream
         self.verbosity = verbosity
         self.save_last_run = save_last_run
         self.run_times = 0
         Config.language = language
         if title is None:
-            self.title = self.DEFAULT_TITLE
+            self.title = DEFAULT_TITLE
         else:
             self.title = title
         if description is None:
@@ -374,6 +168,7 @@ class HTMLTestRunner(CustomTemplate):
         """
         Run the given test case or test suite.
         """
+
         print('\nXTestRunner Running tests...\n')
         print('----------------------------------------------------------------------')
         for test in self.test_iter(testlist):
@@ -403,6 +198,7 @@ class HTMLTestRunner(CustomTemplate):
         self.end_time = datetime.datetime.now()
         self.run_times += 1
         self.generate_report(testlist, result)
+
         print("Generating HTML reports...")
         return result
 
@@ -477,7 +273,7 @@ class HTMLTestRunner(CustomTemplate):
 
         html_content = template.render(
             title=saxutils.escape(self.title),
-            version=f'{version}',
+            version=version,
             stylesheet=stylesheet,
             heading=heading,
             report=report,
@@ -540,7 +336,7 @@ class HTMLTestRunner(CustomTemplate):
             doc = cls.__doc__ or ""
             # desc = doc and '%s: %s' % (name, doc) or name
 
-            row = self.REPORT_CLASS_TMPL % dict(
+            row = CustomTemplate.REPORT_CLASS_TMPL % dict(
                 style=num_error > 0 and 'errorClass' or num_fail > 0 and 'failClass' or 'passClass',
                 name=name,
                 desc=doc,
@@ -589,7 +385,7 @@ class HTMLTestRunner(CustomTemplate):
         name = test.id().split('.')[-1]
         doc = test.shortDescription() or ""
         # desc = doc and ('%s: %s' % (name, doc)) or name
-        tmpl = has_output and self.REPORT_TEST_WITH_OUTPUT_TMPL or self.REPORT_TEST_NO_OUTPUT_TMPL
+        tmpl = has_output and CustomTemplate.REPORT_TEST_WITH_OUTPUT_TMPL or CustomTemplate.REPORT_TEST_NO_OUTPUT_TMPL
 
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(out, str):
@@ -616,7 +412,7 @@ class HTMLTestRunner(CustomTemplate):
                     tmp += """<img src="data:image/jpg;base64,{}" style="display: block;" class="img"/>\n""".format(img)
                 else:
                     tmp += """<img src="data:image/jpg;base64,{}" style="display: none;" class="img"/>\n""".format(img)
-            screenshots_html = self.IMG_TMPL.format(images=tmp)
+            screenshots_html = CustomTemplate.IMG_TMPL.format(images=tmp)
         else:
             screenshots_html = """"""
 
@@ -634,7 +430,7 @@ class HTMLTestRunner(CustomTemplate):
             desc=doc,
             runtime=runtime,
             script=script,
-            status=self.STATUS[num],
+            status=CustomTemplate.STATUS[num],
             img=screenshots_html
         )
         rows.append(row)
