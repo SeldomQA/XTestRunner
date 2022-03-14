@@ -9,6 +9,8 @@ from jinja2 import Environment, FileSystemLoader
 from XTestRunner.htmlrunner.result import _TestResult
 from XTestRunner.config import RunResult, Config
 from XTestRunner.version import get_version
+from XTestRunner._email import SMTP
+
 
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
@@ -441,3 +443,19 @@ class HTMLTestRunner(TextTestRunner):
         rows.append(row)
         if not has_output:
             return
+
+    @staticmethod
+    def send_email(user, password, host, to, subject=None, attachments=None):
+        """
+        Send test report to email
+        :param user:
+        :param password:
+        :param host:
+        :param to:
+        :param subject:
+        :param attachments:
+        """
+        if subject is None:
+            subject = "XTestRunner Test Results"
+        smtp = SMTP(user=user, password=password, host=host)
+        smtp.sender(to=to, subject=subject, attachments=attachments)

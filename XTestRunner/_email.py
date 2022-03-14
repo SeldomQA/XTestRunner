@@ -38,6 +38,8 @@ class SMTP(object):
             subject = 'XTestRunner Test Report'
         if contents is None:
             contents = env.get_template('mail.html').render(
+                mail_title=str(RunResult.title),
+                mail_tester=str(RunResult.tester),
                 mail_pass=str(RunResult.passed),
                 mail_fail=str(RunResult.failed),
                 mail_error=str(RunResult.errors),
