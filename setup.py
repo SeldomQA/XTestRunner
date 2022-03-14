@@ -23,6 +23,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'jinja2>=2.11.3',
+        'requests>=2.22.0'
     ],
     classifiers=[
         'Intended Audience :: Developers',
