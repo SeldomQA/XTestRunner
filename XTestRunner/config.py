@@ -7,6 +7,8 @@ class RunResult:
     """
     Test run results
     """
+    title = "XTestRunner Test Report"
+    tester = "Anonymous"
     passed = 0
     failed = 0
     errors = 0

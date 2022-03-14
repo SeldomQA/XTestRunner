@@ -119,6 +119,7 @@ class HTMLTestRunner(TextTestRunner):
                  stream=sys.stdout,
                  verbosity=1,
                  title=None,
+                 tester="Anonymous",
                  description=None,
                  save_last_run=True,
                  language="en",
@@ -133,6 +134,9 @@ class HTMLTestRunner(TextTestRunner):
             self.title = DEFAULT_TITLE
         else:
             self.title = title
+        RunResult.title = self.title
+        self.tester = tester
+        RunResult.tester = tester
         if description is None:
             self.description = ""
         elif isinstance(description, str):
@@ -292,6 +296,7 @@ class HTMLTestRunner(TextTestRunner):
             title=self.title,
             start_time=base["start_time"],
             duration=base["duration"],
+            tester=self.tester,
             description=self.description,
             p_number=statistics["p"]["number"],
             p_percent=statistics["p"]["percent"],
