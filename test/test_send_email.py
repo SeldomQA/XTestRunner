@@ -6,14 +6,20 @@ from XTestRunner import SMTP
 说明：
 1.使用126邮箱发送时password应为授权码而非用户密码，须在邮箱客户端设置开启授权码
 2.使用gmail邮箱发送时password为用户密码，须在gmail客户端开启安全性较低的应用的访问权限
+
+* user: 邮箱用户名
+* password: 邮箱密码
+* host: 协议，例如："smtp.qq.com"
+* to: 收件人，例如："recipient@126.com" 或者 ["aa@qq.com", "bb@qq.com"]
+* subject: 邮件标题
+* attachments: 附件，可以指定生成的测试报告。
 """
 
 
-class TestDemo(unittest.TestCase):
+class TestEmail(unittest.TestCase):
     """测试用例说明"""
 
     def test_success(self):
-        """执行成功"""
         self.assertEqual(2 + 3, 5)
 
     @unittest.skip("skip case")
@@ -30,10 +36,10 @@ class TestDemo(unittest.TestCase):
 if __name__ == '__main__':
     suit = unittest.TestSuite()
     suit.addTests([
-        TestDemo("test_success"),
-        TestDemo("test_skip"),
-        TestDemo("test_fail"),
-        TestDemo("test_error")
+        TestEmail("test_success"),
+        TestEmail("test_skip"),
+        TestEmail("test_fail"),
+        TestEmail("test_error")
     ])
 
     report = "./test/reports/email_result.html"
