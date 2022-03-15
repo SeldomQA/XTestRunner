@@ -10,6 +10,7 @@ from XTestRunner.htmlrunner.result import _TestResult
 from XTestRunner.config import RunResult, Config
 from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
+from XTestRunner._dingtalk import DingTalk
 
 
 # default tile
@@ -445,9 +446,14 @@ class HTMLTestRunner(TextTestRunner):
             return
 
     @staticmethod
-    def send_email(user, password, host, to, subject=None, attachments=None):
+    def send_email(
+            user: str,
+            password: str,
+            host: str, to: any,
+            subject=None,
+            attachments=None):
         """
-        Send test report to email
+        Send test result to email
         :param user:
         :param password:
         :param host:
@@ -459,3 +465,22 @@ class HTMLTestRunner(TextTestRunner):
             subject = "XTestRunner Test Results"
         smtp = SMTP(user=user, password=password, host=host)
         smtp.sender(to=to, subject=subject, attachments=attachments)
+
+    @staticmethod
+    def send_dingtalk(
+            access_token: str,
+            key: str = None,
+            app_secret: str = None,
+            at_mobiles: list = None,
+            is_at_all: bool = False):
+        """
+        send dingtalk notice
+        :param access_token:
+        :param key:
+        :param app_secret:
+        :param at_mobiles:
+        :param is_at_all:
+        :return:
+        """
+        ding = DingTalk(access_token=access_token, key=key, app_secret=app_secret, at_mobiles=at_mobiles,is_at_all=is_at_all)
+        ding.sender()

@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from .xmlrunner.runner import XMLTestRunner
 from .htmlrunner.runner import HTMLTestRunner
 from ._email import SMTP
+from ._dingtalk import DingTalk
 from .config import label
 
 
