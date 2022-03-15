@@ -42,7 +42,7 @@ if __name__ == '__main__':
         TestEmail("test_error")
     ])
 
-    report = "./test/reports/email_result.html"
+    report = "./reports/email_result.html"
     with(open(report, 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
