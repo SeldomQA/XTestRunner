@@ -113,7 +113,7 @@ class CustomTemplate:
 """
 
 
-class HTMLTestRunner(TextTestRunner):
+class HTMLTestRunner(object):
     """
     Run the test class
     """
@@ -127,7 +127,6 @@ class HTMLTestRunner(TextTestRunner):
                  save_last_run=True,
                  language="en",
                  **kwargs):
-        super(HTMLTestRunner, self).__init__(**kwargs)
         self.stream = stream
         self.verbosity = verbosity
         self.save_last_run = save_last_run
