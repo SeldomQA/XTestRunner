@@ -1,3 +1,10 @@
+### 1.3.0 版本
+
+* 功能：支持钉钉（dingtalk）发送通知 [文档](./docs/send_notice.md)。
+* 功能：HTMLTestRunner类`run()`方法增加 `tester` 字段用于设置测试人员。
+* 功能：邮件通知增加`标题` 和 `测试人员`。
+* 修复：设置title未写入报告
+
 ### 1.2.0 版本
 
 * 支持`XML`格式（XMLTestRunner）的报告。
