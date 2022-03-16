@@ -1,1 +1,1 @@
-recursive-include XTestRunner/html *.html
+recursive-include XTestRunner/html *.html *.md
