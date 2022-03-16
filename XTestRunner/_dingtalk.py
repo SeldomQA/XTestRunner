@@ -76,15 +76,11 @@ class DingTalk:
         """
         send dingtalk notice
         """
-        if self.key is None:
-            title = f"{RunResult.title}({self.key})"
-        else:
-            title = f"{RunResult.title}"
         res_text = self._get_notice_content()
         data = {
             "msgtype": "markdown",
             "markdown": {
-                "title": title,
+                "title": '{}({})'.format(RunResult.title, self.key),
                 "text": res_text
             },
             "at": {
