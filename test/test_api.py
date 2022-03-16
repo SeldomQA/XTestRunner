@@ -36,6 +36,7 @@ if __name__ == '__main__':
     with(open(report, 'wb')) as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
+            tester="虫师",
             title='Seldom自动化测试报告',
-            description=['类型：API', '地址：https://httpbin.org/', '执行人：虫师']
+            description=['类型：API', '地址：https://httpbin.org/']
         ))

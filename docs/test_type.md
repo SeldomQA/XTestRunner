@@ -46,6 +46,7 @@ if __name__ == '__main__':
     with(open('./result.html', 'wb')) as fp:
         runner = HTMLTestRunner(
             stream=fp,
+            tester="虫师",
             title='<project name>test report',
             description='describe: ... ',
             language='en',
@@ -61,6 +62,7 @@ __`HTMLTestRunner`类说明__
 
 * `stream`: 指定报告的路径。
 * `title`: 报告的标题。
+* `tester`: 指定测试人员。
 * `description`: 报告的描述, 支持`str`、`list`两种类型。
 * `language`: 支持中文`zh-CN`, 默认`en`。
 
@@ -150,8 +152,9 @@ if __name__ == '__main__':
     with(open(report, 'wb')) as fp:
          unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
+            tester="虫师",
             title='Selenium自动化测试报告',
-            description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome', '执行人：虫师']
+            description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome']
         ))
 ```
 

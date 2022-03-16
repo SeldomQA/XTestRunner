@@ -29,6 +29,7 @@ if __name__ == '__main__':
     with(open(report, 'wb')) as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
+            tester="虫师",
             title='<project name>test report',
             description='describe: ... ',
             whitelist=["base"],  # 设置白名单

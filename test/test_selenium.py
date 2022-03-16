@@ -64,6 +64,7 @@ if __name__ == '__main__':
     with(open(report, 'wb')) as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
+            tester="虫师",
             title='Selenium自动化测试报告',
-            description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome', '执行人：虫师']
+            description=['类型：selenium', '操作系统：Windows', '浏览器：Chrome']
         ))
