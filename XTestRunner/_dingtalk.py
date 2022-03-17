@@ -54,9 +54,9 @@ class DingTalk:
             title=RunResult.title,
             tester=RunResult.tester,
             p_number=RunResult.passed,
-            f_number=RunResult.passed,
-            e_number=RunResult.passed,
-            s_number=RunResult.passed,
+            f_number=RunResult.failed,
+            e_number=RunResult.errors,
+            s_number=RunResult.skipped,
         )
         return res_text
 
