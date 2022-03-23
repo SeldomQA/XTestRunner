@@ -366,12 +366,11 @@ class HTMLTestRunner(object):
             raise EnvironmentError("The language is not supported")
         report = env.get_template(report_html).render(
             test_list=''.join(rows),
-            count=str(result.success_count + result.failure_count + result.error_count),
+            count=str(result.success_count + result.failure_count + result.error_count + result.skip_count),
             Pass=str(result.success_count),
             fail=str(result.failure_count),
             error=str(result.error_count),
             skip=str(result.skip_count),
-            total=str(result.success_count + result.failure_count + result.error_count),
             channel=str(self.run_times),
         )
         return report
