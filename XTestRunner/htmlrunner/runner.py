@@ -447,8 +447,8 @@ class HTMLTestRunner(object):
     def send_email(
             user: str,
             password: str,
-            host: str, to: any,
-            subject=None,
+            host: str,
+            to: any,
             attachments=None):
         """
         Send test result to email
@@ -456,13 +456,10 @@ class HTMLTestRunner(object):
         :param password:
         :param host:
         :param to:
-        :param subject:
         :param attachments:
         """
-        if subject is None:
-            subject = "XTestRunner Test Results"
         smtp = SMTP(user=user, password=password, host=host)
-        smtp.sender(to=to, subject=subject, attachments=attachments)
+        smtp.sender(to=to, attachments=attachments)
 
     @staticmethod
     def send_dingtalk(

@@ -53,7 +53,6 @@ if __name__ == '__main__':
             password="xxx",
             host="smtp.qq.com",
             to="recipient@126.com",
-            subject="测试邮件",
             attachments=report
         )
     # 发送方式 2：SMTP类

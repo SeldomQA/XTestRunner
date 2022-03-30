@@ -35,7 +35,7 @@ class SMTP(object):
             raise ValueError("Received mail type error")
 
         if subject is None:
-            subject = 'XTestRunner Test Report'
+            subject = RunResult.title
         if contents is None:
             contents = env.get_template('mail.html').render(
                 mail_title=str(RunResult.title),
