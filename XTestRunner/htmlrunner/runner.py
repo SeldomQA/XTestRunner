@@ -237,10 +237,15 @@ class HTMLTestRunner(object):
         RunResult.errors = result.error_count
         RunResult.skipped = result.skip_count
         count = RunResult.passed + RunResult.failed + RunResult.errors + RunResult.skipped
-        p_percent = '{:.2%}'.format(RunResult.passed / count)
-        e_percent = '{:.2%}'.format(RunResult.errors / count)
-        f_percent = '{:.2%}'.format(RunResult.failed / count)
-        s_percent = '{:.2%}'.format(RunResult.skipped / count)
+        p_percent = '0.00'
+        e_percent = '0.00'
+        f_percent = '0.00'
+        s_percent = '0.00'
+        if count > 0:
+            p_percent = '{:.2%}'.format(RunResult.passed / count)
+            e_percent = '{:.2%}'.format(RunResult.errors / count)
+            f_percent = '{:.2%}'.format(RunResult.failed / count)
+            s_percent = '{:.2%}'.format(RunResult.skipped / count)
 
         base_info = {
             "start_time": start_time_format,
