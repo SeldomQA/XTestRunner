@@ -1,3 +1,5 @@
+import time
+
 
 class Config:
     language = "en"  # en/ zh-CN
@@ -9,10 +11,18 @@ class RunResult:
     """
     title = "XTestRunner Test Report"
     tester = "Anonymous"
+    start_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    duration = "0:00:00"
     passed = 0
     failed = 0
     errors = 0
     skipped = 0
+    count = 0
+    pass_rate = 0.00
+    failure_rate = 0.00
+    error_rate = 0.00
+    skip_rate = 0.00
 
 
 def label(*labels):

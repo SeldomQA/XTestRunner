@@ -230,8 +230,12 @@ class HTMLTestRunner(object):
         Override this to add custom attributes.
         """
         start_time_format = str(self.start_time)[:19]
-        duration = str(self.end_time - self.start_time)
+        end_time_format = str(self.end_time)[:19]
+        duration = str(self.end_time - self.start_time)[:-3]
 
+        RunResult.start_time = start_time_format
+        RunResult.end_time = end_time_format
+        RunResult.duration = duration
         RunResult.passed = result.success_count
         RunResult.failed = result.failure_count
         RunResult.errors = result.error_count
@@ -247,8 +251,15 @@ class HTMLTestRunner(object):
             f_percent = '{:.2%}'.format(RunResult.failed / count)
             s_percent = '{:.2%}'.format(RunResult.skipped / count)
 
+        RunResult.count = count
+        RunResult.pass_rate = p_percent
+        RunResult.error_rate = e_percent
+        RunResult.failure_rate = f_percent
+        RunResult.skip_rate = s_percent
+
         base_info = {
             "start_time": start_time_format,
+            "end_time": end_time_format,
             "duration": duration
         }
 
@@ -302,6 +313,7 @@ class HTMLTestRunner(object):
         heading = env.get_template(heading_html).render(
             title=self.title,
             start_time=base["start_time"],
+            end_time=base["end_time"],
             duration=base["duration"],
             tester=self.tester,
             description=self.description,
