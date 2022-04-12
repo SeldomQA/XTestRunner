@@ -39,11 +39,18 @@ class SMTP(object):
         if contents is None:
             contents = env.get_template('mail.html').render(
                 mail_title=str(RunResult.title),
+                start_time=str(RunResult.start_time),
+                end_time=str(RunResult.end_time),
                 mail_tester=str(RunResult.tester),
+                duration=str(RunResult.duration),
                 mail_pass=str(RunResult.passed),
+                pass_rate=str(RunResult.pass_rate),
                 mail_fail=str(RunResult.failed),
+                failure_rate=str(RunResult.failure_rate),
                 mail_error=str(RunResult.errors),
-                mail_skip=str(RunResult.skipped)
+                error_rate=str(RunResult.error_rate),
+                mail_skip=str(RunResult.skipped),
+                skip_rate=str(RunResult.skip_rate)
             )
 
         msg = MIMEMultipart()

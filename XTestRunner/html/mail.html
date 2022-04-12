@@ -23,51 +23,97 @@
         <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;margin:0">
             <tbody>
             <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     标题:
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_title }}
                 </td>
-            </tr>
-            <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                 <td style="padding:0 0 20px; width: 25%;">
                     测试人员:
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_tester }}
                 </td>
             </tr>
             <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
+                    开始时间:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ start_time }}
+                </td>
+                 <td style="padding:0 0 20px; width: 25%;">
+                    结束时间:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ end_time }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:0 0 20px; width: 25%;">
+                    运行时长:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ duration }}
+                </td>
+                <td style="padding:0 0 20px; width: 25%;"></td>
+                <td style="padding:0 0 20px; width: 25%;"></td>
+            </tr>
+            <tr>
+                <td style="padding:0 0 20px; width: 25%;">
                     通过用例:
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_pass }}
                 </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    通过率:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ pass_rate }}
+                </td>
             </tr>
             <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     失败用例: 
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_fail }}
                 </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    失败率:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ failure_rate }}
+                </td>
             </tr>
             <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     错误用例:
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_error }}
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    错误率:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ error_rate }}
                 </td>
             </tr>
             <tr>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     跳过用例: 
                 </td>
-                <td style="padding:0 0 20px; width: 50%;">
+                <td style="padding:0 0 20px; width: 25%;">
                     {{ mail_skip }}
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    跳过率:
+                </td>
+                <td style="padding:0 0 20px; width: 25%;">
+                    {{ skip_rate }}
                 </td>
             </tr>
             </tbody>

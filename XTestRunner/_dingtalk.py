@@ -53,10 +53,17 @@ class DingTalk:
         res_text = env.get_template('notice_tmp.md').render(
             title=RunResult.title,
             tester=RunResult.tester,
+            start_time=RunResult.start_time,
+            end_time=RunResult.end_time,
+            duration=RunResult.duration,
             p_number=RunResult.passed,
+            pass_rate=RunResult.pass_rate,
             f_number=RunResult.failed,
+            failure_rate=RunResult.failure_rate,
             e_number=RunResult.errors,
+            error_rate=RunResult.error_rate,
             s_number=RunResult.skipped,
+            skip_rate=RunResult.skip_rate,
         )
         return res_text
 
