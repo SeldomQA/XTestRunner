@@ -338,17 +338,9 @@ class HTMLTestRunner(object):
                 if num == 0:
                     num_pass += 1
                 elif num == 1:
-                    if self.test_obj != test:
-                        self.test_obj = test
-                        num_fail += 1
-                    else:
-                        num_fail += 0
+                    num_fail += 1
                 elif num == 2:
-                    if self.test_obj != test:
-                        self.test_obj = test
-                        num_error += 1
-                    else:
-                        num_error += 0
+                    num_fail += 1
                 else:
                     num_skip += 1
 
