@@ -57,6 +57,7 @@ class _TestResult(TestResult):
         self.case_end_time = None
         self.output_buffer = None
         self.test_obj = None
+        self.sub_test_list = []
 
     def startTest(self, test):
         self.case_start_time = time.time()
@@ -199,3 +200,47 @@ class _TestResult(TestResult):
             sys.stderr.write('\n')
         else:
             sys.stderr.write('S')
+
+    def addSubTest(self, test, subtest, err):
+        if err is not None:
+            if getattr(self, 'failfast', False):
+                self.stop()
+            if issubclass(err[0], test.failureException):
+                self.failure_count += 1
+                errors = self.failures
+                errors.append((subtest, self._exc_info_to_string(err, subtest)))
+                output = self.complete_output()
+                self.result.append((1, test, output + '\nSubTestCase Failed:\n' + str(subtest),
+                                    self._exc_info_to_string(err, subtest)))
+                if self.verbosity > 1:
+                    sys.stderr.write('F  ')
+                    sys.stderr.write(str(subtest))
+                    sys.stderr.write('\n')
+                else:
+                    sys.stderr.write('F')
+            else:
+                self.error_count += 1
+                errors = self.errors
+                errors.append((subtest, self._exc_info_to_string(err, subtest)))
+                output = self.complete_output()
+                self.result.append(
+                    (2, test, output + '\nSubTestCase Error:\n' + str(subtest), self._exc_info_to_string(err, subtest)))
+                if self.verbosity > 1:
+                    sys.stderr.write('E  ')
+                    sys.stderr.write(str(subtest))
+                    sys.stderr.write('\n')
+                else:
+                    sys.stderr.write('E')
+            self._mirrorOutput = True
+        else:
+            self.sub_test_list.append(subtest)
+            self.sub_test_list.append(test)
+            self.success_count += 1
+            output = self.complete_output()
+            self.result.append((0, test, output + '\nSubTestCase Pass:\n' + str(subtest), ''))
+            if self.verbosity > 1:
+                sys.stderr.write('ok ')
+                sys.stderr.write(str(subtest))
+                sys.stderr.write('\n')
+            else:
+                sys.stderr.write('.')
