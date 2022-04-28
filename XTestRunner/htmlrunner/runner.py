@@ -75,9 +75,7 @@ class CustomTemplate:
             <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
                [x]</a>
             </div>
-            <pre>
-            %(script)s
-            </pre>
+            <pre>%(script)s</pre>
         </div>
         <!--css div popup end-->
     </td>
