@@ -3,7 +3,6 @@ import sys
 import unittest
 import datetime
 import functools
-from unittest import TextTestRunner
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
 from XTestRunner.htmlrunner.result import _TestResult
@@ -70,12 +69,27 @@ class CustomTemplate:
         <!--css div popup start-->
         <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
             %(status)s</a>
-        <div id='div_%(tid)s' class="popup_window">
-            <div style='text-align: right; color:red;cursor:pointer'>
-            <a onfocus='this.blur();' onclick="document.getElementById('div_%(tid)s').style.display = 'none' " >
-               [x]</a>
+        <div id='div_%(tid)s' class="modal show" style="display: none; background-color: #000000c7;">
+            <div class="modal-dialog modal-dialog-centered log_window">
+                <div class="modal-content shadow-3">
+                    <div class="modal-header">
+                        <div>
+                            <h5 class="mb-1">%(log_title)s</h5>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">detailed log</h5>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" data-bs-dismiss="modal" onclick="document.getElementById('div_%(tid)s').style.display = 'none' ">X</button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <pre>%(script)s</pre>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <pre>%(script)s</pre>
         </div>
         <!--css div popup end-->
     </td>
@@ -100,7 +114,7 @@ class CustomTemplate:
 """  # variables: (tid, Class, style, desc, status)
 
     IMG_TMPL = r"""
-<a  onfocus='this.blur();' href="#" onclick="showImg(this)">show</a>
+<a onfocus='this.blur();' href="#" onclick="showImg(this)">show</a>
 <div align="center" class="screenshots"  style="display:none">
     <button class="close-shots btn btn-sm btn-square btn-neutral text-danger-hover"  onclick="hideImg(this)">❌</button>
     <div class="card-body pb-5 img-card">
@@ -442,6 +456,7 @@ class HTMLTestRunner(object):
             casename=name,
             desc=doc,
             runtime=runtime,
+            log_title=name,
             script=script,
             status=CustomTemplate.STATUS[num],
             img=screenshots_html
