@@ -58,12 +58,19 @@ class _TestResult(TestResult):
         self.output_buffer = None
         self.test_obj = None
         self.sub_test_list = []
+        self.stdout_proxy = sys.stderr
 
     def startTest(self, test):
         self.case_start_time = time.time()
         test.images = getattr(test, "images", [])
         test.runtime = getattr(test, "runtime", None)
-        self.output_buffer = io.StringIO()
+
+        if type(sys.stderr).__name__ == "StringIO":
+            self.output_buffer = self.stdout_proxy
+            self.output_buffer.truncate(0)
+        else:
+            self.output_buffer = io.StringIO()
+
         stdout_redirector.fp = self.output_buffer
         stderr_redirector.fp = self.output_buffer
         self.stdout0 = sys.stdout
