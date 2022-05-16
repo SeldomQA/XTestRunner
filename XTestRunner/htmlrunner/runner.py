@@ -67,8 +67,7 @@ class CustomTemplate:
     </td>
     <td colspan='5' align='center' class='caseStatistics'>
         <!--css div popup start-->
-        <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_%(tid)s')" >
-            %(status)s</a>
+        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(status)s</a>
         <div id='div_%(tid)s' class="modal show" style="display: none; background-color: #000000c7;">
             <div class="modal-dialog modal-dialog-centered log_window">
                 <div class="modal-content shadow-3">
@@ -80,7 +79,7 @@ class CustomTemplate:
                             <h5 class="mb-1">detailed log</h5>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" data-bs-dismiss="modal" onclick="document.getElementById('div_%(tid)s').style.display = 'none' ">X</button>
+                            <button type="button" class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" data-bs-dismiss="modal" onclick="hideLog('div_%(tid)s')">X</button>
                         </div>
                     </div>
                     <div class="modal-body">
@@ -114,13 +113,24 @@ class CustomTemplate:
 """  # variables: (tid, Class, style, desc, status)
 
     IMG_TMPL = r"""
-<a onfocus='this.blur();' href="#" onclick="showImg(this)">show</a>
-<div align="center" class="screenshots"  style="display:none">
-    <button class="close-shots btn btn-sm btn-square btn-neutral text-danger-hover"  onclick="hideImg(this)">❌</button>
-    <div class="card-body pb-5 img-card">
-        {images}
+<a onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">show</a>
+<div id="case-image" class="modal show" style="display:none; background-color: #000000c7;">
+  <div class="modal-dialog modal-dialog-centered log_window">
+    <div class="modal-content shadow-3">
+      <div class="modal-header">
+        <div>
+          <h5 class="mb-1">screenshots</h5>
+        </div>
+          <div>
+            <button class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" onclick='hideImg(this)'">X</button>
+          </div>
+        </div>
+        <div class="modal-body" style="height: 600px; background: #e7eaf0;">
+          {images}
+        </div>
+        <div class="img-circle"></div>
     </div>
-    <div class="img-circle"></div>
+    </div>
 </div>
 """
 
