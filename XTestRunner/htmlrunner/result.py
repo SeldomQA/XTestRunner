@@ -164,7 +164,10 @@ class _TestResult(TestResult):
         self.result.append((2, test, output, _exc_str))
         if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
             driver = getattr(test, "driver")
-            test.images.append(driver.get_screenshot_as_base64())
+            try:
+                test.images.append(driver.get_screenshot_as_base64())
+            except BaseException:
+                ...
         if self.verbosity > 1:
             sys.stderr.write('E  ')
             sys.stderr.write(str(test))
@@ -187,7 +190,10 @@ class _TestResult(TestResult):
         self.result.append((1, test, output, _exc_str))
         if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
             driver = getattr(test, "driver")
-            test.images.append(driver.get_screenshot_as_base64())
+            try:
+                test.images.append(driver.get_screenshot_as_base64())
+            except BaseException:
+                ...
         if self.verbosity > 1:
             sys.stderr.write('F  ')
             sys.stderr.write(str(test))
