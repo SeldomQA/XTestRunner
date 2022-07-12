@@ -130,6 +130,8 @@ if __name__ == '__main__':
             app_secret="xxxxx",
             at_mobiles=[13700000000, 13800000000],
             is_at_all=False,
+            append=None,
+            text=None,
         )
 
     # 方式二： DingTalk 类
@@ -139,6 +141,8 @@ if __name__ == '__main__':
         app_secret="xxxxx",
         at_mobiles=[13700000000, 13800000000],
         is_at_all=False,
+        append=None,
+        text=None,
     )
     ding.sender()
 ```
@@ -150,3 +154,5 @@ __参数说明__
 * app_secret: 如果钉钉机器人安全设置了签名，则需要传入对应的密钥。
 * at_mobiles: 发送通知钉钉中要@人的手机号列表，如：[137xxx, 188xxx]。
 * is_at_all: 是否@所有人，默认为False, 设为True则会@所有人。
+* append: 在发送的消息中追加一些消息，markdown的字符串格式， 例如`"\n#标题 \n*id \n*名字"`
+* text: 替换要发送的消息，markdown的字符串格式。

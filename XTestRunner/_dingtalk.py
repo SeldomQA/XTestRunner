@@ -9,9 +9,6 @@ from jinja2 import Environment, FileSystemLoader
 from XTestRunner.config import RunResult
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DINGTALK_TMP = os.path.join(BASE_DIR, 'html', 'notice_tmp.md')
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_DIR = os.path.join(BASE_DIR, "html")
 env = Environment(loader=FileSystemLoader(HTML_DIR))
 
@@ -79,11 +76,18 @@ class DingTalk:
         sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
         return {"sign": sign, "timestamp": timestamp}
 
-    def sender(self):
+    def sender(self, append: str = None, text: str = None):
         """
         send dingtalk notice
+        :param append: appending sending information
+        :param text : replace send message
         """
         res_text = self._get_notice_content()
+        if append is not None:
+            res_text = res_text + str(append)
+        if text is not None:
+            res_text = text
+
         data = {
             "msgtype": "markdown",
             "markdown": {
