@@ -499,7 +499,9 @@ class HTMLTestRunner(object):
             key: str = None,
             app_secret: str = None,
             at_mobiles: list = None,
-            is_at_all: bool = False):
+            is_at_all: bool = False,
+            append: str = None,
+            text: str = None):
         """
         send dingtalk notice
         :param access_token:
@@ -507,7 +509,10 @@ class HTMLTestRunner(object):
         :param app_secret:
         :param at_mobiles:
         :param is_at_all:
+        :param append:
+        :param text:
         :return:
         """
-        ding = DingTalk(access_token=access_token, key=key, app_secret=app_secret, at_mobiles=at_mobiles,is_at_all=is_at_all)
-        ding.sender()
+        ding = DingTalk(access_token=access_token, key=key, app_secret=app_secret, at_mobiles=at_mobiles,
+                        is_at_all=is_at_all)
+        ding.sender(append=append, text=text)
