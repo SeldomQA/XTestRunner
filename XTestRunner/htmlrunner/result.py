@@ -39,7 +39,7 @@ class _TestResult(TestResult):
     It lacks the output and reporting ability compares to unittest._TextTestResult.
     """
 
-    def __init__(self, verbosity=1, rerun=0, save_last_run=False):
+    def __init__(self, verbosity=1, rerun=0, save_last_run=False, logger=None):
         TestResult.__init__(self)
         self.stdout0 = None
         self.stderr0 = None
@@ -59,17 +59,17 @@ class _TestResult(TestResult):
         self.test_obj = None
         self.sub_test_list = []
         self.stdout_proxy = sys.stderr
+        self.logger = logger
+        self.logger_handler_id = None
 
     def startTest(self, test):
         self.case_start_time = time.time()
         test.images = getattr(test, "images", [])
         test.runtime = getattr(test, "runtime", None)
 
-        if type(sys.stderr).__name__ == "StringIO":
-            self.output_buffer = self.stdout_proxy
-            self.output_buffer.truncate(0)
-        else:
-            self.output_buffer = io.StringIO()
+        self.output_buffer = io.StringIO()
+        if self.logger is not None:
+            self.logger_handler_id = self.logger.add(self.output_buffer)
 
         stdout_redirector.fp = self.output_buffer
         stderr_redirector.fp = self.output_buffer
@@ -86,6 +86,10 @@ class _TestResult(TestResult):
         if self.stdout0:
             sys.stdout = self.stdout0
             sys.stderr = self.stderr0
+
+            if self.logger is not None:
+                self.logger.remove(self.logger_handler_id)
+
             self.stdout0 = None
             self.stderr0 = None
         return self.output_buffer.getvalue()
