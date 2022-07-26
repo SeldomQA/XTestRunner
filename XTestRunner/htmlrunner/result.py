@@ -12,9 +12,11 @@ class OutputRedirector(object):
 
     def __init__(self, fp):
         self.fp = fp
+        self.stdbak = fp
 
     def write(self, s):
         self.fp.write(s)
+        self.stdbak.write("{}\n".format(str(s)))
 
     def writelines(self, lines):
         self.fp.writelines(lines)
