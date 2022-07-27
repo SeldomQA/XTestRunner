@@ -11,7 +11,6 @@ from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
 
-
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
 
@@ -148,11 +147,13 @@ class HTMLTestRunner(object):
                  description=None,
                  save_last_run=True,
                  language="en",
+                 logger=None,
                  **kwargs):
         self.stream = stream
         self.verbosity = verbosity
         self.save_last_run = save_last_run
         self.run_times = 0
+        self.logger = logger
         Config.language = language
         if title is None:
             self.title = DEFAULT_TITLE
@@ -214,6 +215,7 @@ class HTMLTestRunner(object):
                 @functools.wraps(test_method)
                 def skip_wrapper(*args, **kwargs):
                     raise unittest.SkipTest('label exclusion')
+
                 skip_wrapper.__unittest_skip__ = True
                 if len(self.whitelist) >= 1:
                     skip_wrapper.__unittest_skip_why__ = f'label whitelist {self.whitelist}'
@@ -221,7 +223,7 @@ class HTMLTestRunner(object):
                     skip_wrapper.__unittest_skip_why__ = f'label blacklist {self.blacklist}'
                 setattr(test, test._testMethodName, skip_wrapper)
 
-        result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run)
+        result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run, logger=self.logger)
         testlist(result)
         self.end_time = datetime.datetime.now()
         self.run_times += 1
@@ -370,7 +372,7 @@ class HTMLTestRunner(object):
             if cls.__module__ == "__main__":
                 name = cls.__name__
             else:
-                name = f"{cls.__module__}.{ cls.__name__}"
+                name = f"{cls.__module__}.{cls.__name__}"
             doc = cls.__doc__ or ""
             # desc = doc and '%s: %s' % (name, doc) or name
 
