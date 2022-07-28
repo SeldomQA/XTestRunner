@@ -21,10 +21,12 @@ class XMLTestRunner(TextTestRunner):
                  resultclass=None,
                  whitelist=None,
                  blacklist=None,
+                 logger=None,
                  **kwargs):
         super(XMLTestRunner, self).__init__(**kwargs)
         self.output = output
         self.encoding = encoding
+        self.logger = logger
         # None means default timestamped suffix
         # '' (empty) means no suffix
         if outsuffix is None:
@@ -46,7 +48,7 @@ class XMLTestRunner(TextTestRunner):
         """
         # override in subclasses if necessary.
         return self.resultclass(
-            self.stream, self.descriptions, self.verbosity, self.elapsed_times
+            self.stream, self.descriptions, self.verbosity, self.elapsed_times, logger=self.logger
         )
 
     @classmethod

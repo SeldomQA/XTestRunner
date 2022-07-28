@@ -12,7 +12,6 @@ from time import time
 from unittest.result import failfast
 from unittest import TestResult, TextTestResult
 
-
 # Matches invalid XML1.0 unicode characters, like control characters:
 # http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
 # http://stackoverflow.com/questions/1707890/fast-way-to-filter-illegal-xml-unicode-chars-in-python
@@ -40,7 +39,6 @@ _illegal_ranges = [
 ]
 
 INVALID_XML_1_0_UNICODE_RE = re.compile(u'[%s]' % u''.join(_illegal_ranges))
-
 
 STDOUT_LINE = '\nStdout:\n%s'
 STDERR_LINE = '\nStderr:\n%s'
@@ -135,7 +133,8 @@ class _TestInfo(object):
         SKIP: 'skipped',
     }
 
-    def __init__(self, test_result, test_method, outcome=SUCCESS, err=None, subTest=None, filename=None, lineno=None, doc=None):
+    def __init__(self, test_result, test_method, outcome=SUCCESS, err=None, subTest=None, filename=None, lineno=None,
+                 doc=None):
         self.test_result = test_result
         self.outcome = outcome
         self.elapsed_time = 0
@@ -154,7 +153,7 @@ class _TestInfo(object):
         self.test_exception_info = (
             '' if outcome in (self.SUCCESS, self.SKIP)
             else self.test_result._exc_info_to_string(
-                    err, test_method)
+                err, test_method)
         )
 
         self.test_name = testcase_name(test_method)
@@ -193,8 +192,9 @@ class _XMLTestResult(TextTestResult):
 
     Used by XMLTestRunner.
     """
+
     def __init__(self, stream=sys.stderr, descriptions=1, verbosity=1,
-                 elapsed_times=True, properties=None, infoclass=None):
+                 elapsed_times=True, properties=None, infoclass=None, logger=None):
         TextTestResult.__init__(self, stream, descriptions, verbosity)
         self._stdout_data = None
         self._stderr_data = None
@@ -209,6 +209,7 @@ class _XMLTestResult(TextTestResult):
         self.filename = None
         self.lineno = None
         self.doc = None
+        self.logger = logger
         if infoclass is None:
             self.infoclass = _TestInfo
         else:
@@ -289,6 +290,9 @@ class _XMLTestResult(TextTestResult):
         sys.stdout = _DuplicateWriter(sys.stdout, self._stdout_capture)
         self.__stderr_saved = sys.stderr
         sys.stderr = _DuplicateWriter(sys.stderr, self._stderr_capture)
+        if self.logger is not None:
+            self.logger_handler_id = self.logger.logger.add(self._stdout_capture, level=self.logger._level,
+                                                            colorize=False, format=self.logger._console_format)
 
     def _restoreStdout(self):
         """
@@ -300,6 +304,9 @@ class _XMLTestResult(TextTestResult):
         if self.__stderr_saved:
             sys.stderr = self.__stderr_saved
             self.__stderr_saved = None
+        if self.logger is not None:
+            self.logger.logger.remove(self.logger_handler_id)
+
         self._stdout_capture.seek(0)
         self._stdout_capture.truncate()
         self._stderr_capture.seek(0)
@@ -536,10 +543,10 @@ class _XMLTestResult(TextTestResult):
         text = safe_unicode(text)
         pos = text.find(']]>')
         while pos >= 0:
-            tmp = text[0:pos+2]
+            tmp = text[0:pos + 2]
             cdata = xmldoc.createCDATASection(tmp)
             node.appendChild(cdata)
-            text = text[pos+2:]
+            text = text[pos + 2:]
             pos = text.find(']]>')
         cdata = xmldoc.createCDATASection(text)
         node.appendChild(cdata)

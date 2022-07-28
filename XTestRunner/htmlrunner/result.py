@@ -71,7 +71,8 @@ class _TestResult(TestResult):
 
         self.output_buffer = io.StringIO()
         if self.logger is not None:
-            self.logger_handler_id = self.logger.add(self.output_buffer)
+            self.logger_handler_id = self.logger.logger.add(self.output_buffer, level=self.logger._level,
+                                                            colorize=False, format=self.logger._console_format)
 
         stdout_redirector.fp = self.output_buffer
         stderr_redirector.fp = self.output_buffer
@@ -90,7 +91,7 @@ class _TestResult(TestResult):
             sys.stderr = self.stderr0
 
             if self.logger is not None:
-                self.logger.remove(self.logger_handler_id)
+                self.logger.logger.remove(self.logger_handler_id)
 
             self.stdout0 = None
             self.stderr0 = None
