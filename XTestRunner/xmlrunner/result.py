@@ -16,6 +16,8 @@ from unittest import TestResult, TextTestResult
 # http://www.w3.org/TR/2006/REC-xml-20060816/#charsets
 # http://stackoverflow.com/questions/1707890/fast-way-to-filter-illegal-xml-unicode-chars-in-python
 
+sys.setrecursionlimit(2000)
+
 _illegal_unichrs = [
     (0x00, 0x08), (0x0B, 0x0C), (0x0E, 0x1F),
     (0x7F, 0x84), (0x86, 0x9F),
@@ -102,6 +104,11 @@ class _DuplicateWriter(io.TextIOBase):
         self._second.writelines(lines)
 
     def write(self, b):
+        try:
+            # AttributeError: '_DuplicateWriter' object has no attribute '_first'
+            self._first
+        except AttributeError:
+            return
         if isinstance(self._first, io.TextIOBase):
             wrote = self._first.write(b)
 
