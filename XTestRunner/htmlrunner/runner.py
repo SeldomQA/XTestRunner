@@ -10,6 +10,7 @@ from XTestRunner.config import RunResult, Config
 from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
+from XTestRunner._feishu import FeiShu
 
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
@@ -518,3 +519,15 @@ class HTMLTestRunner(object):
         ding = DingTalk(access_token=access_token, key=key, app_secret=app_secret, at_mobiles=at_mobiles,
                         is_at_all=is_at_all)
         ding.sender(append=append, text=text)
+
+    @staticmethod
+    def send_feishu(
+            url: str,
+            key: str = None,
+            secret: str = None,
+            user_id: str = None,
+            user_name: str = False,
+            feishu_href: str = None):
+
+        fs = FeiShu(url=url, key=key, secret=secret, user_id=user_id, user_name=user_name, feishu_href=feishu_href)
+        fs.feishu_notice()

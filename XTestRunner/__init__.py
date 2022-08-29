@@ -35,6 +35,7 @@ from .xmlrunner.runner import XMLTestRunner
 from .htmlrunner.runner import HTMLTestRunner
 from ._email import SMTP
 from ._dingtalk import DingTalk
+from ._feishu import FeiShu
 from .config import label
 
 
