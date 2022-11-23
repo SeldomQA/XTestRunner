@@ -381,7 +381,7 @@ class HTMLTestRunner(object):
                 style=num_error > 0 and 'errorClass' or num_fail > 0 and 'failClass' or 'passClass',
                 name=name,
                 desc=doc,
-                count=num_pass + num_fail + num_error,
+                count=num_pass + num_fail + num_error + num_skip,
                 Pass=num_pass,
                 fail=num_fail,
                 error=num_error,
