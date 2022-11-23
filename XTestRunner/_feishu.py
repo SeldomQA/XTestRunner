@@ -52,7 +52,8 @@ class FeiShu:
         response = requests.post(url=self.url, json=data, params=params)  # 发送请求
         return response.text
 
-    def __get_feishu_notice_content(self):
+    @staticmethod
+    def __get_feishu_notice_content():
         """获取通知的内容"""
         template_path = os.path.join(os.path.dirname(__file__), '../XTestRunner/html')
         env = Environment(loader=FileSystemLoader(template_path))

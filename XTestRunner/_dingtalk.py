@@ -43,7 +43,8 @@ class DingTalk:
         self.at_mobiles = at_mobiles
         self.is_at_all = is_at_all
 
-    def _get_notice_content(self):
+    @staticmethod
+    def _get_notice_content():
         """
         get notice content
         """
