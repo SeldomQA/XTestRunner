@@ -17,7 +17,7 @@ class Weinxin:
     """
     SendNail group notification
     help doc:
-        https://open.dingtalk.com/document/group/enterprise-created-chatbot
+        https://developer.work.weixin.qq.com/document/path/91770
     """
 
     def __init__(self, access_token, at_mobiles: list = None, is_at_all: bool = False):
