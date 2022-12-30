@@ -1,3 +1,10 @@
+### 1.5.0 版本
+
+* 新增飞书推送，感谢 @yingzi(3011456083@qq.com)
+* 新增微信推送，感谢 @Yingqing Shan(yingqing.shan@sayweee.com)
+* 修复：邮件发送错误： `smtplib.SMTP_SSL()` 改为 `smtplib.SMTP()`。
+* 修复：测试类统计错误：测试类没有统计`跳过`的用例。
+
 ### 1.4.6 版本
 
 * 修复 AttributeError 异常

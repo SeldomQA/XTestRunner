@@ -41,6 +41,6 @@ from .config import label
 
 __author__ = "bugmaster"
 
-__version__ = "1.4.6"
+__version__ = "1.5.0"
 
 __description__ = "Unittest-based HTML test report."
