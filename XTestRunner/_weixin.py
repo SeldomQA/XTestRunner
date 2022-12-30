@@ -75,6 +75,7 @@ class Weinxin:
     def send_text(self, content):
         """
         发送text类型消息
+        :param content: 消息内容
         :return:
         """
         # 推送人手机号码
@@ -101,7 +102,6 @@ class Weinxin:
         """
         message = {"msgtype": "markdown", "markdown": {"content": content}}
         resp = self._send_message(self.url, message)
-        print(resp)
         if resp["errcode"] == 0:
             print(" 📧 dingTalk sent successfully!!")
         else:
