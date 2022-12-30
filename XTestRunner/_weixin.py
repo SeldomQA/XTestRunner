@@ -112,7 +112,7 @@ class Weinxin:
 
 if __name__ == '__main__':
     weixin = Weinxin(
-        access_token="50327a8c-59c3-4be7-bf44-a7ad4ec749b5",
+        access_token="50327a8c-59c3-4be7-bf44-a7ad4ec749b5#",
         at_mobiles=[13700000000, 13800000000],
         is_at_all=True,
     )
