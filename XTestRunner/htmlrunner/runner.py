@@ -365,7 +365,7 @@ class HTMLTestRunner(object):
                 elif num == 1:
                     num_fail += 1
                 elif num == 2:
-                    num_fail += 1
+                    num_error += 1
                 else:
                     num_skip += 1
 
