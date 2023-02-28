@@ -419,23 +419,23 @@ class _XMLTestResult(TextTestResult):
         """
         if err is not None:
             if issubclass(err[0], test.failureException):
-                errorText = 'FAIL'
-                errorValue = self.infoclass.FAILURE
-                errorList = self.failures
+                error_text = 'FAIL'
+                error_value = self.infoclass.FAILURE
+                error_list = self.failures
             else:
-                errorText = 'ERROR'
-                errorValue = self.infoclass.ERROR
-                errorList = self.errors
+                error_text = 'ERROR'
+                error_value = self.infoclass.ERROR
+                error_list = self.errors
 
             self._save_output_data()
 
             testinfo = self.infoclass(
-                self, testcase, errorValue, err, subTest=test)
-            errorList.append((
+                self, testcase, error_value, err, subTest=test)
+            error_list.append((
                 testinfo,
                 self._exc_info_to_string(err, testcase)
             ))
-            self._prepare_callback(testinfo, [], errorText, errorText[0])
+            self._prepare_callback(testinfo, [], error_text, error_list[0])
 
     def addSkip(self, test, reason):
         """
@@ -497,7 +497,7 @@ class _XMLTestResult(TextTestResult):
     def _get_info_by_testcase(self):
         """
         Organizes test results by TestCase module. This information is
-        used during the report generation, where a XML report will be created
+        used during the report generation, where an XML report will be created
         for each TestCase.
         """
         tests_by_testcase = {}

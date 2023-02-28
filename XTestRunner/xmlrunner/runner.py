@@ -18,6 +18,8 @@ class XMLTestRunner(TextTestRunner):
                  outsuffix=None,
                  elapsed_times=True,
                  encoding=UTF8,
+                 descriptions=True,
+                 verbosity=1,
                  whitelist=None,
                  blacklist=None,
                  logger=None,
@@ -26,6 +28,8 @@ class XMLTestRunner(TextTestRunner):
         super(XMLTestRunner, self).__init__(**kwargs)
         self.output = output
         self.encoding = encoding
+        self.descriptions = descriptions
+        self.verbosity = verbosity
         self.logger = logger
         self.rerun = rerun
         # None means default timestamped suffix
