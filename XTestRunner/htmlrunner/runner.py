@@ -146,13 +146,13 @@ class HTMLTestRunner(object):
                  title=None,
                  tester="Anonymous",
                  description=None,
-                 save_last_run=True,
+                 rerun=0,
                  language="en",
                  logger=None,
                  **kwargs):
         self.stream = stream
         self.verbosity = verbosity
-        self.save_last_run = save_last_run
+        self.rerun = rerun
         self.run_times = 0
         self.logger = logger
         Config.language = language
@@ -194,7 +194,7 @@ class HTMLTestRunner(object):
             else:
                 yield test
 
-    def run(self, testlist, rerun=0, save_last_run=False):
+    def run(self, testlist):
         """
         Run the given test case or test suite.
         """
@@ -224,7 +224,7 @@ class HTMLTestRunner(object):
                     skip_wrapper.__unittest_skip_why__ = f'label blacklist {self.blacklist}'
                 setattr(test, test._testMethodName, skip_wrapper)
 
-        result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run, logger=self.logger)
+        result = _TestResult(self.verbosity, rerun=self.rerun, logger=self.logger)
         testlist(result)
         self.end_time = datetime.datetime.now()
         self.run_times += 1
