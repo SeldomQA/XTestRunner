@@ -2,6 +2,5 @@
 *.pyc
 *.log
 report
-build
 dist
-TestRunner.egg-info
+poetry.lock
