@@ -254,7 +254,10 @@ class _XMLTestResult(TextTestResult):
                     '%s (%.3fs)' % (verbose_str, test_info.elapsed_time)
                 )
             elif self.dots:
-                self.stream.write(short_str)
+                if isinstance(short_str, tuple) and len(short_str) == 2:
+                    self.stream.write(short_str[1])
+                else:
+                    self.stream.write(short_str)
 
             self.stream.flush()
 
@@ -436,6 +439,12 @@ class _XMLTestResult(TextTestResult):
                 self._exc_info_to_string(err, testcase)
             ))
             self._prepare_callback(testinfo, [], error_text, error_list[0])
+        else:
+            self._save_output_data()
+            self._restoreStdout()
+            self._prepare_callback(
+                self.infoclass(self, test), self.successes, 'ok', '.'
+            )
 
     def addSkip(self, test, reason):
         """
