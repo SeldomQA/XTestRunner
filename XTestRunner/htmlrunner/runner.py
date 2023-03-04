@@ -480,21 +480,27 @@ class HTMLTestRunner(object):
 
     @staticmethod
     def send_email(
+            to: any,
             user: str,
             password: str,
             host: str,
-            to: any,
+            port: int = None,
+            ssl: bool = True,
+            subject: str = None,
             attachments=None):
         """
         Send test result to email
+        :param to:
         :param user:
         :param password:
         :param host:
-        :param to:
+        :param port:
+        :param ssl:
+        :param subject:
         :param attachments:
         """
-        smtp = SMTP(user=user, password=password, host=host)
-        smtp.sender(to=to, attachments=attachments)
+        smtp = SMTP(user=user, password=password, host=host, port=port, ssl=ssl)
+        smtp.sender(to=to, subject=subject, attachments=attachments)
 
     @staticmethod
     def send_dingtalk(

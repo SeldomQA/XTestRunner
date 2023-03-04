@@ -54,10 +54,10 @@ if __name__ == '__main__':
         runner.run(suit)
         # 发送邮件方式 1：send_email()方法
         runner.send_email(
+            to="recipient@126.com",
             user="sender@qq.com",
             password="xxx",
             host="smtp.qq.com",
-            to="recipient@126.com",
             subject="测试邮件",
             attachments=report
         )
