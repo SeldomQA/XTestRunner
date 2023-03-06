@@ -12,76 +12,52 @@ __测试用例__
 # test_unit.py
 import unittest
 from XTestRunner import HTMLTestRunner
+from random import randint
 
 
 class TestDemo(unittest.TestCase):
     """测试用例说明"""
-    
+
     def test_success(self):
         """执行成功"""
         self.assertEqual(2 + 3, 5)
-    
+
     @unittest.skip("skip case")
     def test_skip(self):
-        """跳过用例"""
         pass
-    
+
     def test_fail(self):
-        """失败用例"""
-        self.assertEqual(5, 6)
-    
+        """ 失败用例 """
+        num = randint(1, 5)
+        self.assertEqual(num, 3)
+
     def test_error(self):
-        """错误用例"""
-        self.assertEqual(a, 6)
+        """ 错误用例 """
+        num = randint(1, 1)
+        if num == 1:
+            self.assertEqual(a, 2)
+
+
+class TestDemo2(unittest.TestCase):
+
+    def test_success(self):
+        """成功用例2"""
+        self.assertEqual(2 + 2, 4)
+
+
+class TestDemo3(unittest.TestCase):
+
+    def test_fail(self):
+        """ 失败用例2 """
+        num = randint(1, 5)
+        self.assertEqual(num, 2)
+
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTests([
-        TestDemo("test_success"),
-        TestDemo("test_skip"),
-        TestDemo("test_fail"),
-        TestDemo("test_error")
-    ])
-    
-    with(open('./result.html', 'wb')) as fp:
-        runner = HTMLTestRunner(
-            stream=fp,
-            tester="虫师",
-            title='<project name>test report',
-            description='describe: ... ',
-            language='en',
-        )
-        runner.run(
-            testlist=suit,
-            rerun=2,
-            save_last_run=False
-        )
+    report = "./reports/test_unit.html"
+    with(open(report, 'wb')) as fp:
+        unittest.main(testRunner=HTMLTestRunner(fp, rerun=2))
 ```
-
-__`HTMLTestRunner`类说明__
-
-* `stream`: 指定报告的路径。
-* `title`: 报告的标题。
-* `tester`: 指定测试人员。
-* `description`: 报告的描述, 支持`str`、`list`两种类型。
-* `language`: 支持中文`zh-CN`, 默认`en`。
-
-__`run()`方法说明__
-
-* `testlist`: 运行的测试套件。
-* `rerun`: 重跑次数。
-* `save_last_run`: 是否保存最后一个重跑结果。
-
-
-__运行测试__
-
-```shell
-> python test_unit.py
-```
-
-__测试报告__
-
-![](../img/test_report.png)
 
 ### SeleniumWeb测试
 
@@ -178,40 +154,50 @@ XTestRunner 当然也支持HTTP接口测试了。
 __测试用例__
 
 ```python
+import json
 import requests
 import unittest
 from XTestRunner import HTMLTestRunner
 
-class YouTest(unittest.TestCase):
+
+def formatting(msg):
+    """formatted message"""
+    if isinstance(msg, dict):
+        return json.dumps(msg, indent=2, ensure_ascii=False)
+    return msg
+
+
+class ApiTest(unittest.TestCase):
 
     def test_get(self):
         """测试get接口 """
-        r = requests.get("https://httpbin.org/get", params={"key":"value"})
-        print(r.json())
+        r = requests.get("https://httpbin.org/get", params={"key": "value"})
+        print(formatting(r.json()))
 
     def test_post(self):
         """测试post接口 """
-        r = requests.post("https://httpbin.org/post", data={"key":"value"})
-        print(r.json())
+        r = requests.post("https://httpbin.org/post", data={"key": "value"})
+        print(formatting(r.json()))
 
     def test_put(self):
         """测试put接口 """
-        r = requests.put("https://httpbin.org/put", data={"key":"value"})
-        print(r.json())
+        r = requests.put("https://httpbin.org/put", data={"key": "value"})
+        print(formatting(r.json()))
 
     def test_delete(self):
         """测试delete接口 """
-        r = requests.delete("https://httpbin.org/delete", data={"key":"value"})
-        print(r.json())
+        r = requests.delete("https://httpbin.org/delete", data={"key": "value"})
+        print(formatting(r.json()))
 
 
 if __name__ == '__main__':
-    report = "./reports/api_result.html"
+    report = "./reports/test_api.html"
     with(open(report, 'wb')) as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
-            title='Seldom自动化测试报告',
-            description=['类型：API', '地址：https://httpbin.org/', '执行人：虫师']
+            tester="虫师",
+            title='api自动化测试报告',
+            description=['类型：API', '地址：https://httpbin.org/']
         ))
 ```
 

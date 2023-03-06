@@ -29,19 +29,13 @@ stdout_redirector = OutputRedirector(sys.stdout)
 stderr_redirector = OutputRedirector(sys.stderr)
 
 
-class OneCase:
-    obj = None
-    error = 0
-    failure = 0
-
-
 class _TestResult(TestResult):
     """
     note: _TestResult is a pure representation of results.
     It lacks the output and reporting ability compares to unittest._TextTestResult.
     """
 
-    def __init__(self, verbosity=1, rerun=0, save_last_run=False, logger=None):
+    def __init__(self, verbosity=1, rerun=0, logger=None):
         TestResult.__init__(self)
         self.stdout0 = None
         self.stderr0 = None
@@ -51,7 +45,6 @@ class _TestResult(TestResult):
         self.skip_count = 0
         self.verbosity = verbosity
         self.rerun = rerun
-        self.save_last_run = save_last_run
         self.status = 0
         self.runs = 0
         self.result = []
@@ -91,13 +84,15 @@ class _TestResult(TestResult):
         """
         if self.stdout0:
             sys.stdout = self.stdout0
-            sys.stderr = self.stderr0
-
-            if self.logger is not None:
-                self.logger.logger.remove(self.logger_handler_id)
-
             self.stdout0 = None
+
+        if self.stderr0:
+            sys.stderr = self.stderr0
             self.stderr0 = None
+
+        if self.logger is not None:
+            self.logger.logger.remove(self.logger_handler_id)
+
         return self.output_buffer.getvalue()
 
     def stopTest(self, test):
@@ -110,18 +105,10 @@ class _TestResult(TestResult):
             if self.status == 1:
                 self.runs += 1
                 if self.runs <= self.rerun:
-                    if self.save_last_run is True:
-                        t = self.result.pop(-1)
-                        if t[0] == 1:
-                            if self.failure_count > 1:
-                                self.failure_count -= 1
-                        else:
-                            if self.error_count > 1:
-                                self.error_count -= 1
                     test = copy.copy(test)
-                    sys.stderr.write("Retesting... ")
-                    sys.stderr.write(str(test))
-                    sys.stderr.write(f"..{self.runs} \n")
+                    sys.stdout.write("Retesting... ")
+                    sys.stdout.write(str(test))
+                    sys.stdout.write(f"..{self.runs} \n")
                     doc = getattr(test, '_testMethodDoc', u"") or u''
                     if doc.find('->rerun') != -1:
                         doc = doc[:doc.find('->rerun')]
@@ -139,16 +126,8 @@ class _TestResult(TestResult):
         test.runtime = round(case_run_time, 2)
 
     def addSuccess(self, test):
-        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.failure == 1):
-            self.failure_count -= 1
-            OneCase.obj = None
-            OneCase.failure = 0
-        if (self.rerun > 1) and (OneCase.obj == test) and (OneCase.error == 1):
-            self.error_count -= 1
-            OneCase.obj = None
-            OneCase.error = 0
-        self.success_count += 1
         self.status = 0
+        self.success_count += 1
         TestResult.addSuccess(self, test)
         output = self.complete_output()
         self.result.append((0, test, output, ''))
@@ -160,14 +139,10 @@ class _TestResult(TestResult):
             sys.stderr.write('.' + str(self.success_count))
 
     def addError(self, test, err):
-        if self.test_obj != test:
-            self.test_obj = test
-            self.error_count += 1
-            OneCase.obj = test
-            OneCase.error = 1
-        else:
-            self.error_count += 0
         self.status = 1
+        if self.runs < self.rerun:
+            return
+        self.error_count += 1
         TestResult.addError(self, test, err)
         _, _exc_str = self.errors[-1]
         output = self.complete_output()
@@ -186,14 +161,10 @@ class _TestResult(TestResult):
             sys.stderr.write('E')
 
     def addFailure(self, test, err):
-        if self.test_obj != test:
-            self.test_obj = test
-            self.failure_count += 1
-            OneCase.obj = test
-            OneCase.failure = 1
-        else:
-            self.failure_count += 0
         self.status = 1
+        if self.runs < self.rerun:
+            return
+        self.failure_count += 1
         TestResult.addFailure(self, test, err)
         _, _exc_str = self.failures[-1]
         output = self.complete_output()

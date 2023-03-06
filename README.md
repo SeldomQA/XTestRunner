@@ -6,14 +6,15 @@
 
 ### 特点
 
-* 漂亮测试报告让你更愿意编写测试。
-* 支持`单元`、`Web UI`、`API` 各种类型的测试。
-* 支持`Selenium`运行失败/错误自动截图。
-* 支持失败重跑。
+* 简洁、美观具有现代风格的测试报告。
+* 支持`HTML/XML`不同格式。
+* 支持`单元`、`Web UI`、`API`各种类型的测试。
+* 集成`邮件/钉钉/企微/飞书` 发送消息。
+* 支持用例`错误/失败`重跑。
 * 支持标签黑、白名单。
-* 支持发邮件功能。
-* 支持多语言`en`、`zh-CN` 等。
-* 支持`HTML/XML`不同格式的报告。
+* 针对`Selenium`运行失败/错误自动截图（HTML格式）。
+* 支持多语言`en`、`zh-CN`（HTML格式）。
+
 
 ## Report
 
@@ -34,7 +35,7 @@ If you want to keep up with the latest version, you can install with github repo
 
 ## demo
 
-查看更多使用 [例子](./test)。
+查看更多使用 [例子](./tests)。
 
 * unittest测试
 
@@ -78,17 +79,14 @@ if __name__ == '__main__':
             title='<project name>test report',
             description='describe: ... ',
             language='en',
+            rerun=3
         )
-        runner.run(
-            testlist=suit,
-            rerun=2,
-            save_last_run=False
-        )
+        runner.run(suit)
 ```
 
 ## Document
 
-[中文文档](./docs/README.md)
+更多例子，请阅读 [中文文档](./docs/README.md)
 
 ## 感谢
 

@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "XTestRunner"
+version = "1.5.0"
+description = "Modern style test report based on unittest framework."
+authors = ["bugmaster <fnngj@126.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/seldomQA/XTestRunner/"
+repository = "https://github.com/seldomQA/XTestRunner/"
+classifiers = [
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: Apache Software License',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    "Topic :: Software Development :: Testing",
+    'Topic :: Software Development :: Version Control :: Git'
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+jinja2 = "^2.11.3"
+requests = "^2.22.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

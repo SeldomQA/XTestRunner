@@ -11,6 +11,8 @@ from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
 from XTestRunner._feishu import FeiShu
+from XTestRunner._weixin import Weinxin
+
 
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
@@ -146,13 +148,13 @@ class HTMLTestRunner(object):
                  title=None,
                  tester="Anonymous",
                  description=None,
-                 save_last_run=True,
+                 rerun=0,
                  language="en",
                  logger=None,
                  **kwargs):
         self.stream = stream
         self.verbosity = verbosity
-        self.save_last_run = save_last_run
+        self.rerun = rerun
         self.run_times = 0
         self.logger = logger
         Config.language = language
@@ -194,7 +196,7 @@ class HTMLTestRunner(object):
             else:
                 yield test
 
-    def run(self, testlist, rerun=0, save_last_run=False):
+    def run(self, testlist):
         """
         Run the given test case or test suite.
         """
@@ -224,7 +226,7 @@ class HTMLTestRunner(object):
                     skip_wrapper.__unittest_skip_why__ = f'label blacklist {self.blacklist}'
                 setattr(test, test._testMethodName, skip_wrapper)
 
-        result = _TestResult(self.verbosity, rerun=rerun, save_last_run=save_last_run, logger=self.logger)
+        result = _TestResult(self.verbosity, rerun=self.rerun, logger=self.logger)
         testlist(result)
         self.end_time = datetime.datetime.now()
         self.run_times += 1
@@ -480,21 +482,27 @@ class HTMLTestRunner(object):
 
     @staticmethod
     def send_email(
+            to: any,
             user: str,
             password: str,
             host: str,
-            to: any,
+            port: int = None,
+            ssl: bool = True,
+            subject: str = None,
             attachments=None):
         """
         Send test result to email
+        :param to:
         :param user:
         :param password:
         :param host:
-        :param to:
+        :param port:
+        :param ssl:
+        :param subject:
         :param attachments:
         """
-        smtp = SMTP(user=user, password=password, host=host)
-        smtp.sender(to=to, attachments=attachments)
+        smtp = SMTP(user=user, password=password, host=host, port=port, ssl=ssl)
+        smtp.sender(to=to, subject=subject, attachments=attachments)
 
     @staticmethod
     def send_dingtalk(
@@ -531,3 +539,12 @@ class HTMLTestRunner(object):
 
         fs = FeiShu(url=url, key=key, secret=secret, user_id=user_id, user_name=user_name, feishu_href=feishu_href)
         fs.feishu_notice()
+
+    @staticmethod
+    def send_weixin(
+            access_token: str,
+            at_mobiles: list = None,
+            is_at_all: bool = None):
+
+        wx = Weinxin(access_token=access_token, at_mobiles=at_mobiles, is_at_all=is_at_all)
+        wx.send_text()

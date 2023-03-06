@@ -18,38 +18,29 @@ class XMLTestRunner(TextTestRunner):
                  outsuffix=None,
                  elapsed_times=True,
                  encoding=UTF8,
-                 resultclass=None,
+                 descriptions=True,
+                 verbosity=1,
                  whitelist=None,
                  blacklist=None,
                  logger=None,
+                 rerun=0,
                  **kwargs):
         super(XMLTestRunner, self).__init__(**kwargs)
         self.output = output
         self.encoding = encoding
+        self.descriptions = descriptions
+        self.verbosity = verbosity
         self.logger = logger
+        self.rerun = rerun
         # None means default timestamped suffix
         # '' (empty) means no suffix
         if outsuffix is None:
             outsuffix = time.strftime("%Y%m%d%H%M%S")
         self.outsuffix = outsuffix
         self.elapsed_times = elapsed_times
-        if resultclass is None:
-            self.resultclass = _XMLTestResult
-        else:
-            self.resultclass = resultclass
 
         self.whitelist = set([] if whitelist is None else whitelist)
         self.blacklist = set([] if blacklist is None else blacklist)
-
-    def _make_result(self):
-        """
-        Creates a TestResult object which will be used to store
-        information about the executed tests.
-        """
-        # override in subclasses if necessary.
-        return self.resultclass(
-            self.stream, self.descriptions, self.verbosity, self.elapsed_times, logger=self.logger
-        )
 
     @classmethod
     def test_iter(cls, suite):
@@ -92,7 +83,9 @@ class XMLTestRunner(TextTestRunner):
 
         try:
             # Prepare the test execution
-            result = self._make_result()
+            # result = self._make_result()
+            result = _XMLTestResult(stream=self.stream, descriptions=self.descriptions, verbosity=self.verbosity,
+                                    elapsed_times=self.elapsed_times, logger=self.logger, rerun=self.rerun)
             result.failfast = self.failfast
             result.buffer = self.buffer
             if hasattr(testlist, 'properties'):

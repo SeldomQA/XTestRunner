@@ -2,6 +2,7 @@ import io
 import os
 import re
 import sys
+import copy
 import inspect
 import datetime
 from os import path
@@ -201,7 +202,7 @@ class _XMLTestResult(TextTestResult):
     """
 
     def __init__(self, stream=sys.stderr, descriptions=1, verbosity=1,
-                 elapsed_times=True, properties=None, infoclass=None, logger=None):
+                 elapsed_times=True, properties=None, infoclass=None, logger=None, rerun=0):
         TextTestResult.__init__(self, stream, descriptions, verbosity)
         self._stdout_data = None
         self._stderr_data = None
@@ -217,6 +218,10 @@ class _XMLTestResult(TextTestResult):
         self.lineno = None
         self.doc = None
         self.logger = logger
+        self.rerun = rerun
+        self.status = 0
+        self.runs = 0
+        self.test_obj = None
         if infoclass is None:
             self.infoclass = _TestInfo
         else:
@@ -249,7 +254,10 @@ class _XMLTestResult(TextTestResult):
                     '%s (%.3fs)' % (verbose_str, test_info.elapsed_time)
                 )
             elif self.dots:
-                self.stream.write(short_str)
+                if isinstance(short_str, tuple) and len(short_str) == 2:
+                    self.stream.write(short_str[1])
+                else:
+                    self.stream.write(short_str)
 
             self.stream.flush()
 
@@ -328,6 +336,25 @@ class _XMLTestResult(TextTestResult):
         """
         Called after execute each test method.
         """
+        if self.rerun and self.rerun >= 1:
+            if self.status == 1:
+                self.runs += 1
+                if self.runs <= self.rerun:
+                    test = copy.copy(test)
+                    sys.stdout.write("Retesting... ")
+                    sys.stdout.write(str(test))
+                    sys.stdout.write(f"..{self.runs} \n")
+                    doc = getattr(test, '_testMethodDoc', u"") or u''
+                    if doc.find('->rerun') != -1:
+                        doc = doc[:doc.find('->rerun')]
+                    desc = f"{doc} ->rerun: {self.runs}"
+                    if isinstance(desc, str):
+                        desc = desc
+                    test._testMethodDoc = desc
+                    test(self)
+                else:
+                    self.status = 0
+                    self.runs = 0
         self._save_output_data()
         # self._stdout_data = sys.stdout.getvalue()
         # self._stderr_data = sys.stderr.getvalue()
@@ -343,6 +370,7 @@ class _XMLTestResult(TextTestResult):
         """
         Called when a test executes successfully.
         """
+        self.status = 0
         self._save_output_data()
         self._prepare_callback(
             self.infoclass(self, test), self.successes, 'ok', '.'
@@ -353,6 +381,12 @@ class _XMLTestResult(TextTestResult):
         """
         Called when a test method fails.
         """
+        self.status = 1
+        # If it is less than the number of rerun, no failure is append
+        if self.runs < self.rerun:
+            self._save_output_data()
+            self._restoreStdout()
+            return
         self._save_output_data()
         testinfo = self.infoclass(
             self, test, self.infoclass.FAILURE, err)
@@ -367,6 +401,12 @@ class _XMLTestResult(TextTestResult):
         """
         Called when a test method raises an error.
         """
+        self.status = 1
+        # If it is less than the number of rerun, no error is append
+        if self.runs < self.rerun:
+            self._save_output_data()
+            self._restoreStdout()
+            return
         self._save_output_data()
         testinfo = self.infoclass(
             self, test, self.infoclass.ERROR, err)
@@ -381,34 +421,36 @@ class _XMLTestResult(TextTestResult):
         Called when a subTest method raises an error.
         """
         if err is not None:
-
-            errorText = None
-            errorValue = None
-            errorList = None
             if issubclass(err[0], test.failureException):
-                errorText = 'FAIL'
-                errorValue = self.infoclass.FAILURE
-                errorList = self.failures
-
+                error_text = 'FAIL'
+                error_value = self.infoclass.FAILURE
+                error_list = self.failures
             else:
-                errorText = 'ERROR'
-                errorValue = self.infoclass.ERROR
-                errorList = self.errors
+                error_text = 'ERROR'
+                error_value = self.infoclass.ERROR
+                error_list = self.errors
 
             self._save_output_data()
 
             testinfo = self.infoclass(
-                self, testcase, errorValue, err, subTest=test)
-            errorList.append((
+                self, testcase, error_value, err, subTest=test)
+            error_list.append((
                 testinfo,
                 self._exc_info_to_string(err, testcase)
             ))
-            self._prepare_callback(testinfo, [], errorText, errorText[0])
+            self._prepare_callback(testinfo, [], error_text, error_list[0])
+        else:
+            self._save_output_data()
+            self._restoreStdout()
+            self._prepare_callback(
+                self.infoclass(self, test), self.successes, 'ok', '.'
+            )
 
     def addSkip(self, test, reason):
         """
         Called when a test method was skipped.
         """
+        self.status = 0
         self._save_output_data()
         testinfo = self.infoclass(
             self, test, self.infoclass.SKIP, reason)
@@ -464,7 +506,7 @@ class _XMLTestResult(TextTestResult):
     def _get_info_by_testcase(self):
         """
         Organizes test results by TestCase module. This information is
-        used during the report generation, where a XML report will be created
+        used during the report generation, where an XML report will be created
         for each TestCase.
         """
         tests_by_testcase = {}

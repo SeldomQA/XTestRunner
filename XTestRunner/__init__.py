@@ -3,7 +3,7 @@ A TestRunner for use with the Python unit testing framework. It
 generates a HTML report to show the result at a glance.
 
 ------------------------------------------------------------------------
-Copyright (c) 2004-2022, bugmaster
+Copyright (c) 2004-2023, bugmaster
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -36,6 +36,7 @@ from .htmlrunner.runner import HTMLTestRunner
 from ._email import SMTP
 from ._dingtalk import DingTalk
 from ._feishu import FeiShu
+from ._weixin import Weinxin
 from .config import label
 
 
