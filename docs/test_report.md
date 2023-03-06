@@ -82,7 +82,7 @@ __运行测试__
 
 __测试报告__
 
-![](../img/test_report.png)
+![](../img/test_html_report.png)
 
 
 ### XML测试报告 
@@ -140,3 +140,5 @@ __`XMLTestRunner`类说明__
 __`run()`方法说明__
 
 * `testlist`: 运行的测试套件。
+
+
