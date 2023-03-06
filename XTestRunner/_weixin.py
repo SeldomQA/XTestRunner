@@ -1,9 +1,4 @@
 import os
-import hmac
-import time
-import urllib
-import base64
-import hashlib
 import requests
 from jinja2 import Environment, FileSystemLoader
 from XTestRunner.config import RunResult
@@ -20,13 +15,15 @@ class Weinxin:
         https://developer.work.weixin.qq.com/document/path/91770
     """
 
-    def __init__(self, access_token, at_mobiles: list = None, is_at_all: bool = False):
+    def __init__(self, access_token: str, at_mobiles: list = None, is_at_all: bool = False):
         """
         :param access_token:  企业微信机器人的Webhook地址的key
         :param at_mobiles: 发送通知企业微信中要@人的手机号列表，如：[137xxx, 188xxx]。
         :param is_at_all: 是否@所有人，默认为False, 设为True则会@所有人。
         """
         self.url = f"https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={access_token}"
+        if at_mobiles is None:
+            at_mobiles = []
         self.at_mobiles = at_mobiles
         self.is_at_all = is_at_all
 
@@ -74,9 +71,6 @@ class Weinxin:
         :return:
         """
         # 推送人手机号码
-        if self.at_mobiles is None:
-            at_mobiles = []
-
         if self.is_at_all is True:
             self.at_mobiles.append("@all")
 

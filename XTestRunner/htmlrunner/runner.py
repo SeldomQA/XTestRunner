@@ -11,6 +11,8 @@ from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
 from XTestRunner._feishu import FeiShu
+from XTestRunner._weixin import Weinxin
+
 
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
@@ -537,3 +539,12 @@ class HTMLTestRunner(object):
 
         fs = FeiShu(url=url, key=key, secret=secret, user_id=user_id, user_name=user_name, feishu_href=feishu_href)
         fs.feishu_notice()
+
+    @staticmethod
+    def send_weixin(
+            access_token: str,
+            at_mobiles: list = None,
+            is_at_all: bool = None):
+
+        wx = Weinxin(access_token=access_token, at_mobiles=at_mobiles, is_at_all=is_at_all)
+        wx.send_text()
