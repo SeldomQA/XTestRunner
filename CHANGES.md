@@ -1,3 +1,15 @@
+### 1.6.0 版本
+* XML报告
+  * 支持 `rerun` 重跑参数。
+  * 修复 `subTest` 用例统计错误问题。
+* HTML报告
+  * 移除 `save_last_run` 参数， ⚠️ 不兼容修改。
+  * 修改 `rerun` 传参位置，只保留最后执行结果， ⚠️ 不兼容修改。
+  * 修复 error 用例统计错误。
+* 邮件：支持SMTP_SSL和 SMTP, 增加`ssl`参数，详情查看文档。感谢 @wu-clan
+* 微信：优化代码，提供`send_weixin()`方法，详情查看文档。
+* 打包：`pyproject.toml` 替换 `setup.py` 感谢 @wu-clan
+
 ### 1.5.0 版本
 
 * 新增飞书推送，感谢 @yingzi(3011456083@qq.com)

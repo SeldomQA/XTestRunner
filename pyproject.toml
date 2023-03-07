@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "XTestRunner"
-version = "1.5.0"
+version = "1.6.0"
 description = "Modern style test report based on unittest framework."
 authors = ["bugmaster <fnngj@126.com>"]
 license = "Apache-2.0"
