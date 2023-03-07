@@ -56,3 +56,37 @@ if __name__ == '__main__':
 ```
 
 > 注意： 白名单和黑名单不要同时用，以免产生冲突。
+
+
+### subTest
+
+> 当您的测试之间存在非常小的差异时，例如某些参数，unittest 允许使用 subTest() 上下文管理器在测试方法的主体内区分它们。
+
+XTestRunner 对 subTest 做了支持。
+
+```python
+import unittest
+from XTestRunner import HTMLTestRunner, XMLTestRunner
+
+
+class MyTest(unittest.TestCase):
+
+    def test_even(self):
+        """
+        Test that numbers between 0 and 5 are all even.
+        """
+        for i in range(0, 6):
+            with self.subTest(i=i):
+                self.assertEqual(i % 2, 0)
+
+
+if __name__ == '__main__':
+    report = "./reports/test_subTest.html"
+    with(open(report, 'wb')) as fp:
+        unittest.main(testRunner=HTMLTestRunner(fp))
+
+    # report = "./reports/test_subTest.xml"
+    # with(open(report, 'wb')) as fp:
+    #     unittest.main(testRunner=XMLTestRunner(fp))
+
+```
