@@ -380,7 +380,7 @@ class HTMLTestRunner(object):
             # desc = doc and '%s: %s' % (name, doc) or name
 
             row = CustomTemplate.REPORT_CLASS_TMPL % dict(
-                style=num_error > 0 and 'errorClass' or num_fail > 0 and 'failClass' or 'passClass',
+                style=num_pass > 0 and "passClass" or (num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
                 name=name,
                 desc=doc,
                 count=num_pass + num_fail + num_error + num_skip,
@@ -467,7 +467,7 @@ class HTMLTestRunner(object):
         row = tmpl % dict(
             tid=tid,
             Class=(num == 0 and 'hiddenRow' or 'none'),
-            style=num == 2 and 'errorCase' or (num == 1 and 'failCase' or 'passCase'),
+            style=num == 0 and 'passCase' or (num == 1 and 'failCase' or (num == 2 and 'errorCase' or 'skipCase')),
             casename=name,
             desc=doc,
             runtime=runtime,
