@@ -1,3 +1,7 @@
+### 1.6.2 版本
+* 修复`seldom/loguru`使用XTestRunner 日志错误
+* HTML报告：修改 skip class/case 样式颜色 
+
 ### 1.6.1 版本
 * 紧急修复 jinja2 版本依赖问题，升级jinja2=^3.1.2 版本
 
