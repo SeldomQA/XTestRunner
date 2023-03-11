@@ -320,7 +320,10 @@ class _XMLTestResult(TextTestResult):
             sys.stderr = self.__stderr_saved
             self.__stderr_saved = None
         if self.logger is not None:
-            self.logger.logger.remove(self.logger_handler_id)
+            try:
+                self.logger.logger.remove(self.logger_handler_id)
+            except ValueError:
+                ...
 
         self._stdout_capture.seek(0)
         self._stdout_capture.truncate()
