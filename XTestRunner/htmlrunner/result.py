@@ -120,7 +120,7 @@ class _TestResult(TestResult):
                 else:
                     self.status = 0
                     self.runs = 0
-        self.complete_output()
+
         self.case_end_time = time.time()
         case_run_time = self.case_end_time - self.case_start_time
         test.runtime = round(case_run_time, 2)
