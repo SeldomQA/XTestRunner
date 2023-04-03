@@ -91,9 +91,15 @@ class _TestResult(TestResult):
             self.stderr0 = None
 
         if self.logger is not None:
-            self.logger.logger.remove(self.logger_handler_id)
+            try:
+                self.logger.logger.remove(self.logger_handler_id)
+            except ValueError:
+                ...
 
-        return self.output_buffer.getvalue()
+        if self.output_buffer is not None:
+            return self.output_buffer.getvalue()
+        else:
+            return "setUpClass/start_class error."
 
     def stopTest(self, test):
         """
