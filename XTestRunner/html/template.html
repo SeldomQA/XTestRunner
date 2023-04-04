@@ -7,6 +7,7 @@
     <meta name="generator" content="XTestRunner {{ version }}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
     <link rel="stylesheet" href="http://img.itest.info/seldom-main.css">
     <link rel="stylesheet" href="http://img.itest.info/seldom-utilities.css">
 
@@ -14,7 +15,67 @@
 </head>
 
 <body style="background-color: #f5f9fc;">
+    {{ heading }}
+    {{ report }}
+    {{ chart_script }}
     <script language="javascript" type="text/javascript">
+        console.log(document.getElementById('echartElement'))
+        var myChart = echarts.init(document.getElementById('echartElement'));
+        
+        myChart.setOption({
+        title: {
+            text: 'History data'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+            saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['2023-10-10 12:11:22', '2023-10-11 12:11:22', '2023-10-13 12:11:22']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+            name: 'Skipped',
+            type: 'bar',
+            stack: 'Total',
+            data: [2, 2, 1, 1]
+            },
+            {
+            name: 'Passed',
+            type: 'bar',
+            stack: 'Total',
+            data: [12, 12, 11, 15]
+            },
+            {
+            name: 'Failure',
+            type: 'bar',
+            stack: 'Total',
+            data: [5, 2, 1, 0]
+            },
+            {
+            name: 'Error',
+            type: 'bar',
+            stack: 'Total',
+            data: [3, 3, 3, 3]
+            }
+        ]
+        })
+        // myChart.setOption(option)
         function showLog(id) {
             document.body.style.overflow = 'hidden'
             document.body.style.height='100%'
@@ -202,16 +263,11 @@
         }
     </script>
 
-    {{ heading }}
-    {{ report }}
-    {{ chart_script }}
-
-
 <footer class="footer" style="height: 50px; position: fixed; width: 100%">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                XTestRunner {{ version }}; 2022 © 重定向科技 - http://itest.info
+                XTestRunner {{ version }}; 2023 © 重定向科技 - http://itest.info
             </div>
         </div>
     </div>
