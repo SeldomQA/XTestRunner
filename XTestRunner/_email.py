@@ -20,12 +20,22 @@ class SMTP(object):
     Mail function based on SMTP protocol
     """
 
-    def __init__(self, user, password, host, port=None, ssl=True):
+    def __init__(self, user, password, host, port=None, ssl=True, tls=True):
+        """
+
+        :param user: Email login user name
+        :param password: Email login password
+        :param host: Email service address
+        :param port: Email service post
+        :param ssl: SMTP SSL True/False
+        :param tls: TLS mode True/False
+        """
         self.user = user
         self.password = password
         self.host = host
         self.port = int(port) if port is not None else 465
         self.ssl = ssl
+        self.tls = tls
 
     def sender(self, to=None, subject=None, contents=None, attachments=None):
         if to is None:
@@ -77,8 +87,9 @@ class SMTP(object):
             msg.attach(att)
 
         smtp = smtplib.SMTP_SSL(self.host, self.port) if self.ssl else smtplib.SMTP(self.host, self.port)
-        try:
+        if self.tls is True:
             smtp.starttls()
+        try:
             smtp.login(self.user, self.password)
             smtp.sendmail(self.user, to, msg.as_string())
             print(" 📧 Email sent successfully!!")
