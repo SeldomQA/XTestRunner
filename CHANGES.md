@@ -1,3 +1,7 @@
+### 1.6.3 版本
+* 修复：email发送邮件提示：`STARTTLS extenstion not supported by server`，增加 tls 开关 
+* 修复：HTML报告提示：handler ID 删除错误 
+
 ### 1.6.2 版本
 * 修复`seldom/loguru`使用XTestRunner 日志错误
 * HTML报告：修改 skip class/case 样式颜色 
