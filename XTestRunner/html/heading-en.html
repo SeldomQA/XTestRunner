@@ -1,169 +1,177 @@
-<nav class="navbar navbar-light position-lg-sticky top-lg-0 d-none d-lg-block overlap-10 flex-none bg-white border-bottom px-0 py-3" id="topbar">
-    <div class="container-fluid">
-        <div class="hstack gap-2">
-            <a href="https://github.com/SeldomQA/XTestRunner">
-                <img src="http://img.itest.info/XTestRunner_logo.jpg" style="height: 2.25rem;">
-            </a>
-        </div>
-        <div class="navbar-user d-none d-sm-block">
-            <div class="hstack gap-3 ms-4">
-                <h3 style="float: right;"> {{ title }} </h3>
-            </div>
-        </div>
+<nav
+  class="navbar navbar-light position-lg-sticky top-lg-0 d-none d-lg-block overlap-10 flex-none bg-white border-bottom px-0 py-3"
+  id="topbar">
+  <div class="container-fluid">
+    <div class="hstack gap-2">
+      <a href="https://github.com/SeldomQA/XTestRunner">
+        <img src="http://img.itest.info/XTestRunner_logo.jpg" style="height: 2.25rem;">
+      </a>
     </div>
+    <div class="navbar-user d-none d-sm-block">
+      <div class="hstack gap-3 ms-4">
+        <h3 style="float: right;"> {{ title }} </h3>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <div id="headContainer" class="container-fluid mm-active">
-    <div class="row">
-        <div class="col-12 col-lg-5 col-xl-4 d-flex" style="float:left">
-            <div class='card flex-fill'>
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-0">Overview</h5>
-                    </div>
-                </div>
-                <div class="card-body py-0 position-relative scrollable-y" style="max-height:300px">
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
-                            <div class="flex-1">
-                                <div class="d-flex align-items-center mb-1">Tester</div>
-                                <div class="d-flex align-items-center">
-                                    <div class="text-sm text-muted line-clamp-1 me-auto">{{tester}}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
-                            <div class="flex-1">
-                                <div class="d-flex align-items-center mb-1">Start time - End time</div>
-                                <div class="d-flex align-items-center">
-                                    <div class="text-sm text-muted line-clamp-1 me-auto">{{ start_time }} - {{ end_time }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
-                            <div class="flex-1">
-                                <div class="d-flex align-items-center mb-1">Duration</div>
-                                <div class="d-flex align-items-center">
-                                    <div class="text-sm text-muted line-clamp-1 me-auto">{{duration}}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
-                            <div class="flex-1">
-                                <div class="d-flex align-items-center mb-1">Status</div>
-                                <div class="d-flex align-items-center">
-                                    <div class="text-sm text-muted line-clamp-1 me-auto">
-                                        <span class="badge badge-pill bg-soft-success text-success me-2">Passed:{{p_number}}</span>
-                                        <span class="badge badge-pill bg-soft-warning text-warning me-2">Failed:{{f_number}}</span>
-                                        <span class="badge badge-pill bg-soft-danger text-danger me-2">Errors:{{e_number}}</span>
-                                        <span class="badge badge-pill bg-soft-secondary text-secondary me-2">Skipped:{{s_number}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item px-0 position-relative hstack flex-wrap" style="padding-top: 5px;">
-                            <div class="flex-1">
-                                <div class="d-flex align-items-center mb-1">Description</div>
-                                <div class="d-flex align-items-center">
-                                    <div class="text-sm text-muted me-auto">{{description}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <!-- Overview data -->
+    <div class="col-12 col-lg-5 col-xl-3 d-flex" style="float:left">
+      <div class='card flex-fill'>
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <h5 class="mb-0" id="overview">Overview</h5>
+          </div>
         </div>
-
-        <div style="width: 20%">
-            <div class="card" style="height: 45%;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Passed</span>
-                            <span class="h3 font-bold mb-0">{{p_number}}</span>
-                        </div>
-                        <div class="col-auto">
-                            <div class="icon icon-shape bg-success text-white text-lg rounded-circle">P</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 mb-0 text-sm">
-                        <span class="badge badge-pill bg-soft-success text-success me-2">{{p_percent}}</span>
-                        <span class="text-nowrap text-xs text-muted">Pass rate</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="progress" style="width:70%; margin-top: 5px;">
-                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="83" aria-valuemin="0"
-                                aria-valuemax="100" style="width:{{p_percent}}"></div>
-                        </div>
-                    </div>
+        <div class="card-body py-0 position-relative scrollable-y" style="max-height:300px">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+              <div class="flex-1">
+                <div class="d-flex align-items-center mb-1">👨‍🔧 Tester</div>
+                <div class="d-flex align-items-center">
+                  <div class="text-sm text-muted line-clamp-1 me-auto">{{tester}}</div>
                 </div>
+              </div>
             </div>
-            <div class="card" style="height: 45%; top: 10%;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Failed</span>
-                            <span class="h3 font-bold mb-0">{{f_number}}</span></div>
-                        <div class="col-auto">
-                            <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">F</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 mb-0 text-sm">
-                        <span class="badge badge-pill bg-soft-warning text-warning me-2">{{f_percent}}</span>
-                        <span class="text-nowrap text-xs text-muted">Failure rate</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="progress" style="width:70%; margin-top: 5px;">
-                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="83" aria-valuemin="0"
-                                aria-valuemax="100" style="width:{{f_percent}}"></div>
-                        </div>
-                    </div>
+            <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+              <div class="flex-1">
+                <div class="d-flex align-items-center mb-1">🕒 Start time</div>
+                <div class="d-flex align-items-center">
+                  <div class="text-sm text-muted line-clamp-1 me-auto">{{ start_time }}</div>
                 </div>
+              </div>
             </div>
+            <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+              <div class="flex-1">
+                <div class="d-flex align-items-center mb-1">🕘 End time</div>
+                <div class="d-flex align-items-center">
+                  <div class="text-sm text-muted line-clamp-1 me-auto">{{ end_time }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item px-0 position-relative hstack flex-wrap head-list">
+              <div class="flex-1">
+                <div class="d-flex align-items-center mb-1">⌛ Duration</div>
+                <div class="d-flex align-items-center">
+                  <div class="text-sm text-muted line-clamp-1 me-auto">{{duration}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="list-group-item px-0 position-relative hstack flex-wrap" style="padding-top: 5px;">
+              <div class="flex-1">
+                <div class="d-flex align-items-center mb-1">ℹ️ Description</div>
+                <div class="d-flex align-items-center">
+                  <div class="text-sm text-muted me-auto">{{description}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="width: 20%">
-            <div class="card" style="height: 45%;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Errors</span>
-                            <span class="h3 font-bold mb-0">{{e_number}}</span></div>
-                        <div class="col-auto">
-                            <div class="icon icon-shape bg-danger text-white text-lg rounded-circle">E</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 mb-0 text-sm">
-                        <span class="badge badge-pill bg-soft-danger text-danger me-2">{{e_percent}}</span>
-                        <span class="text-nowrap text-xs text-muted">Error rate</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="progress" style="width:70%; margin-top: 5px;">
-                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="83" aria-valuemin="0"
-                                aria-valuemax="100" style="width:{{e_percent}}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="height: 45%; top: 10%;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <span class="h6 font-semibold text-muted text-sm d-block mb-2">Skipped</span>
-                            <span class="h3 font-bold mb-0">{{s_number}}</span>
-                        </div>
-                        <div class="col-auto">
-                            <div class="icon icon-shape bg-secondary text-white text-lg rounded-circle">S</div>
-                        </div>
-                    </div>
-                    <div class="mt-2 mb-0 text-sm">
-                        <span class="badge badge-pill bg-soft-secondary text-secondary me-2">{{s_percent}}</span>
-                        <span class="text-nowrap text-xs text-muted">Skip rate</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="progress" style="width:70%; margin-top: 5px;">
-                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="83" aria-valuemin="0"
-                                aria-valuemax="100" style="width:{{s_percent}}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <!-- passed & failed -->
+    <div style="width: 20%">
+      <div class="card" style="height: 45%;">
+        <div class="card-body">
+          <div class="row">
+            <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Passed</span>
+              <span class="h3 font-bold mb-0" id="p_number">{{p_number}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-success text-white text-lg rounded-circle">P</div>
+            </div>
+          </div>
+          <div class="mt-2 mb-0 text-sm">
+            <span class="badge badge-pill bg-soft-success text-success me-2">{{p_percent}}</span>
+            <span class="text-nowrap text-xs text-muted">Pass rate</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="progress" style="width:70%; margin-top: 5px;">
+              <div class="progress-bar bg-success" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                aria-valuemax="100" style="width:{{p_percent}}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="height: 45%; top: 10%;">
+        <div class="card-body">
+          <div class="row">
+            <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Failed</span>
+              <span class="h3 font-bold mb-0" id="f_number">{{f_number}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-warning text-white text-lg rounded-circle">F</div>
+            </div>
+          </div>
+          <div class="mt-2 mb-0 text-sm">
+            <span class="badge badge-pill bg-soft-warning text-warning me-2">{{f_percent}}</span>
+            <span class="text-nowrap text-xs text-muted">Failure rate</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="progress" style="width:70%; margin-top: 5px;">
+              <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                aria-valuemax="100" style="width:{{f_percent}}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- error & skipped -->
+    <div style="width: 20%">
+      <div class="card" style="height: 45%;">
+        <div class="card-body">
+          <div class="row">
+            <div class="col"><span class="h6 font-semibold text-muted text-sm d-block mb-2">Errors</span>
+              <span class="h3 font-bold mb-0" id="e_number">{{e_number}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-danger text-white text-lg rounded-circle">E</div>
+            </div>
+          </div>
+          <div class="mt-2 mb-0 text-sm">
+            <span class="badge badge-pill bg-soft-danger text-danger me-2">{{e_percent}}</span>
+            <span class="text-nowrap text-xs text-muted">Error rate</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="progress" style="width:70%; margin-top: 5px;">
+              <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                aria-valuemax="100" style="width:{{e_percent}}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="height: 45%; top: 10%;">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <span class="h6 font-semibold text-muted text-sm d-block mb-2">Skipped</span>
+              <span class="h3 font-bold mb-0" id="s_number">{{s_number}}</span>
+            </div>
+            <div class="col-auto">
+              <div class="icon icon-shape bg-secondary text-white text-lg rounded-circle">S</div>
+            </div>
+          </div>
+          <div class="mt-2 mb-0 text-sm">
+            <span class="badge badge-pill bg-soft-secondary text-secondary me-2">{{s_percent}}</span>
+            <span class="text-nowrap text-xs text-muted">Skip rate</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="progress" style="width:70%; margin-top: 5px;">
+              <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="83" aria-valuemin="0"
+                aria-valuemax="100" style="width:{{s_percent}}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- history data -->
+    <div class="col-12 col-lg-5 col-xl-4 d-flex" style="float:right">
+      <div class='card flex-fill'>
+        <div id="echartElement" class="apex-charts" data-colors="#42d29d,#44badc" style="height:420px; padding:10px;">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
