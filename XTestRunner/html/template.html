@@ -30,8 +30,10 @@
     
     if (overview === 'Overview') {
       var title = 'Statistical data'
+      var dataClass = ['Passed', 'Failure', 'Errors', 'Skipped']
     } else {
       var title = '统计数据'
+      var dataClass = ['通过', '失败', '错误', '跳过']
     }
     myChart.setOption({
       title: {
@@ -42,7 +44,7 @@
       },
       xAxis: {
         type: 'category',
-        data: ['Passed', 'Failure', 'Errors', 'Skipped']
+        data: dataClass
       },
       yAxis: {
         type: 'value'
