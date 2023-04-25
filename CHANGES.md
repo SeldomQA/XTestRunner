@@ -1,3 +1,8 @@
+### 1.7.0 版本
+* 样式调整
+  * 新增：统计数据 
+  * 优化：概述样式调整 
+
 ### 1.6.3 版本
 * 修复：email发送邮件提示：`STARTTLS extenstion not supported by server`，增加 tls 开关 
 * 修复：HTML报告提示：handler ID 删除错误 
