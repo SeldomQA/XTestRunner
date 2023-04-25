@@ -18,7 +18,7 @@
 
 ## Report
 
-![](./img/test_report.png)
+![](./img/test_report_1.7.0.png)
 
 
 ## Install
