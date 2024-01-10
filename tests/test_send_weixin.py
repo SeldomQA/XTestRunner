@@ -39,7 +39,7 @@ if __name__ == '__main__':
         TestDing("test_error")
     ])
 
-    report = "./reports/dingtalk_result.html"
+    report = "./reports/test_send_weixin.html"
     with open(report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
