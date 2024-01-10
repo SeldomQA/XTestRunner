@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "XTestRunner"
-version = "1.7.0"
+version = "1.7.1"
 description = "Modern style test report based on unittest framework."
 authors = ["bugmaster <fnngj@126.com>"]
 license = "Apache-2.0"
@@ -18,6 +18,7 @@ classifiers = [
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     "Topic :: Software Development :: Testing",
     'Topic :: Software Development :: Version Control :: Git'
