@@ -151,16 +151,18 @@
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
           document.body.style.overflow = "auto";
-          var caseImages = document.querySelectorAll("#case-image");
+          var casesLog = document.querySelectorAll(".case-log");
+          var casesImage = document.querySelectorAll("#case-image");
           var imagCircle = document.querySelectorAll(".img-circle");
-          for (var i = 0; i < caseImages.length; i++) {
-            caseImages[i].style.display = "none";
+          for (var i = 0; i < casesLog.length; i++) {
+            casesLog[i].style.display = "none";
+          }
+          for (var i = 0; i < casesImage.length; i++) {
+            casesImage[i].style.display = "none";
           }
           for (var i = 0; i < imagCircle.length; i++) {
             imagCircle[i].innerHTML = "";
           }
-          // document.querySelectorAll("#case-image").style.display = "none";
-          // document.getElementsByClassName("img-circle")[0].innerHTML = "";
         }
       });
 

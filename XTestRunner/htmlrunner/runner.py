@@ -70,7 +70,7 @@ class CustomTemplate:
     <td colspan='5' align='center' class='caseStatistics'>
         <!--css div popup start-->
         <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(status)s</a>
-        <div id='div_%(tid)s' class="modal show" style="display: none; background-color: #000000c7;">
+        <div id='div_%(tid)s' class="modal show case-log" style="display: none; background-color: #000000c7;">
             <div class="modal-dialog modal-dialog-centered log_window">
                 <div class="modal-content shadow-3">
                     <div class="modal-header">
