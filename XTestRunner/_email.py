@@ -33,7 +33,7 @@ class SMTP(object):
         self.user = user
         self.password = password
         self.host = host
-        self.port = int(port) if port is not None else 465
+        self.port = int(port) if port is not None else (465 if ssl else 587)
         self.ssl = ssl
         self.tls = tls
 
@@ -87,7 +87,7 @@ class SMTP(object):
             msg.attach(att)
 
         smtp = smtplib.SMTP_SSL(self.host, self.port) if self.ssl else smtplib.SMTP(self.host, self.port)
-        if self.tls is True:
+        if self.tls is True and self.ssl is False:
             smtp.starttls()
         try:
             smtp.login(self.user, self.password)
