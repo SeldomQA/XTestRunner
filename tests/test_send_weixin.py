@@ -43,20 +43,20 @@ if __name__ == '__main__':
     with open(report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
-            title='测试发送钉钉',
+            title='测试发送微信',
             tester='虫师',
-            description=['类型：测试发送钉钉'],
+            description=['类型：测试发送微信'],
             language="zh-CN"
         )
         runner.run(suit)
-        # 方式一： send_dingtalk() 方法
+        # 方式一： send_weixin() 方法
         runner.send_weixin(
             access_token="50327a8c-59c3-4be7-bf44-a7ad4ec749b59",
             at_mobiles=[13700000000, 18800000000],
             is_at_all=False,
         )
 
-    # 方式二： FeiShu 类
+    # 方式二： Weinxin 类
     weixin = Weinxin(
         access_token="50327a8c-59c3-4be7-bf44-a7ad4ec749b59",
         at_mobiles=[13700000000, 18800000000],

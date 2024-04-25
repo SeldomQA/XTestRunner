@@ -47,13 +47,13 @@ if __name__ == '__main__':
     with open(report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
-            title='测试发送钉钉',
+            title='测试发送飞书',
             tester='虫师',
-            description=['类型：测试发送钉钉'],
+            description=['类型：测试发送飞书'],
             language="zh-CN"
         )
         runner.run(suit)
-        # 方式一： send_dingtalk() 方法
+        # 方式一： send_feishu() 方法
         runner.send_feishu(
             url="https://open.feishu.cn/open-apis/bot/v2/hook/XXX-XXX",
             secret="XXX",

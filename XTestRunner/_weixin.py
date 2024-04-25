@@ -83,9 +83,9 @@ class Weinxin:
         message = {"msgtype": "text", "text": {"content": res_text, "mentioned_mobile_list": self.at_mobiles}}
         resp = self._send_message(self.url, message)
         if resp["errcode"] == 0:
-            print(" 📧 dingTalk sent successfully!!")
+            print(" 📧 weixin sent successfully!!")
         else:
-            print("❌ dingTalk failed to send!!")
+            print("❌ weixin failed to send!!")
             print(resp)
         return resp
 
@@ -105,9 +105,9 @@ class Weinxin:
         message = {"msgtype": "markdown", "markdown": {"content": res_text}}
         resp = self._send_message(self.url, message)
         if resp["errcode"] == 0:
-            print(" 📧 dingTalk sent successfully!!")
+            print(" 📧 weixin sent successfully!!")
         else:
-            print("❌ dingTalk failed to send!!")
+            print("❌ weixin failed to send!!")
             print(resp)
         return resp
 
