@@ -83,7 +83,7 @@ class SMTP(object):
 
             att = MIMEApplication(open(attachments, 'rb').read())
             att['Content-Type'] = 'application/octet-stream'
-            att["Content-Disposition"] = 'attachment; filename="{}"'.format(att_name)
+            att.add_header('Content-Disposition', 'attachment', filename=att_name)
             msg.attach(att)
 
         smtp = smtplib.SMTP_SSL(self.host, self.port) if self.ssl else smtplib.SMTP(self.host, self.port)
