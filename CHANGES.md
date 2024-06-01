@@ -1,34 +1,48 @@
+### 1.7.2 版本
+
+* 验证支持`python 3.12` 版本。
+* 修复：HTML报告底部版本号显示错误。
+* 修复：“附件名称含有中文时会变成.bin结尾的文件”的问题。 感谢 @netassa
+* 修复：smtp.SMTP_SSL()和starttls()的冲突。感谢 @netassa
+* 修复：发送微信消息，打印信息错误。感谢 @netassa
+
 ### 1.7.1 版本
+
 * 功能：日志和截图弹窗支持键盘`ESC`关闭。
 * 界面文字微调：
-  * `Failed` 统一为 `Failure` 
-  * `Cases Total` -> `Total` , `用例总数` -> `总数`
-  * `2023` -> `2024`
+    * `Failed` 统一为 `Failure`
+    * `Cases Total` -> `Total` , `用例总数` -> `总数`
+    * `2023` -> `2024`
 
 ### 1.7.0 版本
+
 * 样式调整
-  * 新增：统计数据 
-  * 优化：概述样式调整 
+    * 新增：统计数据
+    * 优化：概述样式调整
 
 ### 1.6.3 版本
-* 修复：email发送邮件提示：`STARTTLS extenstion not supported by server`，增加 tls 开关 
-* 修复：HTML报告提示：handler ID 删除错误 
+
+* 修复：email发送邮件提示：`STARTTLS extenstion not supported by server`，增加 tls 开关
+* 修复：HTML报告提示：handler ID 删除错误
 
 ### 1.6.2 版本
+
 * 修复`seldom/loguru`使用XTestRunner 日志错误
-* HTML报告：修改 skip class/case 样式颜色 
+* HTML报告：修改 skip class/case 样式颜色
 
 ### 1.6.1 版本
+
 * 紧急修复 jinja2 版本依赖问题，升级jinja2=^3.1.2 版本
 
 ### 1.6.0 版本
+
 * XML报告
-  * 支持 `rerun` 重跑参数。
-  * 修复 `subTest` 用例统计错误问题。
+    * 支持 `rerun` 重跑参数。
+    * 修复 `subTest` 用例统计错误问题。
 * HTML报告
-  * 移除 `save_last_run` 参数， ⚠️ 不兼容修改。
-  * 修改 `rerun` 传参位置，只保留最后执行结果， ⚠️ 不兼容修改。
-  * 修复 error 用例统计错误。
+    * 移除 `save_last_run` 参数， ⚠️ 不兼容修改。
+    * 修改 `rerun` 传参位置，只保留最后执行结果， ⚠️ 不兼容修改。
+    * 修复 error 用例统计错误。
 * 邮件：支持SMTP_SSL和 SMTP, 增加`ssl`参数，详情查看文档。感谢 @wu-clan
 * 微信：优化代码，提供`send_weixin()`方法，详情查看文档。
 * 打包：`pyproject.toml` 替换 `setup.py` 感谢 @wu-clan
@@ -55,31 +69,29 @@
 ### 1.4.3 版本
 
 * xml报告优化：
-  * 支持黑白名单：`whitelist\blacklist`。
-  * 增加`<doc>` 标签，显示用例描述。
+    * 支持黑白名单：`whitelist\blacklist`。
+    * 增加`<doc>` 标签，显示用例描述。
 * HTML报告优化：
-  * 修复截图错误
+    * 修复截图错误
 
 ### 1.4.2 版本
 
 * 该版本优化了若干样式：
-  * `日志详情`采用弹窗，查看日志更方便。
-  * `截图弹窗`采用统一的弹窗，同上。
-  * `日志详情`第一行前面的空格去掉。@yongchin0821
-  * `用例描述` 超过宽度自动换行。
+    * `日志详情`采用弹窗，查看日志更方便。
+    * `截图弹窗`采用统一的弹窗，同上。
+    * `日志详情`第一行前面的空格去掉。@yongchin0821
+    * `用例描述` 超过宽度自动换行。
 * 其他：修改打印日志的获取。@yongchin0821
 
 ### 1.4.1 版本
 
 * 功能：HTML报告支持`subTest()`统计用例。
 
-
 ### 1.4.0 版本
 
 * 功能：HTML报告增加`结束时间`。
 * 功能：邮件默认使用报告标题。
 * 功能：邮件和钉钉消息提供更多信息：`开始时间`、`结束时间`、`运行时长`、`通过率`、`失败率`、`错误率`、`跳过率`。
-
 
 ### 1.3.2 版本
 
@@ -124,24 +136,30 @@
 
 Change History
 Version 1.0.0
+
 * Add Jinjia Library
 * All code refactoring
 
 Version 0.9.0
+
 * Increased repeat execution
 * Added failure screenshots
 
 Version 0.8.2
+
 * Show output inline instead of popup window (Viorel Lupu).
 
 Version in 0.8.1
+
 * Validated XHTML (Wolfgang Borgert).
 * Added description of test classes and test cases.
 
 Version in 0.8.0
+
 * Define TemplateMixing class for customization.
 * Workaround a IE 6 bug that it does not treat <script> block as CDATA.
 
 Version in 0.7.1
+
 * Back port to Python 2.3 (Frank Horowitz).
 * Fix missing scroll bars in detail log (Podi).

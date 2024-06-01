@@ -39,9 +39,8 @@ from ._feishu import FeiShu
 from ._weixin import Weinxin
 from .config import label
 
-
 __author__ = "bugmaster"
 
-__version__ = "1.7.1"
+__version__ = "1.7.2"
 
-__description__ = "Unittest-based HTML test report."
+__description__ = "Modern style test report based on unittest framework."
