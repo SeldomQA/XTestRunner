@@ -12,35 +12,34 @@ https://docs.python.org/3/library/unittest.html
 > pip install XTestRunner
 ```
 
-
 ## 使用文档
 
 * [HTML/XML测试报告](./test_report.md)
-  * [HTML测试报告](./test_report.md#HTML测试报告)
-  * [XML测试报告](./test_report.md#XML测试报告)
+    * [HTML测试报告](./test_report.md#HTML测试报告)
+    * [XML测试报告](./test_report.md#XML测试报告)
 
 * [不同类型的测试](./test_type.md)
-  * [单元测试](./test_type.md#单元测试)
-  * [Selenium Web测试](./test_type.md#SeleniumWeb测试)
-  * [API 接口测试](./test_type.md#API接口测试)
+    * [单元测试](./test_type.md#单元测试)
+    * [Selenium Web测试](./test_type.md#SeleniumWeb测试)
+    * [API 接口测试](./test_type.md#API接口测试)
 
 * [发送消息](./send_notice.md)
-  * [发送邮件](./send_notice.md#发送邮件)
-  * [发送钉钉](./send_notice.md#发送钉钉)
-  * [发送飞书](./send_notice.md#发送飞书)
-  * [发送微信](./send_notice.md#发送微信)
+    * [发送邮件](./send_notice.md#发送邮件)
+    * [发送钉钉](./send_notice.md#发送钉钉)
+    * [发送飞书](./send_notice.md#发送飞书)
+    * [发送微信](./send_notice.md#发送微信)
 
 * [其他功能](./other.md)
-  * [黑白名单](./other.md#黑白名单)
-
+    * [黑白名单](./other.md#黑白名单)
+    * [subTest](./other.md#subTest)
 
 ## 例子
 
-* [生成HTML报告](../tests/test_unit_html.py)
+* [生成HTML报告](../tests/test_output_html.py)
 
-* [生成XML报告](../tests/test_unit_xml.py)
+* [生成XML报告](../tests/test_output_xml.py)
 
-* [单元测试](../tests/test_unit.py)
+* [重复执行](../tests/test_rerun.py)
 
 * [Selenium自动化测试](../tests/test_selenium.py)
 
@@ -55,7 +54,3 @@ https://docs.python.org/3/library/unittest.html
 * [发送企微消息](../tests/test_send_weixin.py)
 
 * [黑白名单](../tests/test_label.py)
-
-
-
-

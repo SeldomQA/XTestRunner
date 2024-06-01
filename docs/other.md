@@ -7,8 +7,8 @@ XTestRunner还支持一些其他功能。
 可以通过黑白名单选择要执行（或跳过）的用例。
 
 * 支持白黑名单
-  * 白名单：whitelist=["base"]  只有使用@label("base")装饰的用例执行
-  * 黑名单：blacklist=["slow"]  只有使用@label("slow")装饰的用例不被执行
+    * 白名单：whitelist=["base"]  只有使用@label("base")装饰的用例执行
+    * 黑名单：blacklist=["slow"]  只有使用@label("slow")装饰的用例不被执行
 
 __测试用例__
 
@@ -22,14 +22,14 @@ class LabelTest(unittest.TestCase):
 
     @label("base")
     def test_label_base(self):
-        self.assertEqual(1+1, 2)
+        self.assertEqual(1 + 1, 2)
 
     @label("slow")
     def test_label_slow(self):
         self.assertEqual(1, 2)
 
     def test_no_label(self):
-        self.assertEqual(2+3, 5)
+        self.assertEqual(2 + 3, 5)
 
 
 if __name__ == '__main__':
@@ -56,7 +56,6 @@ if __name__ == '__main__':
 ```
 
 > 注意： 白名单和黑名单不要同时用，以免产生冲突。
-
 
 ### subTest
 
@@ -88,5 +87,33 @@ if __name__ == '__main__':
     # report = "./reports/test_subTest.xml"
     # with(open(report, 'wb')) as fp:
     #     unittest.main(testRunner=XMLTestRunner(fp))
-
 ```
+
+### subTest
+
+XTestRunner 支持 subTest。
+
+```python
+import unittest
+
+from XTestRunner import HTMLTestRunner
+
+
+class MyTest(unittest.TestCase):
+
+    def test_even(self):
+        """
+        Test that numbers between 0 and 5 are all even.
+        """
+        for i in range(0, 6):
+            with self.subTest(i=i):
+                self.assertEqual(i % 2, 0)
+
+
+if __name__ == '__main__':
+    html_report = "./reports/test_subTest.html"
+    with open(html_report, 'wb') as fp:
+        unittest.main(testRunner=HTMLTestRunner(fp))
+```
+
+* 最终统计用例的数量以`subTest` 和  `assertEqual` 的执行次数为准，运行上面的例子，生成6条测试用例。
