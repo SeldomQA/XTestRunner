@@ -1,5 +1,8 @@
+import os
 import unittest
+
 from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 
 class TestDemo(unittest.TestCase):
@@ -21,22 +24,12 @@ class TestDemo(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTests([
-        TestDemo("test_success"),
-        TestDemo("test_skip"),
-        TestDemo("test_fail"),
-        TestDemo("test_error")
-    ])
-
-    html_report = './reports/test_unit_html.html'
+    html_report = os.path.join(REPORTS_DIR, "test_output_html.html")
     with open(html_report, 'wb') as fp:
-        runner = HTMLTestRunner(
+        unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
-            tester="虫师",
+            tester="bugmaster",
             title='<project name>test report',
             description='describe: ... ',
             language='en',
-            rerun=3
-        )
-        runner.run(suit)
+        ))

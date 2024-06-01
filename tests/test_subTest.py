@@ -1,5 +1,8 @@
+import os
 import unittest
-from XTestRunner import HTMLTestRunner, XMLTestRunner
+
+from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 
 class MyTest(unittest.TestCase):
@@ -14,10 +17,6 @@ class MyTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    report = "./reports/test_subTest.html"
-    with(open(report, 'wb')) as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_subTest.html")
+    with open(html_report, 'wb') as fp:
         unittest.main(testRunner=HTMLTestRunner(fp))
-
-    # report = "./reports/test_subTest.xml"
-    # with(open(report, 'wb')) as fp:
-    #     unittest.main(testRunner=XMLTestRunner(fp))

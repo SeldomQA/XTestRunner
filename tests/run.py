@@ -1,13 +1,15 @@
 import os
 import unittest
+
 from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 suit = unittest.defaultTestLoader.discover(test_dir, "test_*.py")
 
 if __name__ == '__main__':
-    report = "./reports/all_result.html"
-    with(open(report, 'wb')) as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_all_result.html")
+    with open(html_report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='unittest单元测试测试报告',

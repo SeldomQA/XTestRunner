@@ -1,5 +1,8 @@
+import os
 import unittest
+
 from XTestRunner import XMLTestRunner
+from config import REPORTS_DIR
 
 
 class TestDemo(unittest.TestCase):
@@ -21,18 +24,6 @@ class TestDemo(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    suit = unittest.TestSuite()
-    suit.addTests([
-        TestDemo("test_success"),
-        TestDemo("test_skip"),
-        TestDemo("test_fail"),
-        TestDemo("test_error")
-    ])
-
-    xml_report = "./reports/test_unit_xml.xml"
-    with(open(xml_report, 'wb')) as fp:
-        runner = XMLTestRunner(
-            output=fp,
-            rerun=3
-        )
-        runner.run(suit)
+    xml_report = os.path.join(REPORTS_DIR, "test_output_xml.xml")
+    with open(xml_report, 'wb') as fp:
+        unittest.main(testRunner=XMLTestRunner(output=fp))

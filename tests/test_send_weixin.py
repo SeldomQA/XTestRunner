@@ -1,6 +1,9 @@
+import os
 import unittest
+
 from XTestRunner import HTMLTestRunner
 from XTestRunner import Weinxin
+from config import REPORTS_DIR
 
 """
 帮助文档:
@@ -39,8 +42,8 @@ if __name__ == '__main__':
         TestDing("test_error")
     ])
 
-    report = "./reports/test_send_weixin.html"
-    with open(report, 'wb') as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_send_weixin.html")
+    with open(html_report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='测试发送微信',

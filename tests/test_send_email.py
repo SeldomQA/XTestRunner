@@ -1,6 +1,9 @@
+import os
 import unittest
+
 from XTestRunner import HTMLTestRunner
 from XTestRunner import SMTP
+from config import REPORTS_DIR
 
 """
 说明：
@@ -43,8 +46,8 @@ if __name__ == '__main__':
         TestEmail("test_error")
     ])
 
-    report = "./reports/test_send_email.html"
-    with(open(report, 'wb')) as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_send_email.html")
+    with open(html_report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='测试发送邮件',
@@ -60,9 +63,9 @@ if __name__ == '__main__':
             password="xxx",
             host="smtp.qq.com",
             subject="测试邮件",
-            attachments=report,
+            attachments=html_report,
             ssl=False,
         )
     # 发送方式 2：SMTP类
     smtp = SMTP(user="sender@qq.com", password="xxx", host="smtp.qq.com", ssl=False)
-    smtp.sender(to="recipient@126.com", subject="XTestRunner测试邮件", attachments=report)
+    smtp.sender(to="recipient@126.com", subject="XTestRunner测试邮件", attachments=html_report)

@@ -1,6 +1,9 @@
+import os
 import unittest
-from XTestRunner import HTMLTestRunner
+
 from XTestRunner import FeiShu
+from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 """
 帮助文档:
@@ -43,8 +46,8 @@ if __name__ == '__main__':
         TestDing("test_error")
     ])
 
-    report = "./reports/test_send_feishu.html"
-    with open(report, 'wb') as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_send_feishu.html")
+    with open(html_report, 'wb') as fp:
         runner = HTMLTestRunner(
             stream=fp,
             title='测试发送飞书',
@@ -71,4 +74,3 @@ if __name__ == '__main__':
         user_name='所有人'
     )
     ding.feishu_notice()
-

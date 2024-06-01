@@ -1,6 +1,9 @@
+import os
 import unittest
-from XTestRunner import HTMLTestRunner
 from random import randint
+
+from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 
 class TestDemo(unittest.TestCase):
@@ -42,6 +45,6 @@ class TestDemo3(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    report = "./reports/test_unit.html"
-    with(open(report, 'wb')) as fp:
-        unittest.main(testRunner=HTMLTestRunner(fp, rerun=2))
+    html_report = os.path.join(REPORTS_DIR, "test_rerun.html")
+    with open(html_report, 'wb') as fp:
+        unittest.main(testRunner=HTMLTestRunner(fp, rerun=3))

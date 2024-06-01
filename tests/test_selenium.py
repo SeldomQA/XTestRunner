@@ -1,14 +1,19 @@
+import os
 import unittest
 from time import sleep
-from XTestRunner import HTMLTestRunner
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+
+from XTestRunner import HTMLTestRunner
+from config import REPORTS_DIR
 
 """
 1.安装selenium
 > pip install selenium
 
-2.注意：驱动必须定义为 `driver`， 否则无法生成截图
+2. 驱动必须定义为 `self.driver/cls.driver`， 否则无法生成截图
+3. `self.images` 用于存储图片的list，可以手动添加图片
 """
 
 
@@ -60,8 +65,8 @@ class YouTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    report = "./reports/test_selenium.html"
-    with(open(report, 'wb')) as fp:
+    html_report = os.path.join(REPORTS_DIR, "test_selenium.html")
+    with open(html_report, 'wb') as fp:
         unittest.main(testRunner=HTMLTestRunner(
             stream=fp,
             tester="虫师",
