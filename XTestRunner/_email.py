@@ -22,8 +22,8 @@ class SMTP(object):
 
     def __init__(self, user, password, host, port=None, ssl=True, tls=True):
         """
-
-        :param user: Email login user name
+        SMTP send email.
+        :param user: Email login username
         :param password: Email login password
         :param host: Email service address
         :param port: Email service post
