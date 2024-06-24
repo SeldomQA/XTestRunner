@@ -13,7 +13,6 @@ from XTestRunner._dingtalk import DingTalk
 from XTestRunner._feishu import FeiShu
 from XTestRunner._weixin import Weinxin
 
-
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
 
@@ -47,10 +46,7 @@ class CustomTemplate:
     <td>%(name)s</td>
     <td>%(desc)s</td>
     <td></td>
-    <td>%(count)s</td>
-    <td>%(Pass)s</td>
-    <td>%(fail)s</td>
-    <td>%(error)s</td>
+    <td>Passed:%(Pass)s,Failure:%(fail)s,Errors:%(error)s,Skipped:%(skip)s</td>
     <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
     <td>&nbsp;</td>
 </tr>
@@ -67,7 +63,13 @@ class CustomTemplate:
     <td style="color: #495057">
         <div>%(runtime)s s</div>
     </td>
-    <td colspan='5' align='center' class='caseStatistics'>
+    <td>
+         <div class="progress" style="width:50px;">
+          <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
+            aria-valuemax="100" style='%(progress_bar_style)s'></div>
+        </div>
+    </td>
+    <td>
         <!--css div popup start-->
         <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(status)s</a>
         <div id='div_%(tid)s' class="modal show case-log" style="display: none; background-color: #000000c7;">
@@ -109,7 +111,13 @@ class CustomTemplate:
     <td style="color: #495057">
         <div>%(runtime)s s</div>
     </td>
-    <td colspan='5' align='center'>%(status)s</td>
+    <td>
+         <div class="progress" style="width:50px;">
+          <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
+            aria-valuemax="100" style='%(progress_bar_style)s'></div>
+        </div>
+    </td>
+    <td>%(status)s</td>
     <td>%(img)s</td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
@@ -380,13 +388,15 @@ class HTMLTestRunner(object):
             # desc = doc and '%s: %s' % (name, doc) or name
 
             row = CustomTemplate.REPORT_CLASS_TMPL % dict(
-                style=num_pass > 0 and "passClass" or (num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
+                style=num_pass > 0 and "passClass" or (
+                        num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
                 name=name,
                 desc=doc,
                 count=num_pass + num_fail + num_error + num_skip,
                 Pass=num_pass,
                 fail=num_fail,
                 error=num_error,
+                skip=num_skip,
                 cid='c{}.{}'.format(self.run_times, cid + 1),
             )
             rows.append(row)
@@ -465,6 +475,9 @@ class HTMLTestRunner(object):
             runtime = "0.00"
 
         row = tmpl % dict(
+            progress_bar_class=num == 0 and 'bg-success' or (
+                    num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),
+            progress_bar_style="width:100%",
             tid=tid,
             Class=(num == 0 and 'hiddenRow' or 'none'),
             style=num == 0 and 'passCase' or (num == 1 and 'failCase' or (num == 2 and 'errorCase' or 'skipCase')),
