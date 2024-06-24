@@ -34,13 +34,6 @@ class CustomTemplate:
     Overall structure of an HTML report
     """
 
-    STATUS = {
-        0: 'pass',
-        1: 'fail',
-        2: 'error',
-        3: 'skip',
-    }
-
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
     <td>%(name)s</td>
@@ -71,7 +64,7 @@ class CustomTemplate:
     </td>
     <td>
         <!--css div popup start-->
-        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(status)s</a>
+        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">log</a>
         <div id='div_%(tid)s' class="modal show case-log" style="display: none; background-color: #000000c7;">
             <div class="modal-dialog modal-dialog-centered log_window">
                 <div class="modal-content shadow-3">
@@ -117,13 +110,13 @@ class CustomTemplate:
             aria-valuemax="100" style='%(progress_bar_style)s'></div>
         </div>
     </td>
-    <td>%(status)s</td>
+    <td></td>
     <td>%(img)s</td>
 </tr>
 """  # variables: (tid, Class, style, desc, status)
 
     IMG_TMPL = r"""
-<a onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">show</a>
+<a class="popup_link" onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">view</a>
 <div id="case-image" class="modal show" style="display:none; background-color: #000000c7;">
   <div class="modal-dialog modal-dialog-centered log_window">
     <div class="modal-content shadow-3">
@@ -486,7 +479,6 @@ class HTMLTestRunner(object):
             runtime=runtime,
             log_title=name,
             script=script,
-            status=CustomTemplate.STATUS[num],
             img=screenshots_html
         )
         rows.append(row)
