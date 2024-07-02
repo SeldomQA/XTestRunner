@@ -32,4 +32,5 @@ if __name__ == '__main__':
             title='<project name>test report',
             description='describe: ... ',
             language='en',
+            footer=True
         ))

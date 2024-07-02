@@ -152,6 +152,7 @@ class HTMLTestRunner(object):
                  rerun=0,
                  language="en",
                  logger=None,
+                 footer=True,
                  **kwargs):
         self.stream = stream
         self.verbosity = verbosity
@@ -184,6 +185,8 @@ class HTMLTestRunner(object):
 
         self.whitelist = set(kwargs.pop('whitelist', []))
         self.blacklist = set(kwargs.pop('blacklist', []))
+
+        self.keep_footer = footer
 
     @classmethod
     def test_iter(cls, suite):
@@ -328,6 +331,7 @@ class HTMLTestRunner(object):
             heading=heading,
             report=report,
             channel=self.run_times,
+            keep_footer=self.keep_footer
         )
         self.stream.write(html_content.encode('utf8'))
 
