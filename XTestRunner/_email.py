@@ -4,7 +4,7 @@ from email.header import Header
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
+from XTestRunner.config import Config
 from jinja2 import Environment, FileSystemLoader
 
 from XTestRunner.config import RunResult
@@ -20,7 +20,7 @@ class SMTP(object):
     Mail function based on SMTP protocol
     """
 
-    def __init__(self, user, password, host, port=None, ssl=True, tls=True):
+    def __init__(self, user, password, host, port=None, ssl=True, tls=True, language=None):
         """
         SMTP send email.
         :param user: Email login username
@@ -29,6 +29,7 @@ class SMTP(object):
         :param port: Email service post
         :param ssl: SMTP SSL True/False
         :param tls: TLS mode True/False
+        :param language:
         """
         self.user = user
         self.password = password
@@ -36,6 +37,9 @@ class SMTP(object):
         self.port = int(port) if port is not None else (465 if ssl else 587)
         self.ssl = ssl
         self.tls = tls
+        self.language = language
+        if language is None:
+            self.language = Config.language
 
     def sender(self, to=None, subject=None, contents=None, attachments=None):
         if to is None:
@@ -50,7 +54,12 @@ class SMTP(object):
         if subject is None:
             subject = RunResult.title
         if contents is None:
-            contents = env.get_template('mail.html').render(
+            email_template = "mail-en.html"
+            if self.language == "en":
+                email_template = "mail-en.html"
+            elif self.language == "zh-CN":
+                email_template = "mail-zh-CN.html"
+            contents = env.get_template(email_template).render(
                 mail_title=str(RunResult.title),
                 start_time=str(RunResult.start_time),
                 end_time=str(RunResult.end_time),

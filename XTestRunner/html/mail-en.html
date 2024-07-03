@@ -1,0 +1,69 @@
+<div width="50%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 14px;
+        overflow: hidden;
+        border-radius: 7px;
+        margin: 0;
+        border: 1px solid #e9e9e9;
+        width: 50%;
+        background-color: #f5f9fc;">
+  <div style="font-size: 16px;
+            vertical-align: top;
+            color: #fff;
+            background-color: #2d3748;
+            padding: 20px;">
+    <span style="margin-top:20px;display:block"> XTestRunner Test Report </span>
+  </div>
+  <div style="margin-top: 30px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 30px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px; margin:0;">
+      <tbody>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px;"> Title:</td>
+        <td style="width: 25%; padding-left: 5px;" colspan="3"> {{ mail_title }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px;"> Tester:</td>
+        <td style="width: 25%; padding-left: 5px;" colspan="3"> {{ mail_tester }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px;"> Duration:</td>
+        <td style="width: 25%; padding-left: 5px;" colspan="3"> {{ duration }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px;"> Start time:</td>
+        <td style="width: 25%; padding-left: 5px;"> {{ start_time }}</td>
+        <td style="width: 25%; padding-left: 5px;"> End time:</td>
+        <td style="width: 25%; padding-left: 5px;"> {{ end_time }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Passed:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ mail_pass }}</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Pass rate:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ pass_rate }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Failure:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ mail_fail }}</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Failure rate:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ failure_rate }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Errors:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ mail_error }}</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Error rate:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ error_rate }}</td>
+      </tr>
+      <tr style="height: 40px;">
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Skipped:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ mail_skip }}</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> Skip rate:</td>
+        <td style="width: 25%; padding-left: 5px; border: 1px solid; border-color: #cfd6df;"> {{ skip_rate }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
