@@ -1,286 +1,286 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>{{ title }}</title>
-    <meta name="generator" content="XTestRunner {{ version }}" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
-    <link rel="stylesheet" href="http://img.itest.info/seldom-main.css" />
-    <link rel="stylesheet" href="http://img.itest.info/seldom-utilities.css" />
+<head>
+  <title>{{ title }}</title>
+  <meta name="generator" content="XTestRunner {{ version }}"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
+  <link rel="stylesheet" href="http://img.itest.info/seldom-main.css"/>
+  <link rel="stylesheet" href="http://img.itest.info/seldom-utilities.css"/>
 
-    {{ stylesheet }}
-  </head>
+  {{ stylesheet }}
+</head>
 
-  <body style="background-color: #f5f9fc">
-    {{ heading }} {{ report }} {{ chart_script }}
-    <script language="javascript" type="text/javascript">
-      // statistical data
-      var myChart = echarts.init(document.getElementById("echartElement"));
+<body style="background-color: #f5f9fc">
+{{ heading }} {{ report }} {{ chart_script }}
+<script language="javascript" type="text/javascript">
+  // statistical data
+  var myChart = echarts.init(document.getElementById("echartElement"));
 
-      var overview = document.querySelector("#overview").textContent;
-      var passed = document.querySelector("#p_number").textContent;
-      var failure = document.querySelector("#f_number").textContent;
-      var errors = document.querySelector("#e_number").textContent;
-      var skipped = document.querySelector("#s_number").textContent;
+  var overview = document.querySelector("#overview").textContent;
+  var passed = document.querySelector("#p_number").textContent;
+  var failure = document.querySelector("#f_number").textContent;
+  var errors = document.querySelector("#e_number").textContent;
+  var skipped = document.querySelector("#s_number").textContent;
 
-      if (overview === "Overview") {
-        var title = "Statistical data";
-        var dataClass = ["Passed", "Failure", "Errors", "Skipped"];
-      } else {
-        var title = "统计数据";
-        var dataClass = ["通过", "失败", "错误", "跳过"];
-      }
-      myChart.setOption({
-        title: {
-          text: title,
-        },
-        tooltip: {
-          trigger: "axis",
-        },
-        xAxis: {
-          type: "category",
-          data: dataClass,
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
+  if (overview === "Overview") {
+    var title = "Statistical data";
+    var dataClass = ["Passed", "Failure", "Errors", "Skipped"];
+  } else {
+    var title = "统计数据";
+    var dataClass = ["通过", "失败", "错误", "跳过"];
+  }
+  myChart.setOption({
+    title: {
+      text: title,
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    xAxis: {
+      type: "category",
+      data: dataClass,
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        name: "Passed",
+        type: "bar",
+        stack: "Total",
+        data: [
           {
-            name: "Passed",
-            type: "bar",
-            stack: "Total",
-            data: [
-              {
-                value: parseInt(passed),
-                itemStyle: { color: "#00CC88" },
-              },
-              {
-                value: parseInt(failure),
-                itemStyle: { color: "#FF8C00" },
-              },
-              {
-                value: parseInt(errors),
-                itemStyle: { color: "#FF3366" },
-              },
-              {
-                value: parseInt(skipped),
-                itemStyle: { color: "#CFD6DF" },
-              },
-            ],
+            value: parseInt(passed),
+            itemStyle: { color: "#00CC88" },
+          },
+          {
+            value: parseInt(failure),
+            itemStyle: { color: "#FF8C00" },
+          },
+          {
+            value: parseInt(errors),
+            itemStyle: { color: "#FF3366" },
+          },
+          {
+            value: parseInt(skipped),
+            itemStyle: { color: "#CFD6DF" },
           },
         ],
-      });
+      },
+    ],
+  });
 
-      function showLog(id) {
-        document.body.style.overflow = "hidden";
-        document.body.style.height = "100%";
-        document.getElementById(id).style.display = "block";
+  function showLog(id) {
+    document.body.style.overflow = "hidden";
+    document.body.style.height = "100%";
+    document.getElementById(id).style.display = "block";
+  }
+
+  function hideLog(id) {
+    document.body.style.overflow = "auto";
+    document.getElementById(id).style.display = "none";
+  }
+
+  function showImg(obj) {
+    document.body.style.overflow = "hidden";
+    document.body.style.height = "100%";
+    var nextObj = obj.nextElementSibling;
+    nextObj.style.display = "block";
+    var index = 0; //每张图片的下标，
+    var len = nextObj.getElementsByTagName("img").length;
+    var imgCircle = nextObj.getElementsByClassName("img-circle")[0];
+    nextObj.onmouseover = function () {
+      //当鼠标光标停在图片上，则停止轮播
+      clearInterval(start);
+    };
+    nextObj.onmouseout = function () {
+      //当鼠标光标停在图片上，则开始轮播
+      start = setInterval(autoPlay, 1000);
+    };
+    for (var i = 0; i < len; i++) {
+      var fontTag = document.createElement("font");
+      imgCircle.appendChild(fontTag);
+    }
+    var fontTagList = nextObj.getElementsByTagName("font"); //得到所有圆圈
+    changeImg(0);
+    var funny = function (i) {
+      fontTagList[i].onmouseover = function () {
+        index = i;
+        changeImg(i);
+      };
+    };
+    for (var i = 0; i < fontTagList.length; i++) {
+      funny(i);
+    }
+
+    function autoPlay() {
+      if (index > len - 1) {
+        index = 0;
+        clearInterval(start); //运行一轮后停止
       }
-
-      function hideLog(id) {
-        document.body.style.overflow = "auto";
-        document.getElementById(id).style.display = "none";
+      changeImg(index++);
+    }
+    imgCircle.style.width = 30 * len + "px";
+    // 对应圆圈和图片同步
+    function changeImg(index) {
+      var imgTags = nextObj.getElementsByTagName("img");
+      var fontTags = nextObj.getElementsByTagName("font");
+      for (i = 0; i < fontTags.length; i++) {
+        imgTags[i].style.display = "none";
+        fontTags[i].style.backgroundColor = "white";
       }
-
-      function showImg(obj) {
-        document.body.style.overflow = "hidden";
-        document.body.style.height = "100%";
-        var nextObj = obj.nextElementSibling;
-        nextObj.style.display = "block";
-        var index = 0; //每张图片的下标，
-        var len = nextObj.getElementsByTagName("img").length;
-        var imgCircle = nextObj.getElementsByClassName("img-circle")[0];
-        nextObj.onmouseover = function () {
-          //当鼠标光标停在图片上，则停止轮播
-          clearInterval(start);
-        };
-        nextObj.onmouseout = function () {
-          //当鼠标光标停在图片上，则开始轮播
-          start = setInterval(autoPlay, 1000);
-        };
-        for (var i = 0; i < len; i++) {
-          var fontTag = document.createElement("font");
-          imgCircle.appendChild(fontTag);
-        }
-        var fontTagList = nextObj.getElementsByTagName("font"); //得到所有圆圈
-        changeImg(0);
-        var funny = function (i) {
-          fontTagList[i].onmouseover = function () {
-            index = i;
-            changeImg(i);
-          };
-        };
-        for (var i = 0; i < fontTagList.length; i++) {
-          funny(i);
-        }
-
-        function autoPlay() {
-          if (index > len - 1) {
-            index = 0;
-            clearInterval(start); //运行一轮后停止
-          }
-          changeImg(index++);
-        }
-        imgCircle.style.width = 30 * len + "px";
-        // 对应圆圈和图片同步
-        function changeImg(index) {
-          var imgTags = nextObj.getElementsByTagName("img");
-          var fontTags = nextObj.getElementsByTagName("font");
-          for (i = 0; i < fontTags.length; i++) {
-            imgTags[i].style.display = "none";
-            fontTags[i].style.backgroundColor = "white";
-          }
-          imgTags[index].style.display = "block";
-          if (fontTags.length > 0) {
-            fontTags[index].style.backgroundColor = "red";
-          }
-        }
+      imgTags[index].style.display = "block";
+      if (fontTags.length > 0) {
+        fontTags[index].style.backgroundColor = "red";
       }
+    }
+  }
 
-      function hideImg(obj) {
-        document.body.style.overflow = "auto";
-        obj.parentElement.parentElement.parentElement.parentElement.parentElement.style.display =
-          "none";
-        obj.parentElement.parentElement.parentElement.getElementsByClassName(
-          "img-circle"
-        )[0].innerHTML = "";
+  function hideImg(obj) {
+    document.body.style.overflow = "auto";
+    obj.parentElement.parentElement.parentElement.parentElement.parentElement.style.display =
+      "none";
+    obj.parentElement.parentElement.parentElement.getElementsByClassName(
+      "img-circle"
+    )[0].innerHTML = "";
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      document.body.style.overflow = "auto";
+      var casesLog = document.querySelectorAll(".case-log");
+      var casesImage = document.querySelectorAll("#case-image");
+      var imagCircle = document.querySelectorAll(".img-circle");
+      for (var i = 0; i < casesLog.length; i++) {
+        casesLog[i].style.display = "none";
       }
+      for (var i = 0; i < casesImage.length; i++) {
+        casesImage[i].style.display = "none";
+      }
+      for (var i = 0; i < imagCircle.length; i++) {
+        imagCircle[i].innerHTML = "";
+      }
+    }
+  });
 
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          document.body.style.overflow = "auto";
-          var casesLog = document.querySelectorAll(".case-log");
-          var casesImage = document.querySelectorAll("#case-image");
-          var imagCircle = document.querySelectorAll(".img-circle");
-          for (var i = 0; i < casesLog.length; i++) {
-            casesLog[i].style.display = "none";
-          }
-          for (var i = 0; i < casesImage.length; i++) {
-            casesImage[i].style.display = "none";
-          }
-          for (var i = 0; i < imagCircle.length; i++) {
-            imagCircle[i].innerHTML = "";
-          }
-        }
-      });
-
-      output_list = Array();
-      /* level 
-      - 0:Summary
-      - 1:Failed 
-      - 2:Skip
-      - 3:All 
-      */
-      function showCase(level, channel) {
-        trs = document.getElementsByTagName("tr");
-        for (var i = 0; i < trs.length; i++) {
-          tr = trs[i];
-          id = tr.id;
-          if (["ft", "pt", "et", "st"].indexOf(id.substr(0, 2)) != -1) {
-            if (level == 0 && id.substr(2, 1) == channel) {
-              tr.className = "hiddenRow";
-            }
-          }
-          if (id.substr(0, 3) == "pt" + channel) {
-            if (level == 1) {
-              tr.className = "";
-            } else if (level > 4 && id.substr(2, 1) == channel) {
-              tr.className = "";
-            } else {
-              tr.className = "hiddenRow";
-            }
-          }
-          if (id.substr(0, 3) == "ft" + channel) {
-            if (level == 2) {
-              tr.className = "";
-            } else if (level > 4 && id.substr(2, 1) == channel) {
-              tr.className = "";
-            } else {
-              tr.className = "hiddenRow";
-            }
-          }
-          if (id.substr(0, 3) == "et" + channel) {
-            if (level == 3) {
-              tr.className = "";
-            } else if (level > 4 && id.substr(2, 1) == channel) {
-              tr.className = "";
-            } else {
-              tr.className = "hiddenRow";
-            }
-          }
-          if (id.substr(0, 3) == "st" + channel) {
-            if (level == 4) {
-              tr.className = "";
-            } else if (level > 4 && id.substr(2, 1) == channel) {
-              tr.className = "";
-            } else {
-              tr.className = "hiddenRow";
-            }
-          }
+  output_list = Array();
+  /* level
+  - 0:Summary
+  - 1:Failed
+  - 2:Skip
+  - 3:All
+  */
+  function showCase(level, channel) {
+    trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+      tr = trs[i];
+      id = tr.id;
+      if (["ft", "pt", "et", "st"].indexOf(id.substr(0, 2)) != -1) {
+        if (level == 0 && id.substr(2, 1) == channel) {
+          tr.className = "hiddenRow";
         }
       }
-      function showClassDetail(cid, count) {
-        var id_list = Array(count);
-        var toHide = 1;
-        for (var i = 0; i < count; i++) {
-          tid0 = "t" + cid.substr(1) + "." + (i + 1);
-          tid = "f" + tid0;
-          tr = document.getElementById(tid);
-          if (!tr) {
-            tid = "p" + tid0;
-            tr = document.getElementById(tid);
-          }
-          if (!tr) {
-            tid = "e" + tid0;
-            tr = document.getElementById(tid);
-          }
-          if (!tr) {
-            tid = "s" + tid0;
-            tr = document.getElementById(tid);
-          }
-          id_list[i] = tid;
-          if (tr.className) {
-            toHide = 0;
-          }
-        }
-        for (var i = 0; i < count; i++) {
-          tid = id_list[i];
-          if (toHide) {
-            document.getElementById(tid).className = "hiddenRow";
-          } else {
-            document.getElementById(tid).className = "";
-          }
-        }
-      }
-      function showTestDetail(div_id) {
-        var detailsDiv = document.getElementById(div_id);
-        var displayState = detailsDiv.style.display;
-
-        if (displayState != "block") {
-          displayState = "block";
-          detailsDiv.style.display = "block";
+      if (id.substr(0, 3) == "pt" + channel) {
+        if (level == 1) {
+          tr.className = "";
+        } else if (level > 4 && id.substr(2, 1) == channel) {
+          tr.className = "";
         } else {
-          detailsDiv.style.display = "none";
+          tr.className = "hiddenRow";
         }
       }
-      function html_escape(s) {
-        s = s.replace(/&/g, "&amp;");
-        s = s.replace(/</g, "&lt;");
-        s = s.replace(/>/g, "&gt;");
-        return s;
+      if (id.substr(0, 3) == "ft" + channel) {
+        if (level == 2) {
+          tr.className = "";
+        } else if (level > 4 && id.substr(2, 1) == channel) {
+          tr.className = "";
+        } else {
+          tr.className = "hiddenRow";
+        }
       }
-    </script>
+      if (id.substr(0, 3) == "et" + channel) {
+        if (level == 3) {
+          tr.className = "";
+        } else if (level > 4 && id.substr(2, 1) == channel) {
+          tr.className = "";
+        } else {
+          tr.className = "hiddenRow";
+        }
+      }
+      if (id.substr(0, 3) == "st" + channel) {
+        if (level == 4) {
+          tr.className = "";
+        } else if (level > 4 && id.substr(2, 1) == channel) {
+          tr.className = "";
+        } else {
+          tr.className = "hiddenRow";
+        }
+      }
+    }
+  }
+  function showClassDetail(cid, count) {
+    var id_list = Array(count);
+    var toHide = 1;
+    for (var i = 0; i < count; i++) {
+      tid0 = "t" + cid.substr(1) + "." + (i + 1);
+      tid = "f" + tid0;
+      tr = document.getElementById(tid);
+      if (!tr) {
+        tid = "p" + tid0;
+        tr = document.getElementById(tid);
+      }
+      if (!tr) {
+        tid = "e" + tid0;
+        tr = document.getElementById(tid);
+      }
+      if (!tr) {
+        tid = "s" + tid0;
+        tr = document.getElementById(tid);
+      }
+      id_list[i] = tid;
+      if (tr.className) {
+        toHide = 0;
+      }
+    }
+    for (var i = 0; i < count; i++) {
+      tid = id_list[i];
+      if (toHide) {
+        document.getElementById(tid).className = "hiddenRow";
+      } else {
+        document.getElementById(tid).className = "";
+      }
+    }
+  }
+  function showTestDetail(div_id) {
+    var detailsDiv = document.getElementById(div_id);
+    var displayState = detailsDiv.style.display;
 
-    <footer class="footer" style="height: 50px; position: fixed; width: 100%">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-6">
-            XTestRunner {{ version }}; 2024 © 重定向科技 - http://itest.info
-          </div>
-        </div>
+    if (displayState != "block") {
+      displayState = "block";
+      detailsDiv.style.display = "block";
+    } else {
+      detailsDiv.style.display = "none";
+    }
+  }
+  function html_escape(s) {
+    s = s.replace(/&/g, "&amp;");
+    s = s.replace(/</g, "&lt;");
+    s = s.replace(/>/g, "&gt;");
+    return s;
+  }
+</script>
+
+<footer class="footer" style="height: 50px; position: fixed; width: 100%">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        XTestRunner {{ version }}; 2024 © SeldomQA Team
       </div>
-    </footer>
-  </body>
+    </div>
+  </div>
+</footer>
+</body>
 </html>
