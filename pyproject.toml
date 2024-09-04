@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "XTestRunner"
-version = "1.7.4"
+version = "1.7.5"
 description = "Modern style test report based on unittest framework."
 authors = ["bugmaster <fnngj@126.com>"]
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 jinja2 = "^3.1.2"
-requests = "^2.22.0"
+requests = ">=2.22.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

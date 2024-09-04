@@ -1,3 +1,9 @@
+### 1.7.5 版本
+
+* 修复：中文报告，`通过率`标签样式错误。
+* 修改：HTML测试报告引用css样式地址，`http`替换为`https`。
+* 优化：subTest测试，支持自定义`desc`参数作为HTML报告描述 [#51](https://github.com/SeldomQA/XTestRunner/issues/51)。
+
 ### 1.7.4 版本
 
 * 增加：Email邮件支持多语言。
