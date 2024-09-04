@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import unittest
 import datetime
@@ -428,7 +429,10 @@ class HTMLTestRunner(object):
         tid = tmp + 't{}.{}.{}'.format(self.run_times, cid + 1, tid + 1)
         # tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = test.id().split('.')[-1]
-        doc = test.shortDescription() or ""
+        if "desc=" in out:
+            doc = re.search(r'desc=\'([^\']*)\'', out).group(1)
+        else:
+            doc = test.shortDescription() or ""
         # desc = doc and ('%s: %s' % (name, doc)) or name
         tmpl = has_output and CustomTemplate.REPORT_TEST_WITH_OUTPUT_TMPL or CustomTemplate.REPORT_TEST_NO_OUTPUT_TMPL
 
