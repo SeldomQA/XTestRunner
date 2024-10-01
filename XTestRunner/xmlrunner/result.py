@@ -174,6 +174,7 @@ class _TestInfo(object):
         self.filename = filename
         self.lineno = lineno
         self.doc = doc
+        self.images = []
 
     def id(self):
         return self.test_id
@@ -228,7 +229,7 @@ class _XMLTestResult(TextTestResult):
             self.infoclass = infoclass
 
     def _prepare_callback(self, test_info, target_list, verbose_str,
-                          short_str):
+                          short_str, images: list = None):
         """
         Appends a `infoclass` to the given target list and sets a callback
         method to be called by stopTest method.
@@ -237,6 +238,10 @@ class _XMLTestResult(TextTestResult):
         test_info.lineno = self.lineno
         test_info.doc = self.doc
         target_list.append(test_info)
+        if images is None:
+            test_info.images = []
+        else:
+            test_info.images = images
 
         def callback():
             """Prints the test method outcome to the stream, as well as
@@ -268,6 +273,7 @@ class _XMLTestResult(TextTestResult):
         Called before execute each test method.
         """
         self.start_time = time()
+        test.images = getattr(test, "images", [])
         TestResult.startTest(self, test)
 
         try:
@@ -397,7 +403,13 @@ class _XMLTestResult(TextTestResult):
             testinfo,
             self._exc_info_to_string(err, test)
         ))
-        self._prepare_callback(testinfo, [], 'FAIL', 'F')
+        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
+            driver = getattr(test, "driver")
+            try:
+                test.images.append(driver.get_screenshot_as_base64())
+            except BaseException:
+                ...
+        self._prepare_callback(testinfo, [], 'FAIL', 'F', images=test.images)
 
     @failfast
     def addError(self, test, err):
@@ -417,7 +429,13 @@ class _XMLTestResult(TextTestResult):
             testinfo,
             self._exc_info_to_string(err, test)
         ))
-        self._prepare_callback(testinfo, [], 'ERROR', 'E')
+        if type(getattr(test, "driver", "")).__name__ == 'WebDriver':
+            driver = getattr(test, "driver")
+            try:
+                test.images.append(driver.get_screenshot_as_base64())
+            except BaseException as msg:
+                ...
+        self._prepare_callback(testinfo, [], 'ERROR', 'E', images=test.images)
 
     def addSubTest(self, testcase, test, err):
         """
@@ -672,6 +690,14 @@ class _XMLTestResult(TextTestResult):
             testcase.appendChild(systemout)
             _XMLTestResult._createCDATAsections(
                 xml_document, systemout, test_result.stderr)
+
+        if len(test_result.images) != 0:
+            for image in test_result.images:
+                screenshot = xml_document.createElement('screenshot')
+                screenshot.setAttribute('src', image)
+                testcase.appendChild(screenshot)
+                _XMLTestResult._createCDATAsections(
+                    xml_document, screenshot, '')
 
     _report_testcase = staticmethod(_report_testcase)
 
