@@ -1,3 +1,11 @@
+### 1.7.6 版本
+
+* 功能：XML保持支持用例`失败`/`错误` 截图保存在XML报告中。[#54](https://github.com/SeldomQA/XTestRunner/issues/54)。
+* 优化：报告样式优化。[#53](https://github.com/SeldomQA/XTestRunner/issues/53)。
+    * 测试报告列表的标题调大。
+    * 测试类统计支持中文。
+    * 测试结果标签增加文字。
+
 ### 1.7.5 版本
 
 * 修复：中文报告，`通过率`标签样式错误。
