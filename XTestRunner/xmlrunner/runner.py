@@ -2,7 +2,7 @@ import time
 import unittest
 import functools
 
-from unittest import TextTestRunner, TestProgram
+from unittest import TextTestRunner
 from .result import _XMLTestResult
 
 # http://www.iana.org/assignments/character-sets/character-sets.xhtml
@@ -109,7 +109,7 @@ class XMLTestRunner(TextTestRunner):
             run = result.testsRun
             self.stream.writeln("Ran %d test%s in %.3fs" % (
                 run, run != 1 and "s" or "", time_taken)
-            )
+                                )
             self.stream.writeln()
 
             # other metrics
