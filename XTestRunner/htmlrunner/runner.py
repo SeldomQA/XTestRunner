@@ -29,6 +29,14 @@ TEMPLATE_HTML = "template.html"
 STYLESHEET_HTML = "stylesheet.html"
 
 
+class Result:
+    """test result"""
+    TAG_PASSED = "Passed"
+    TAG_FAILURE = "Failure"
+    TAG_ERRORS = "Errors"
+    TAG_SKIPPED = "Skipped"
+
+
 class CustomTemplate:
     """
     Define a HTML template for report customerization and generation.
@@ -40,7 +48,7 @@ class CustomTemplate:
     <td>%(name)s</td>
     <td>%(desc)s</td>
     <td></td>
-    <td>Passed:%(Pass)s,Failure:%(fail)s,Errors:%(error)s,Skipped:%(skip)s</td>
+    <td>%(class_result)s</td>
     <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
     <td>&nbsp;</td>
 </tr>
@@ -58,9 +66,9 @@ class CustomTemplate:
         <div>%(runtime)s s</div>
     </td>
     <td>
-         <div class="progress" style="width:50px;">
+         <div class="progress" style="width:60px; height: 18px;">
           <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
-            aria-valuemax="100" style='%(progress_bar_style)s'></div>
+            aria-valuemax="100" style='%(progress_bar_style)s'>%(progress_result)s</div>
         </div>
     </td>
     <td>
@@ -106,9 +114,9 @@ class CustomTemplate:
         <div>%(runtime)s s</div>
     </td>
     <td>
-         <div class="progress" style="width:50px;">
+         <div class="progress" style="width:60px; height: 18px;">
           <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
-            aria-valuemax="100" style='%(progress_bar_style)s'></div>
+            aria-valuemax="100" style='%(progress_bar_style)s'>%(progress_result)s</div>
         </div>
     </td>
     <td></td>
@@ -160,6 +168,11 @@ class HTMLTestRunner(object):
         self.run_times = 0
         self.logger = logger
         Config.language = language
+        if Config.language == 'zh-CN':
+            Result.TAG_PASSED = "通过"
+            Result.TAG_FAILURE = "失败"
+            Result.TAG_ERRORS = "错误"
+            Result.TAG_SKIPPED = "跳过"
         if title is None:
             self.title = DEFAULT_TITLE
         else:
@@ -387,10 +400,7 @@ class HTMLTestRunner(object):
                 name=name,
                 desc=doc,
                 count=num_pass + num_fail + num_error + num_skip,
-                Pass=num_pass,
-                fail=num_fail,
-                error=num_error,
-                skip=num_skip,
+                class_result=f"{Result.TAG_PASSED}:{num_pass}, {Result.TAG_FAILURE}:{num_fail}, {Result.TAG_ERRORS}:{num_error}, {Result.TAG_SKIPPED}:{num_skip}",
                 cid='c{}.{}'.format(self.run_times, cid + 1),
             )
             rows.append(row)
@@ -474,6 +484,8 @@ class HTMLTestRunner(object):
         row = tmpl % dict(
             progress_bar_class=num == 0 and 'bg-success' or (
                     num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),
+            progress_result=num == 0 and Result.TAG_PASSED or (
+                    num == 1 and Result.TAG_FAILURE or (num == 2 and Result.TAG_ERRORS or Result.TAG_SKIPPED)),
             progress_bar_style="width:100%",
             tid=tid,
             Class=(num == 0 and 'hiddenRow' or 'none'),
