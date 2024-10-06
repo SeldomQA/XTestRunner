@@ -7,6 +7,7 @@ import functools
 from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
 from XTestRunner.htmlrunner.result import _TestResult
+from XTestRunner.htmlrunner.multi_language import language_tag
 from XTestRunner.config import RunResult, Config
 from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
@@ -29,14 +30,6 @@ TEMPLATE_HTML = "template.html"
 STYLESHEET_HTML = "stylesheet.html"
 
 
-class Result:
-    """test result"""
-    TAG_PASSED = "Passed"
-    TAG_FAILURE = "Failure"
-    TAG_ERRORS = "Errors"
-    TAG_SKIPPED = "Skipped"
-
-
 class CustomTemplate:
     """
     Define a HTML template for report customerization and generation.
@@ -49,7 +42,7 @@ class CustomTemplate:
     <td>%(desc)s</td>
     <td></td>
     <td>%(class_result)s</td>
-    <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
+    <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">%(detail)s</a></td>
     <td>&nbsp;</td>
 </tr>
 """  # variables: (style, desc, count, Pass, fail, error, cid)
@@ -73,7 +66,7 @@ class CustomTemplate:
     </td>
     <td>
         <!--css div popup start-->
-        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">log</a>
+        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(log_viewing)s</a>
         <div id='div_%(tid)s' class="modal show case-log" style="display: none; background-color: #000000c7;">
             <div class="modal-dialog modal-dialog-centered log_window">
                 <div class="modal-content shadow-3">
@@ -82,7 +75,7 @@ class CustomTemplate:
                             <h5 class="mb-1">%(log_title)s</h5>
                         </div>
                         <div>
-                            <h5 class="mb-1">detailed log</h5>
+                            <h5 class="mb-1">%(log_detailed)s</h5>
                         </div>
                         <div>
                             <button type="button" class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" data-bs-dismiss="modal" onclick="hideLog('div_%(tid)s')">X</button>
@@ -168,11 +161,6 @@ class HTMLTestRunner(object):
         self.run_times = 0
         self.logger = logger
         Config.language = language
-        if Config.language == 'zh-CN':
-            Result.TAG_PASSED = "通过"
-            Result.TAG_FAILURE = "失败"
-            Result.TAG_ERRORS = "错误"
-            Result.TAG_SKIPPED = "跳过"
         if title is None:
             self.title = DEFAULT_TITLE
         else:
@@ -393,15 +381,16 @@ class HTMLTestRunner(object):
                 name = f"{cls.__module__}.{cls.__name__}"
             doc = cls.__doc__ or ""
             # desc = doc and '%s: %s' % (name, doc) or name
-
+            tag = language_tag(Config.language)
             row = CustomTemplate.REPORT_CLASS_TMPL % dict(
                 style=num_pass > 0 and "passClass" or (
                         num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
                 name=name,
                 desc=doc,
                 count=num_pass + num_fail + num_error + num_skip,
-                class_result=f"{Result.TAG_PASSED}:{num_pass}, {Result.TAG_FAILURE}:{num_fail}, {Result.TAG_ERRORS}:{num_error}, {Result.TAG_SKIPPED}:{num_skip}",
+                class_result=f"{tag['PASSED']}:{num_pass}, {tag['FAILURE']}:{num_fail}, {tag['ERRORS']}:{num_error}, {tag['SKIPPED']}:{num_skip}",
                 cid='c{}.{}'.format(self.run_times, cid + 1),
+                detail=tag['DETAIL']
             )
             rows.append(row)
 
@@ -481,19 +470,22 @@ class HTMLTestRunner(object):
         else:
             runtime = "0.00"
 
+        tag = language_tag(Config.language)
         row = tmpl % dict(
             progress_bar_class=num == 0 and 'bg-success' or (
                     num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),
-            progress_result=num == 0 and Result.TAG_PASSED or (
-                    num == 1 and Result.TAG_FAILURE or (num == 2 and Result.TAG_ERRORS or Result.TAG_SKIPPED)),
+            progress_result=num == 0 and tag["PASSED"] or (
+                    num == 1 and tag["FAILURE"] or (num == 2 and tag["ERRORS"] or tag["SKIPPED"])),
             progress_bar_style="width:100%",
             tid=tid,
+            log_viewing=tag["LOG"],
             Class=(num == 0 and 'hiddenRow' or 'none'),
             style=num == 0 and 'passCase' or (num == 1 and 'failCase' or (num == 2 and 'errorCase' or 'skipCase')),
             casename=name,
             desc=doc,
             runtime=runtime,
             log_title=name,
+            log_detailed=tag["DETAILED_LOG"],
             script=script,
             img=screenshots_html
         )
