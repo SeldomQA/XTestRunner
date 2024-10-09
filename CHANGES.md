@@ -1,3 +1,7 @@
+### 1.7.7 版本
+
+* 优化：HTML中文报告支持全中文。[#55](https://github.com/SeldomQA/XTestRunner/issues/55)。
+
 ### 1.7.6 版本
 
 * 功能：XML保持支持用例`失败`/`错误` 截图保存在XML报告中。[#54](https://github.com/SeldomQA/XTestRunner/issues/54)。
