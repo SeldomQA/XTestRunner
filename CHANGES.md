@@ -1,3 +1,10 @@
+### 1.8.0 版本
+
+* HTML中文报告优化
+    * `view` -> `查看`。
+    * `screenshot` -> `截图`。
+* HTML报告增加 icon。
+
 ### 1.7.7 版本
 
 * 优化：HTML中文报告支持全中文。[#55](https://github.com/SeldomQA/XTestRunner/issues/55)。
