@@ -118,13 +118,13 @@ class CustomTemplate:
 """  # variables: (tid, Class, style, desc, status)
 
     IMG_TMPL = r"""
-<a class="popup_link" onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">view</a>
+<a class="popup_link" onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">{img_view}</a>
 <div id="case-image" class="modal show" style="display:none; background-color: #000000c7;">
   <div class="modal-dialog modal-dialog-centered log_window">
     <div class="modal-content shadow-3">
       <div class="modal-header">
         <div>
-          <h5 class="mb-1">screenshots</h5>
+          <h5 class="mb-1">{screenshots}</h5>
         </div>
           <div>
             <button class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" onclick='hideImg(this)'">X</button>
@@ -452,6 +452,7 @@ class HTMLTestRunner(object):
             id=tid,
             output=saxutils.escape(uo + ue),
         )
+        tag = language_tag(Config.language)
         # add image
         if getattr(test, 'images', []):
             tmp = ""
@@ -460,7 +461,11 @@ class HTMLTestRunner(object):
                     tmp += """<img src="data:image/jpg;base64,{}" style="display: block;" class="img"/>\n""".format(img)
                 else:
                     tmp += """<img src="data:image/jpg;base64,{}" style="display: none;" class="img"/>\n""".format(img)
-            screenshots_html = CustomTemplate.IMG_TMPL.format(images=tmp)
+
+            screenshots_html = CustomTemplate.IMG_TMPL.format(
+                images=tmp,
+                img_view=tag["VIEW"],
+                screenshots=tag["SCREENSHOTS"])
         else:
             screenshots_html = """"""
 
@@ -470,7 +475,6 @@ class HTMLTestRunner(object):
         else:
             runtime = "0.00"
 
-        tag = language_tag(Config.language)
         row = tmpl % dict(
             progress_bar_class=num == 0 and 'bg-success' or (
                     num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),

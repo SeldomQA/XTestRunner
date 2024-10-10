@@ -9,7 +9,9 @@ LANGUAGE_TAGS = {
         "SKIPPED": "Skipped",
         "LOG": "log",
         "DETAIL": "Detail",
-        "DETAILED_LOG": "detailed log"
+        "DETAILED_LOG": "detailed log",
+        "VIEW": "view",
+        "SCREENSHOTS": "screenshots",
 
     },
     "zh-CN": {
@@ -19,7 +21,9 @@ LANGUAGE_TAGS = {
         "SKIPPED": "跳过",
         "LOG": "日志",
         "DETAIL": "详情",
-        "DETAILED_LOG": "日志详情"
+        "DETAILED_LOG": "日志详情",
+        "VIEW": "查看",
+        "SCREENSHOTS": "截图",
     }
 }
 
