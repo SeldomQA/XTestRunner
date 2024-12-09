@@ -87,7 +87,9 @@ if __name__ == '__main__':
 
 更多例子，请阅读 [中文文档](./docs/README.md)
 
-## 感谢
+## 其他
+
+### 感谢
 
 感谢从以下项目中得到思路和帮助。
 
@@ -96,3 +98,13 @@ if __name__ == '__main__':
 * [HTMLTestRunner_cn](https://github.com/GoverSky/HTMLTestRunner_cn)
 
 * [Theme style](https://clever-dashboard.webpixels.work/pages/tasks/list-view.html)
+
+### 静态文件服务
+
+1.添加静态文件到github项目。
+
+https://github.com/defnngj/Telegraph-Image
+
+2.cloudflare提供免费的访问域名。
+
+https://dash.cloudflare.com/
