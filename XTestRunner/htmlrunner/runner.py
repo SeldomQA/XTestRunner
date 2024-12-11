@@ -428,8 +428,13 @@ class HTMLTestRunner(object):
         tid = tmp + 't{}.{}.{}'.format(self.run_times, cid + 1, tid + 1)
         # tid = (n == 0 and 'p' or 'f') + 't%s.%s' % (cid + 1, tid + 1)
         name = test.id().split('.')[-1]
-        if "desc=" in out:
-            doc = re.search(r'desc=\'([^\']*)\'', out).group(1)
+        # match subTest: desc='xx'
+        desc_single_match = re.search(r'desc=\'([^\']*)\'', out)
+        desc_double_match = re.search(r'desc="([^"]*)"', out)
+        if desc_single_match:
+            doc = desc_single_match.group(1)
+        elif desc_double_match:
+            doc = desc_double_match.group(1)
         else:
             doc = test.shortDescription() or ""
         # desc = doc and ('%s: %s' % (name, doc)) or name
