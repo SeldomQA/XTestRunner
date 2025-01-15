@@ -8,7 +8,7 @@ from xml.sax import saxutils
 from jinja2 import Environment, FileSystemLoader
 from XTestRunner.htmlrunner.result import _TestResult
 from XTestRunner.htmlrunner.multi_language import language_tag
-from XTestRunner.config import RunResult, Config
+from XTestRunner.config import RunResult, Config, static_file
 from XTestRunner.version import get_version
 from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
@@ -154,12 +154,14 @@ class HTMLTestRunner(object):
                  rerun=0,
                  language="en",
                  logger=None,
+                 local_style=False,
                  **kwargs):
         self.stream = stream
         self.verbosity = verbosity
         self.rerun = rerun
         self.run_times = 0
         self.logger = logger
+        self.local_style = local_style
         Config.language = language
         if title is None:
             self.title = DEFAULT_TITLE
@@ -322,8 +324,13 @@ class HTMLTestRunner(object):
         version = get_version()
         heading = self._generate_heading(base, statistics)
         report = self._generate_report(result)
+        static = static_file(self.local_style, self.stream.name)
 
         html_content = template.render(
+            jquery_url=static["jquery_url"],
+            echarts_url=static["echarts_url"],
+            css_url=static["css_url"],
+            png_url=static["png_url"],
             title=saxutils.escape(self.title),
             version=version,
             stylesheet=stylesheet,
