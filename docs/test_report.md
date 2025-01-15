@@ -7,7 +7,7 @@ XTestRunner 支持HTML 和 XML 两种格式的测试报告。
 
 > 注： 两种格式采用不同的运行个器，部分参数和功能会有差异。
 
-### HTML测试报告 
+### HTML测试报告
 
 XTestRunner基本用法，用于生成 HTML测试报告。
 
@@ -20,23 +20,24 @@ from XTestRunner import HTMLTestRunner
 
 class TestDemo(unittest.TestCase):
     """测试用例说明"""
-    
+
     def test_success(self):
         """执行成功"""
         self.assertEqual(2 + 3, 5)
-    
+
     @unittest.skip("skip case")
     def test_skip(self):
         """跳过用例"""
         pass
-    
+
     def test_fail(self):
         """失败用例"""
         self.assertEqual(5, 6)
-    
+
     def test_error(self):
         """错误用例"""
         self.assertEqual(a, 6)
+
 
 if __name__ == '__main__':
     suit = unittest.TestSuite()
@@ -55,7 +56,8 @@ if __name__ == '__main__':
             title='<project name>test report',
             description='describe: ... ',
             language='en',
-            rerun=3
+            rerun=3,
+            local_style=False,
         )
         runner.run(suit)
 
@@ -69,6 +71,7 @@ __`HTMLTestRunner`类说明__
 * `description`: 报告的描述, 支持`str`、`list`两种类型。
 * `language`: 支持中文`zh-CN`, 默认`en`。
 * `rerun`: 重跑次数。
+* `local_style`: 是否使用本地样式，默认`False`。
 
 __`run()`方法说明__
 
@@ -84,8 +87,7 @@ __测试报告__
 
 ![](../img/test_html_report.png)
 
-
-### XML测试报告 
+### XML测试报告
 
 XTestRunner基本用法，用于生成 XML测试报告。
 
