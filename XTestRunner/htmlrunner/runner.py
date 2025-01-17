@@ -347,8 +347,10 @@ class HTMLTestRunner(object):
             heading_html = "heading-zh-CN.html"
         else:
             raise EnvironmentError("The language is not supported")
+        static = static_file(self.local_style, self.stream.name)
         heading = env.get_template(heading_html).render(
             title=self.title,
+            png_url=static["png_url"],
             start_time=base["start_time"],
             end_time=base["end_time"],
             duration=base["duration"],
