@@ -1,0 +1,21 @@
+<a class="popup_link" onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">{{img_view}}</a>
+<div id="case-image" class="modal show" style="display:none; background-color: #000000c7;">
+    <div class="modal-dialog modal-dialog-centered log_window">
+        <div class="modal-content shadow-3">
+            <div class="modal-header">
+                <div>
+                    <h5 class="mb-1">{{screenshots}}</h5>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover"
+                            onclick="hideImg(this)">X
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" style="height: 600px; background: #e7eaf0;">
+                {{images}}
+            </div>
+            <div class="img-circle"></div>
+        </div>
+    </div>
+</div>

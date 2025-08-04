@@ -26,118 +26,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML_DIR = os.path.join(BASE_DIR, "html")
 
 env = Environment(loader=FileSystemLoader(HTML_DIR))
-TEMPLATE_HTML = "template.html"
-STYLESHEET_HTML = "stylesheet.html"
 
-
-class CustomTemplate:
-    """
-    Define a HTML template for report customerization and generation.
-    Overall structure of an HTML report
-    """
-
-    REPORT_CLASS_TMPL = r"""
-<tr class='%(style)s'>
-    <td>%(name)s</td>
-    <td>%(desc)s</td>
-    <td></td>
-    <td>%(class_result)s</td>
-    <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">%(detail)s</a></td>
-    <td>&nbsp;</td>
-</tr>
-"""  # variables: (style, desc, count, Pass, fail, error, cid)
-
-    REPORT_TEST_WITH_OUTPUT_TMPL = r"""
-<tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'>
-        <div class='testcase'>%(casename)s</div>
-    </td>
-    <td style="color: #495057">
-        <div>%(desc)s</div>
-    </td>
-    <td style="color: #495057">
-        <div>%(runtime)s s</div>
-    </td>
-    <td>
-         <div class="progress" style="width:60px; height: 18px;">
-          <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
-            aria-valuemax="100" style='%(progress_bar_style)s'>%(progress_result)s</div>
-        </div>
-    </td>
-    <td>
-        <!--css div popup start-->
-        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_%(tid)s')">%(log_viewing)s</a>
-        <div id='div_%(tid)s' class="modal show case-log" style="display: none; background-color: #000000c7;">
-            <div class="modal-dialog modal-dialog-centered log_window">
-                <div class="modal-content shadow-3">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="mb-1">%(log_title)s</h5>
-                        </div>
-                        <div>
-                            <h5 class="mb-1">%(log_detailed)s</h5>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" data-bs-dismiss="modal" onclick="hideLog('div_%(tid)s')">X</button>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <pre>%(script)s</pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--css div popup end-->
-    </td>
-    <td>%(img)s</td>
-</tr>
-"""  # variables: (tid, Class, style, desc, status)
-
-    REPORT_TEST_NO_OUTPUT_TMPL = r"""
-<tr id='%(tid)s' class='%(Class)s'>
-    <td class='%(style)s'>
-        <div class='testcase'>%(casename)s</div>
-    </td>
-    <td style="color: #495057">
-        <div>%(desc)s</div>
-    </td>
-    <td style="color: #495057">
-        <div>%(runtime)s s</div>
-    </td>
-    <td>
-         <div class="progress" style="width:60px; height: 18px;">
-          <div class='progress-bar %(progress_bar_class)s' role="progressbar" aria-valuenow="83" aria-valuemin="0"
-            aria-valuemax="100" style='%(progress_bar_style)s'>%(progress_result)s</div>
-        </div>
-    </td>
-    <td></td>
-    <td>%(img)s</td>
-</tr>
-"""  # variables: (tid, Class, style, desc, status)
-
-    IMG_TMPL = r"""
-<a class="popup_link" onfocus='this.blur();' href="javascript:void(0)" onclick="showImg(this)">{img_view}</a>
-<div id="case-image" class="modal show" style="display:none; background-color: #000000c7;">
-  <div class="modal-dialog modal-dialog-centered log_window">
-    <div class="modal-content shadow-3">
-      <div class="modal-header">
-        <div>
-          <h5 class="mb-1">{screenshots}</h5>
-        </div>
-          <div>
-            <button class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover" onclick='hideImg(this)'">X</button>
-          </div>
-        </div>
-        <div class="modal-body" style="height: 600px; background: #e7eaf0;">
-          {images}
-        </div>
-        <div class="img-circle"></div>
-    </div>
-    </div>
-</div>
-"""
+# Load HTML snippets as Jinja2 templates
+TEMPLATE_HTML_TMPL = env.get_template("template.html")
+STYLESHEET_HTML_TMPL = env.get_template("stylesheet.html")
+REPORT_CLASS_TMPL = env.get_template("report_class.html")
+REPORT_TEST_WITH_OUTPUT_TMPL = env.get_template("report_test_with_output.html")
+REPORT_TEST_NO_OUTPUT_TMPL = env.get_template("report_test_no_output.html")
+IMG_TMPL = env.get_template("img_tmpl.html")
 
 
 class HTMLTestRunner(object):
@@ -317,8 +213,6 @@ class HTMLTestRunner(object):
         return base_info, statistics_info
 
     def generate_report(self, test, result):
-        template = env.get_template(TEMPLATE_HTML)
-        stylesheet = env.get_template(STYLESHEET_HTML).render()
         base, statistics = self.get_report_attributes(result)
 
         version = get_version()
@@ -326,14 +220,14 @@ class HTMLTestRunner(object):
         report = self._generate_report(result)
         static = static_file(self.local_style, self.stream.name)
 
-        html_content = template.render(
+        html_content = TEMPLATE_HTML_TMPL.render(
             jquery_url=static["jquery_url"],
             echarts_url=static["echarts_url"],
             css_url=static["css_url"],
             png_url=static["png_url"],
             title=saxutils.escape(self.title),
             version=version,
-            stylesheet=stylesheet,
+            stylesheet=STYLESHEET_HTML_TMPL.render(),
             heading=heading,
             report=report,
             channel=self.run_times,
@@ -391,7 +285,7 @@ class HTMLTestRunner(object):
             doc = cls.__doc__ or ""
             # desc = doc and '%s: %s' % (name, doc) or name
             tag = language_tag(Config.language)
-            row = CustomTemplate.REPORT_CLASS_TMPL % dict(
+            row = REPORT_CLASS_TMPL.render(
                 style=num_pass > 0 and "passClass" or (
                         num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
                 name=name,
@@ -447,7 +341,7 @@ class HTMLTestRunner(object):
         else:
             doc = test.shortDescription() or ""
         # desc = doc and ('%s: %s' % (name, doc)) or name
-        tmpl = has_output and CustomTemplate.REPORT_TEST_WITH_OUTPUT_TMPL or CustomTemplate.REPORT_TEST_NO_OUTPUT_TMPL
+        tmpl = has_output and REPORT_TEST_WITH_OUTPUT_TMPL.render or REPORT_TEST_NO_OUTPUT_TMPL.render
 
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(out, str):
@@ -472,14 +366,11 @@ class HTMLTestRunner(object):
             tmp = ""
             for i, img in enumerate(test.images):
                 if i == 0:
-                    tmp += """<img src="data:image/jpg;base64,{}" style="display: block;" class="img"/>\n""".format(img)
+                    tmp += f'<img src="data:image/jpg;base64,{img}" style="display: block;" class="img"/>\n'
                 else:
-                    tmp += """<img src="data:image/jpg;base64,{}" style="display: none;" class="img"/>\n""".format(img)
+                    tmp += f'<img src="data:image/jpg;base64,{img}" style="display: none;" class="img"/>\n'
 
-            screenshots_html = CustomTemplate.IMG_TMPL.format(
-                images=tmp,
-                img_view=tag["VIEW"],
-                screenshots=tag["SCREENSHOTS"])
+            screenshots_html = IMG_TMPL.render(images=tmp, img_view=tag["VIEW"], screenshots=tag["SCREENSHOTS"])
         else:
             screenshots_html = """"""
 
@@ -489,7 +380,7 @@ class HTMLTestRunner(object):
         else:
             runtime = "0.00"
 
-        row = tmpl % dict(
+        row = tmpl(
             progress_bar_class=num == 0 and 'bg-success' or (
                     num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),
             progress_result=num == 0 and tag["PASSED"] or (
