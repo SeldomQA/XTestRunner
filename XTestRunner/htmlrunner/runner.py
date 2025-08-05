@@ -230,13 +230,25 @@ class HTMLTestRunner:
         )
         self.stream.write(html_content.encode('utf-8'))
 
+    def _get_language_template(self, template_type: str) -> str:
+        """
+        Return the template filename for the given type and current language.
+        template_type: 'heading' or 'report'
+        """
+        lang = Config.language
+        mapping = {
+            ("en", "heading"): "heading-en.html",
+            ("zh-CN", "heading"): "heading-zh-CN.html",
+            ("en", "report"): "report-en.html",
+            ("zh-CN", "report"): "report-zh-CN.html",
+        }
+        try:
+            return mapping[(lang, template_type)]
+        except KeyError:
+            raise EnvironmentError(f"The language '{lang}' is not supported for {template_type} template.")
+
     def _generate_heading(self, base: dict, statistics: dict) -> str:
-        if Config.language == "en":
-            heading_html = "heading-en.html"
-        elif Config.language == "zh-CN":
-            heading_html = "heading-zh-CN.html"
-        else:
-            raise EnvironmentError("The language is not supported")
+        heading_html = self._get_language_template("heading")
         static = static_file(self.local_style, self.stream.name)
         heading = env.get_template(heading_html).render(
             title=self.title,
@@ -295,12 +307,7 @@ class HTMLTestRunner:
             for tid, (num, test, out, error) in enumerate(cls_results):
                 self._generate_report_test(rows, cid, tid, num, test, out, error)
 
-        if Config.language == "en":
-            report_html = "report-en.html"
-        elif Config.language == "zh-CN":
-            report_html = "report-zh-CN.html"
-        else:
-            raise EnvironmentError("The language is not supported")
+        report_html = self._get_language_template("report")
         report = env.get_template(report_html).render(
             test_list=''.join(rows),
             count=str(result.success_count + result.failure_count + result.error_count + result.skip_count),
