@@ -1,7 +1,7 @@
 import time
 import unittest
 import functools
-
+from typing import Any
 from unittest import TextTestRunner
 from .result import _XMLTestResult
 
@@ -39,22 +39,21 @@ class XMLTestRunner(TextTestRunner):
         self.outsuffix = outsuffix
         self.elapsed_times = elapsed_times
 
-        self.whitelist = set([] if whitelist is None else whitelist)
-        self.blacklist = set([] if blacklist is None else blacklist)
+        self.whitelist = set() if whitelist is None else set(whitelist)
+        self.blacklist = set() if blacklist is None else set(blacklist)
 
     @classmethod
-    def test_iter(cls, suite):
+    def test_iter(cls, suite: Any):
         """
         Iterate through test suites, and yield individual tests
         """
         for test in suite:
             if isinstance(test, unittest.TestSuite):
-                for t in cls.test_iter(test):
-                    yield t
+                yield from cls.test_iter(test)
             else:
                 yield test
 
-    def run(self, testlist):
+    def run(self, testlist: Any) -> _XMLTestResult:
         """
         Runs the given test case or test suite.
         """
@@ -82,10 +81,14 @@ class XMLTestRunner(TextTestRunner):
                 setattr(test, test._testMethodName, skip_wrapper)
 
         try:
-            # Prepare the test execution
-            # result = self._make_result()
-            result = _XMLTestResult(stream=self.stream, descriptions=self.descriptions, verbosity=self.verbosity,
-                                    elapsed_times=self.elapsed_times, logger=self.logger, rerun=self.rerun)
+            result = _XMLTestResult(
+                stream=self.stream,
+                descriptions=self.descriptions,
+                verbosity=self.verbosity,
+                elapsed_times=self.elapsed_times,
+                logger=self.logger,
+                rerun=self.rerun
+            )
             result.failfast = self.failfast
             result.buffer = self.buffer
             if hasattr(testlist, 'properties'):
@@ -107,9 +110,7 @@ class XMLTestRunner(TextTestRunner):
             result.printErrors()
             self.stream.writeln(result.separator2)
             run = result.testsRun
-            self.stream.writeln("Ran %d test%s in %.3fs" % (
-                run, run != 1 and "s" or "", time_taken)
-                                )
+            self.stream.writeln(f"Ran {run} test{'s' if run != 1 else ''} in {time_taken:.3f}s")
             self.stream.writeln()
 
             # other metrics
@@ -123,22 +124,21 @@ class XMLTestRunner(TextTestRunner):
                 self.stream.write("FAILED")
                 failed, errored = map(len, (result.failures, result.errors))
                 if failed:
-                    infos.append("failures={0}".format(failed))
+                    infos.append(f"failures={failed}")
                 if errored:
-                    infos.append("errors={0}".format(errored))
+                    infos.append(f"errors={errored}")
             else:
                 self.stream.write("OK")
 
             if skipped:
-                infos.append("skipped={0}".format(skipped))
+                infos.append(f"skipped={skipped}")
             if expectedFails:
-                infos.append("expected failures={0}".format(expectedFails))
+                infos.append(f"expected failures={expectedFails}")
             if unexpectedSuccesses:
-                infos.append("unexpected successes={0}".format(
-                    unexpectedSuccesses))
+                infos.append(f"unexpected successes={unexpectedSuccesses}")
 
             if infos:
-                self.stream.writeln(" ({0})".format(", ".join(infos)))
+                self.stream.writeln(f" ({', '.join(infos)})")
             else:
                 self.stream.write("\n")
 

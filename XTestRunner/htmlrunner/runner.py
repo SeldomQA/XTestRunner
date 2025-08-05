@@ -14,6 +14,7 @@ from XTestRunner._email import SMTP
 from XTestRunner._dingtalk import DingTalk
 from XTestRunner._feishu import FeiShu
 from XTestRunner._weixin import Weinxin
+from typing import Any, Optional, List, Union
 
 # default tile
 DEFAULT_TITLE = 'XTestRunner Test Report'
@@ -27,31 +28,34 @@ HTML_DIR = os.path.join(BASE_DIR, "html")
 
 env = Environment(loader=FileSystemLoader(HTML_DIR))
 
-# Load HTML snippets as Jinja2 templates
-TEMPLATE_HTML_TMPL = env.get_template("template.html")
-STYLESHEET_HTML_TMPL = env.get_template("stylesheet.html")
-REPORT_CLASS_TMPL = env.get_template("report_class.html")
-REPORT_TEST_WITH_OUTPUT_TMPL = env.get_template("report_test_with_output.html")
-REPORT_TEST_NO_OUTPUT_TMPL = env.get_template("report_test_no_output.html")
-IMG_TMPL = env.get_template("img_tmpl.html")
+
+# Load HTML snippets as Jinja2 templates (use .render as method, not property)
+TEMPLATE_HTML_TMPL = env.get_template("template.html").render
+STYLESHEET_HTML_TMPL = env.get_template("stylesheet.html").render
+REPORT_CLASS_TMPL = env.get_template("report_class.html").render
+REPORT_TEST_WITH_OUTPUT_TMPL = env.get_template("report_test_with_output.html").render
+REPORT_TEST_NO_OUTPUT_TMPL = env.get_template("report_test_no_output.html").render
+IMG_TMPL = env.get_template("img_tmpl.html").render
 
 
-class HTMLTestRunner(object):
+class HTMLTestRunner:
     """
     Run the test class
     """
 
-    def __init__(self,
-                 stream=sys.stdout,
-                 verbosity=1,
-                 title=None,
-                 tester="Anonymous",
-                 description=None,
-                 rerun=0,
-                 language="en",
-                 logger=None,
-                 local_style=False,
-                 **kwargs):
+    def __init__(
+        self,
+        stream: Any = sys.stdout,
+        verbosity: int = 1,
+        title: Optional[str] = None,
+        tester: str = "Anonymous",
+        description: Optional[Union[str, List[str]]] = None,
+        rerun: int = 0,
+        language: str = "en",
+        logger: Optional[Any] = None,
+        local_style: bool = False,
+        **kwargs
+    ):
         self.stream = stream
         self.verbosity = verbosity
         self.rerun = rerun
@@ -59,10 +63,7 @@ class HTMLTestRunner(object):
         self.logger = logger
         self.local_style = local_style
         Config.language = language
-        if title is None:
-            self.title = DEFAULT_TITLE
-        else:
-            self.title = title
+        self.title = title if title is not None else DEFAULT_TITLE
         RunResult.title = self.title
         self.tester = tester
         RunResult.tester = tester
@@ -71,33 +72,29 @@ class HTMLTestRunner(object):
         elif isinstance(description, str):
             self.description = description
         elif isinstance(description, list):
-            self.description = ""
-            for desc in description:
-                p_tag = '<p>' + desc + '</p>'
-                self.description = self.description + p_tag
+            self.description = "".join(f'<p>{desc}</p>' for desc in description)
         else:
             self.description = ""
 
-        self.start_time = datetime.datetime.now()
-        self.end_time = None
-        self.test_obj = None
+        self.start_time: datetime.datetime = datetime.datetime.now()
+        self.end_time: Optional[datetime.datetime] = None
+        self.test_obj: Optional[Any] = None
 
         self.whitelist = set(kwargs.pop('whitelist', []))
         self.blacklist = set(kwargs.pop('blacklist', []))
 
     @classmethod
-    def test_iter(cls, suite):
+    def test_iter(cls, suite: Any):
         """
         Iterate through test suites, and yield individual tests
         """
         for test in suite:
             if isinstance(test, unittest.TestSuite):
-                for t in cls.test_iter(test):
-                    yield t
+                yield from cls.test_iter(test)
             else:
                 yield test
 
-    def run(self, testlist):
+    def run(self, testlist: Any) -> _TestResult:
         """
         Run the given test case or test suite.
         """
@@ -136,7 +133,7 @@ class HTMLTestRunner(object):
         print("Generating HTML reports...")
         return result
 
-    def sort_result(self, result_list):
+    def sort_result(self, result_list: list) -> list:
         """
         unittest does not seems to run in any particular order.
         Here at least we want to group them together by class.
@@ -152,7 +149,7 @@ class HTMLTestRunner(object):
         r = [(cls, run_map[cls]) for cls in classes]
         return r
 
-    def get_report_attributes(self, result):
+    def get_report_attributes(self, result: _TestResult):
         """
         Return report attributes as a list of (name, value).
         Override this to add custom attributes.
@@ -212,29 +209,28 @@ class HTMLTestRunner(object):
 
         return base_info, statistics_info
 
-    def generate_report(self, test, result):
+    def generate_report(self, test: Any, result: _TestResult) -> None:
         base, statistics = self.get_report_attributes(result)
-
         version = get_version()
         heading = self._generate_heading(base, statistics)
         report = self._generate_report(result)
         static = static_file(self.local_style, self.stream.name)
 
-        html_content = TEMPLATE_HTML_TMPL.render(
+        html_content = TEMPLATE_HTML_TMPL(
             jquery_url=static["jquery_url"],
             echarts_url=static["echarts_url"],
             css_url=static["css_url"],
             png_url=static["png_url"],
             title=saxutils.escape(self.title),
             version=version,
-            stylesheet=STYLESHEET_HTML_TMPL.render(),
+            stylesheet=STYLESHEET_HTML_TMPL(),
             heading=heading,
             report=report,
             channel=self.run_times,
         )
-        self.stream.write(html_content.encode('utf8'))
+        self.stream.write(html_content.encode('utf-8'))
 
-    def _generate_heading(self, base, statistics):
+    def _generate_heading(self, base: dict, statistics: dict) -> str:
         if Config.language == "en":
             heading_html = "heading-en.html"
         elif Config.language == "zh-CN":
@@ -261,7 +257,7 @@ class HTMLTestRunner(object):
         )
         return heading
 
-    def _generate_report(self, result):
+    def _generate_report(self, result: _TestResult) -> str:
         rows = []
         sorted_result = self.sort_result(result.result)
         for cid, (cls, cls_results) in enumerate(sorted_result):
@@ -285,14 +281,13 @@ class HTMLTestRunner(object):
             doc = cls.__doc__ or ""
             # desc = doc and '%s: %s' % (name, doc) or name
             tag = language_tag(Config.language)
-            row = REPORT_CLASS_TMPL.render(
-                style=num_pass > 0 and "passClass" or (
-                        num_fail > 0 and 'failClass' or (num_error > 0 and 'errorClass' or 'skipClass')),
+            row = REPORT_CLASS_TMPL(
+                style="passClass" if num_pass > 0 else ("failClass" if num_fail > 0 else ("errorClass" if num_error > 0 else "skipClass")),
                 name=name,
                 desc=doc,
                 count=num_pass + num_fail + num_error + num_skip,
                 class_result=f"{tag['PASSED']}:{num_pass}, {tag['FAILURE']}:{num_fail}, {tag['ERRORS']}:{num_error}, {tag['SKIPPED']}:{num_skip}",
-                cid='c{}.{}'.format(self.run_times, cid + 1),
+                cid=f'c{self.run_times}.{cid + 1}',
                 detail=tag['DETAIL']
             )
             rows.append(row)
@@ -317,7 +312,16 @@ class HTMLTestRunner(object):
         )
         return report
 
-    def _generate_report_test(self, rows, cid, tid, num, test, out, error):
+    def _generate_report_test(
+        self,
+        rows: list,
+        cid: int,
+        tid: int,
+        num: int,
+        test: Any,
+        out: Any,
+        error: Any
+    ) -> None:
         # e.g. 'pt1.1', 'ft1.1','et1.1', 'st1.1' etc
         has_output = bool(out or error)
         if num == 0:
@@ -341,7 +345,7 @@ class HTMLTestRunner(object):
         else:
             doc = test.shortDescription() or ""
         # desc = doc and ('%s: %s' % (name, doc)) or name
-        tmpl = has_output and REPORT_TEST_WITH_OUTPUT_TMPL.render or REPORT_TEST_NO_OUTPUT_TMPL.render
+        tmpl = REPORT_TEST_WITH_OUTPUT_TMPL if has_output else REPORT_TEST_NO_OUTPUT_TMPL
 
         # o and e should be byte string because they are collected from stdout and stderr?
         if isinstance(out, str):
@@ -370,9 +374,9 @@ class HTMLTestRunner(object):
                 else:
                     tmp += f'<img src="data:image/jpg;base64,{img}" style="display: none;" class="img"/>\n'
 
-            screenshots_html = IMG_TMPL.render(images=tmp, img_view=tag["VIEW"], screenshots=tag["SCREENSHOTS"])
+            screenshots_html = IMG_TMPL(images=tmp, img_view=tag["VIEW"], screenshots=tag["SCREENSHOTS"])
         else:
-            screenshots_html = """"""
+            screenshots_html = ""
 
         # add runtime
         if getattr(test, 'runtime', []):
@@ -381,15 +385,17 @@ class HTMLTestRunner(object):
             runtime = "0.00"
 
         row = tmpl(
-            progress_bar_class=num == 0 and 'bg-success' or (
-                    num == 1 and 'bg-warning' or (num == 2 and 'bg-danger' or 'bg-secondary')),
-            progress_result=num == 0 and tag["PASSED"] or (
-                    num == 1 and tag["FAILURE"] or (num == 2 and tag["ERRORS"] or tag["SKIPPED"])),
+            progress_bar_class=(
+                'bg-success' if num == 0 else ('bg-warning' if num == 1 else ('bg-danger' if num == 2 else 'bg-secondary'))
+            ),
+            progress_result=(
+                tag["PASSED"] if num == 0 else (tag["FAILURE"] if num == 1 else (tag["ERRORS"] if num == 2 else tag["SKIPPED"]))
+            ),
             progress_bar_style="width:100%",
             tid=tid,
             log_viewing=tag["LOG"],
-            Class=(num == 0 and 'hiddenRow' or 'none'),
-            style=num == 0 and 'passCase' or (num == 1 and 'failCase' or (num == 2 and 'errorCase' or 'skipCase')),
+            Class=('hiddenRow' if num == 0 else 'none'),
+            style=('passCase' if num == 0 else ('failCase' if num == 1 else ('errorCase' if num == 2 else 'skipCase'))),
             casename=name,
             desc=doc,
             runtime=runtime,
@@ -404,14 +410,15 @@ class HTMLTestRunner(object):
 
     @staticmethod
     def send_email(
-            to: any,
-            user: str,
-            password: str,
-            host: str,
-            port: int = None,
-            ssl: bool = True,
-            subject: str = None,
-            attachments=None):
+        to: Any,
+        user: str,
+        password: str,
+        host: str,
+        port: Optional[int] = None,
+        ssl: bool = True,
+        subject: Optional[str] = None,
+        attachments: Optional[Any] = None
+    ) -> None:
         """
         Send test result to email
         :param to:
@@ -428,13 +435,14 @@ class HTMLTestRunner(object):
 
     @staticmethod
     def send_dingtalk(
-            access_token: str,
-            key: str = None,
-            app_secret: str = None,
-            at_mobiles: list = None,
-            is_at_all: bool = False,
-            append: str = None,
-            text: str = None):
+        access_token: str,
+        key: Optional[str] = None,
+        app_secret: Optional[str] = None,
+        at_mobiles: Optional[List[str]] = None,
+        is_at_all: bool = False,
+        append: Optional[str] = None,
+        text: Optional[str] = None
+    ) -> None:
         """
         send dingtalk notice
         :param access_token:
@@ -452,21 +460,21 @@ class HTMLTestRunner(object):
 
     @staticmethod
     def send_feishu(
-            url: str,
-            key: str = None,
-            secret: str = None,
-            user_id: str = None,
-            user_name: str = False,
-            feishu_href: str = None):
-
+        url: str,
+        key: Optional[str] = None,
+        secret: Optional[str] = None,
+        user_id: Optional[str] = None,
+        user_name: Union[str, bool] = False,
+        feishu_href: Optional[str] = None
+    ) -> None:
         fs = FeiShu(url=url, key=key, secret=secret, user_id=user_id, user_name=user_name, feishu_href=feishu_href)
         fs.feishu_notice()
 
     @staticmethod
     def send_weixin(
-            access_token: str,
-            at_mobiles: list = None,
-            is_at_all: bool = None):
-
+        access_token: str,
+        at_mobiles: Optional[List[str]] = None,
+        is_at_all: Optional[bool] = None
+    ) -> None:
         wx = Weinxin(access_token=access_token, at_mobiles=at_mobiles, is_at_all=is_at_all)
         wx.send_text()

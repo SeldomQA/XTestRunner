@@ -7,6 +7,7 @@ import inspect
 import datetime
 from os import path
 from io import StringIO
+from typing import Any, Optional, List
 
 # use direct import to bypass freezegun
 from time import time
@@ -85,54 +86,47 @@ class _DuplicateWriter(io.TextIOBase):
     The second handle is expected to be a StringIO and not to block.
     """
 
-    def __init__(self, first, second):
-        super(_DuplicateWriter, self).__init__()
+    def __init__(self, first: io.TextIOBase, second: StringIO):
+        super().__init__()
         self._first = first
         self._second = second
 
-    def flush(self):
+    def flush(self) -> None:
         self._first.flush()
         self._second.flush()
 
-    def writable(self):
+    def writable(self) -> bool:
         return True
 
-    def getvalue(self):
+    def getvalue(self) -> str:
         return self._second.getvalue()
 
-    def writelines(self, lines):
+    def writelines(self, lines) -> None:
         self._first.writelines(lines)
         self._second.writelines(lines)
 
-    def write(self, b):
+    def write(self, b: str) -> int:
         try:
-            # AttributeError: '_DuplicateWriter' object has no attribute '_first'
             self._first
         except AttributeError:
-            return
+            return 0
         if isinstance(self._first, io.TextIOBase):
             wrote = self._first.write(b)
-
             if wrote is not None:
-                # expected to always succeed to write
                 self._second.write(b[:wrote])
-
-            return wrote
+            return wrote if wrote is not None else 0
         else:
-            # file-like object that doesn't return wrote bytes.
             self._first.write(b)
             self._second.write(b)
             return len(b)
 
 
-class _TestInfo(object):
+class _TestInfo:
     """
-    This class keeps useful information about the execution of a
-    test method.
+    This class keeps useful information about the execution of a test method.
     """
 
-    # Possible test outcomes
-    (SUCCESS, FAILURE, ERROR, SKIP) = range(4)
+    SUCCESS, FAILURE, ERROR, SKIP = range(4)
 
     OUTCOME_ELEMENTS = {
         SUCCESS: None,
@@ -141,12 +135,21 @@ class _TestInfo(object):
         SKIP: 'skipped',
     }
 
-    def __init__(self, test_result, test_method, outcome=SUCCESS, err=None, subTest=None, filename=None, lineno=None,
-                 doc=None):
+    def __init__(
+        self,
+        test_result: Any,
+        test_method: Any,
+        outcome: int = SUCCESS,
+        err: Optional[Any] = None,
+        subTest: Optional[Any] = None,
+        filename: Optional[str] = None,
+        lineno: Optional[int] = None,
+        doc: Optional[str] = None,
+    ):
         self.test_result = test_result
         self.outcome = outcome
-        self.elapsed_time = 0
-        self.timestamp = datetime.datetime.min.replace(microsecond=0).isoformat()
+        self.elapsed_time: float = 0.0
+        self.timestamp: str = datetime.datetime.min.replace(microsecond=0).isoformat()
         if err is not None:
             if self.outcome != _TestInfo.SKIP:
                 self.test_exception_name = safe_unicode(err[0].__name__)
@@ -160,8 +163,7 @@ class _TestInfo(object):
         self.test_description = self.test_result.getDescription(test_method)
         self.test_exception_info = (
             '' if outcome in (self.SUCCESS, self.SKIP)
-            else self.test_result._exc_info_to_string(
-                err, test_method)
+            else self.test_result._exc_info_to_string(err, test_method)
         )
 
         self.test_name = testcase_name(test_method)
@@ -174,24 +176,19 @@ class _TestInfo(object):
         self.filename = filename
         self.lineno = lineno
         self.doc = doc
-        self.images = []
+        self.images: List[Any] = []
 
-    def id(self):
+    def id(self) -> str:
         return self.test_id
 
-    def test_finished(self):
-        """Save info that can only be calculated once a test has run.
-        """
-        self.elapsed_time = \
-            self.test_result.stop_time - self.test_result.start_time
+    def test_finished(self) -> None:
+        """Save info that can only be calculated once a test has run."""
+        self.elapsed_time = self.test_result.stop_time - self.test_result.start_time
         timestamp = datetime.datetime.fromtimestamp(self.test_result.stop_time)
         self.timestamp = timestamp.replace(microsecond=0).isoformat()
 
-    def get_error_info(self):
-        """
-        Return a text representation of an exception thrown by a test
-        method.
-        """
+    def get_error_info(self) -> str:
+        """Return a text representation of an exception thrown by a test method."""
         return self.test_exception_info
 
 
@@ -228,8 +225,14 @@ class _XMLTestResult(TextTestResult):
         else:
             self.infoclass = infoclass
 
-    def _prepare_callback(self, test_info, target_list, verbose_str,
-                          short_str, images: list = None):
+    def _prepare_callback(
+        self,
+        test_info: _TestInfo,
+        target_list: list,
+        verbose_str: str,
+        short_str: str,
+        images: Optional[list] = None
+    ) -> None:
         """
         Appends a `infoclass` to the given target list and sets a callback
         method to be called by stopTest method.
@@ -243,32 +246,25 @@ class _XMLTestResult(TextTestResult):
         else:
             test_info.images = images
 
-        def callback():
-            """Prints the test method outcome to the stream, as well as
-            the elapsed time.
-            """
 
+        def callback() -> None:
+            """Prints the test method outcome to the stream, as well as the elapsed time."""
             test_info.test_finished()
-
             # Ignore the elapsed times for a more reliable unit testing
             if not self.elapsed_times:
                 self.start_time = self.stop_time = 0
-
             if self.showAll:
-                self.stream.writeln(
-                    '%s (%.3fs)' % (verbose_str, test_info.elapsed_time)
-                )
+                self.stream.writeln(f'{verbose_str} ({test_info.elapsed_time:.3f}s)')
             elif self.dots:
                 if isinstance(short_str, tuple) and len(short_str) == 2:
                     self.stream.write(short_str[1])
                 else:
                     self.stream.write(short_str)
-
             self.stream.flush()
 
         self.callback = callback
 
-    def startTest(self, test):
+    def startTest(self, test: Any) -> None:
         """
         Called before execute each test method.
         """
@@ -302,7 +298,7 @@ class _XMLTestResult(TextTestResult):
             self.stream.write(" ... ")
             self.stream.flush()
 
-    def _setupStdout(self):
+    def _setupStdout(self) -> None:
         """
         Capture stdout / stderr by replacing sys.stdout / sys.stderr
         """
@@ -315,7 +311,7 @@ class _XMLTestResult(TextTestResult):
             self.logger_handler_id = self.logger.logger.add(self._stdout_capture, level=self.logger._level,
                                                             colorize=False, format=self.logger._console_format)
 
-    def _restoreStdout(self):
+    def _restoreStdout(self) -> None:
         """
         Stop capturing stdout / stderr and recover sys.stdout / sys.stderr
         """
@@ -337,11 +333,11 @@ class _XMLTestResult(TextTestResult):
         self._stderr_capture.truncate()
         super(_XMLTestResult, self)._restoreStdout()
 
-    def _save_output_data(self):
+    def _save_output_data(self) -> None:
         self._stdout_data = self._stdout_capture.getvalue()
         self._stderr_data = self._stderr_capture.getvalue()
 
-    def stopTest(self, test):
+    def stopTest(self, test: Any) -> None:
         """
         Called after execute each test method.
         """
@@ -375,7 +371,7 @@ class _XMLTestResult(TextTestResult):
             self.callback()
             self.callback = None
 
-    def addSuccess(self, test):
+    def addSuccess(self, test: Any) -> None:
         """
         Called when a test executes successfully.
         """
@@ -386,7 +382,7 @@ class _XMLTestResult(TextTestResult):
         )
 
     @failfast
-    def addFailure(self, test, err):
+    def addFailure(self, test: Any, err: Any) -> None:
         """
         Called when a test method fails.
         """
@@ -412,7 +408,7 @@ class _XMLTestResult(TextTestResult):
         self._prepare_callback(testinfo, [], 'FAIL', 'F', images=test.images)
 
     @failfast
-    def addError(self, test, err):
+    def addError(self, test: Any, err: Any) -> None:
         """
         Called when a test method raises an error.
         """
@@ -437,7 +433,7 @@ class _XMLTestResult(TextTestResult):
                 ...
         self._prepare_callback(testinfo, [], 'ERROR', 'E', images=test.images)
 
-    def addSubTest(self, testcase, test, err):
+    def addSubTest(self, testcase: Any, test: Any, err: Any) -> None:
         """
         Called when a subTest method raises an error.
         """
@@ -467,7 +463,7 @@ class _XMLTestResult(TextTestResult):
                 self.infoclass(self, test), self.successes, 'ok', '.'
             )
 
-    def addSkip(self, test, reason):
+    def addSkip(self, test: Any, reason: str) -> None:
         """
         Called when a test method was skipped.
         """
@@ -480,7 +476,7 @@ class _XMLTestResult(TextTestResult):
         self.skipped.append((testinfo, reason))
         self._prepare_callback(testinfo, [], 'skip', 's')
 
-    def addExpectedFailure(self, test, err):
+    def addExpectedFailure(self, test: Any, err: Any) -> None:
         """
         Missing in xmlrunner, copy-pasted from xmlrunner addError.
         """
@@ -494,7 +490,7 @@ class _XMLTestResult(TextTestResult):
         self._prepare_callback(testinfo, [], 'expected failure', 'x')
 
     @failfast
-    def addUnexpectedSuccess(self, test):
+    def addUnexpectedSuccess(self, test: Any) -> None:
         """
         Missing in xmlrunner, copy-pasted from xmlrunner addSuccess.
         """
@@ -510,7 +506,7 @@ class _XMLTestResult(TextTestResult):
         self.unexpectedSuccesses.append((testinfo, 'unexpected success'))
         self._prepare_callback(testinfo, [], 'unexpected success', 'u')
 
-    def printErrorList(self, flavour, errors):
+    def printErrorList(self, flavour: str, errors: list) -> None:
         """
         Writes information about the FAIL or ERROR to the stream.
         """
@@ -524,7 +520,7 @@ class _XMLTestResult(TextTestResult):
             self.stream.writeln('%s' % test_info.get_error_info())
             self.stream.flush()
 
-    def _get_info_by_testcase(self):
+    def _get_info_by_testcase(self) -> dict:
         """
         Organizes test results by TestCase module. This information is
         used during the report generation, where an XML report will be created
@@ -545,7 +541,7 @@ class _XMLTestResult(TextTestResult):
 
         return tests_by_testcase
 
-    def _report_testsuite_properties(xml_testsuite, xml_document, properties):
+    def _report_testsuite_properties(xml_testsuite: Any, xml_document: Any, properties: Optional[dict]) -> None:
         if properties:
             xml_properties = xml_document.createElement('properties')
             xml_testsuite.appendChild(xml_properties)
@@ -557,8 +553,13 @@ class _XMLTestResult(TextTestResult):
 
     _report_testsuite_properties = staticmethod(_report_testsuite_properties)
 
-    def _report_testsuite(suite_name, tests, xml_document, parentElement,
-                          properties):
+    def _report_testsuite(
+        suite_name: str,
+        tests: list,
+        xml_document: Any,
+        parentElement: Any,
+        properties: Optional[dict]
+    ) -> Any:
         """
         Appends the testsuite section to the XML document.
         """
@@ -597,7 +598,7 @@ class _XMLTestResult(TextTestResult):
 
     _report_testsuite = staticmethod(_report_testsuite)
 
-    def _test_method_name(test_id):
+    def _test_method_name(test_id: str) -> str:
         """
         Returns the test method name.
         """
@@ -609,7 +610,7 @@ class _XMLTestResult(TextTestResult):
 
     _test_method_name = staticmethod(_test_method_name)
 
-    def _createCDATAsections(xmldoc, node, text):
+    def _createCDATAsections(xmldoc: Any, node: Any, text: str) -> None:
         text = safe_unicode(text)
         pos = text.find(']]>')
         while pos >= 0:
@@ -623,7 +624,7 @@ class _XMLTestResult(TextTestResult):
 
     _createCDATAsections = staticmethod(_createCDATAsections)
 
-    def _report_testcase(test_result, xml_testsuite, xml_document):
+    def _report_testcase(test_result: _TestInfo, xml_testsuite: Any, xml_document: Any) -> None:
         """
         Appends a testcase section to the XML document.
         """
@@ -701,7 +702,7 @@ class _XMLTestResult(TextTestResult):
 
     _report_testcase = staticmethod(_report_testcase)
 
-    def generate_reports(self, test_runner):
+    def generate_reports(self, test_runner: Any) -> None:
         """
         Generates the XML reports to a given XMLTestRunner object.
         """
@@ -757,6 +758,6 @@ class _XMLTestResult(TextTestResult):
             )
             test_runner.output.write(xml_content)
 
-    def _exc_info_to_string(self, err, test):
+    def _exc_info_to_string(self, err: Any, test: Any) -> str:
         """Converts a sys.exc_info()-style tuple of values into a string."""
-        return super(_XMLTestResult, self)._exc_info_to_string(err, test)
+        return super()._exc_info_to_string(err, test)
