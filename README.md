@@ -1,4 +1,4 @@
-![](./XTestRunner_logo.jpg)
+![](./img/XReport_logo.png)
 
 > Modern style test report based on unittest framework.
 
@@ -17,7 +17,7 @@
 
 ## Report
 
-![](./img/test_report_1.8.0.png)
+![](./img/test_report_1.8.6.png)
 
 ## Install
 
