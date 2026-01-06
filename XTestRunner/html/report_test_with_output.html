@@ -1,50 +1,50 @@
 <tr id='{{tid}}' class='{{Class}}'>
-    <td class='{{style}}'>
-        <div class='testcase'>{{casename}}</div>
-    </td>
-    <td style="color: #495057">
-        <div>{{desc}}</div>
-    </td>
-    <td style="color: #495057">
-        <div>{{runtime}} s</div>
-    </td>
-    <td>
-        <div class="progress" style="width:60px; height: 18px;">
-            <div class='progress-bar {{progress_bar_class}}' role="progressbar" aria-valuenow="83" aria-valuemin="0"
-                 aria-valuemax="100" style='{{progress_bar_style}}'>{{progress_result}}
+  <td class='{{style}}'>
+    <div class='testcase'>{{casename}}</div>
+  </td>
+  <td style="color: #495057">
+    <div>{{desc}}</div>
+  </td>
+  <td style="color: #495057">
+    <div>{{runtime}} s</div>
+  </td>
+  <td>
+    <div class="progress" style="width:60px; height: 18px;">
+      <div class='progress-bar {{progress_bar_class}}' role="progressbar" aria-valuenow="83" aria-valuemin="0"
+           aria-valuemax="100" style='{{progress_bar_style}}'>{{progress_result}}
+      </div>
+    </div>
+  </td>
+  <td>
+    <!--css div popup start-->
+    <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_{{tid}}')">{{log_viewing}}</a>
+    <div id='div_{{tid}}' class="modal show case-log" style="display: none; background-color: #000000c7;">
+      <div class="modal-dialog modal-dialog-centered log_window">
+        <div class="modal-content shadow-3">
+          <div class="modal-header">
+            <div>
+              <h5 class="mb-1">{{log_title}}</h5>
             </div>
-        </div>
-    </td>
-    <td>
-        <!--css div popup start-->
-        <a class="popup_link" href="javascript:void(0)" onclick="showLog('div_{{tid}}')">{{log_viewing}}</a>
-        <div id='div_{{tid}}' class="modal show case-log" style="display: none; background-color: #000000c7;">
-            <div class="modal-dialog modal-dialog-centered log_window">
-                <div class="modal-content shadow-3">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="mb-1">{{log_title}}</h5>
-                        </div>
-                        <div>
-                            <h5 class="mb-1">{{log_detailed}}</h5>
-                        </div>
-                        <div>
-                            <button type="button"
-                                    class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover"
-                                    data-bs-dismiss="modal"
-                                    onclick="hideLog('div_{{tid}}')">X
-                            </button>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <pre>{{script}}</pre>
-                        </div>
-                    </div>
-                </div>
+            <div>
+              <h5 class="mb-1">{{log_detailed}}</h5>
             </div>
+            <div>
+              <button type="button"
+                      class="btn btn-sm btn-square bg-tertiary bg-opacity-20 bg-opacity-100-hover text-tertiary text-white-hover"
+                      data-bs-dismiss="modal"
+                      onclick="hideLog('div_{{tid}}')">X
+              </button>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div>
+              <pre>{{script}}</pre>
+            </div>
+          </div>
         </div>
-        <!--css div popup end-->
-    </td>
-    <td>{{img}}</td>
+      </div>
+    </div>
+    <!--css div popup end-->
+  </td>
+  <td>{{img}}</td>
 </tr>
